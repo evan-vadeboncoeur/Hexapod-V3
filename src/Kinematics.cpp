@@ -30,9 +30,9 @@ C_Position Kinematics::fk(){
     R3_2 = cos(t2 + t3);
     R3_3 = 0.0;
     // 3 x 1 positon vector of EE frame represented in global frame
-    c_x = 70.0*cos(t1) + cos(t1)*(150.0*cos(t2 + t3) + 100.0*cos(t2)); 
-    c_y = 70.0*sin(t1) + sin(t1)*(150.0*cos(t2 + t3) + 100.0*cos(t2));  
-    c_z = 150.0*sin(t2 + t3) + 100.0*sin(t2);
+    c_x = L1*cos(t1) + cos(t1)*(L3*cos(t2 + t3) + L2*cos(t2)); 
+    c_y = L1*sin(t1) + sin(t1)*(L3*cos(t2 + t3) + L2*cos(t2));  
+    c_z = L3*sin(t2 + t3) + L2*sin(t2);
 
     calculated_p.setPosition(c_x, c_y, c_z);
 
