@@ -16,6 +16,7 @@ class Leg{
         Joint joints[3]; // 3 joints per leg: J0, J1, J2
         C_Position local, global, target; // keep track of local, global, and target (local) positions
         J_Position joint_space; // joint vector of 3 servos at present
+        float beta, gamma, t1, t2, t3, t3_s;
         void forwardKinematics();
         void inverseKinematics();
         void moveToPV(); // move to position vector
@@ -24,6 +25,7 @@ class Leg{
         Leg();
         Leg(int j1, int j2, int j3, int id);
         void computeGlobal(); // conver local position to global
+        void setTarget(C_Position goal);
         
 
 };

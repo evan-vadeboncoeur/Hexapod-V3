@@ -12,3 +12,13 @@ Leg::Leg(int j1, int j2, int j3, int id){
     joints[3] = Joint(j3);
     this->id = id;
 }
+
+void Leg::setTarget(C_Position goal){
+    target.setPosition(goal.getX(), goal.getY(), goal.getZ());
+}
+
+void Leg::forwardKinematics(){
+    
+
+
+}
