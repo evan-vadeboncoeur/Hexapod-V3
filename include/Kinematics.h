@@ -4,6 +4,8 @@
 #define FK_DEBUG
 
 #include <math.h>
+#include <HardwareSerial.h>
+#include <Arduino.h>
 #include "C_Position.h"
 #include "J_Position.h"
 
@@ -26,6 +28,7 @@ class Kinematics {
         J_Position configCheck(bool config);
         bool ikCheck();
         float distance(C_Position desired, C_Position calculated);
+        HardwareSerial* serial;
 
 };
 

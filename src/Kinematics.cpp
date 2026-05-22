@@ -8,6 +8,7 @@ Kinematics::Kinematics(float L1, float L2, float L3){
     this->L1 = L1;
     this->L2 = L2;
     this->L3 = L3;
+    serial = &Serial;
 }
 
 void Kinematics::setTarget(float x, float y, float z){
@@ -35,8 +36,19 @@ C_Position Kinematics::fk(){
 
     calculated_p.setPosition(c_x, c_y, c_z);
 
-    #ifdef DEBUG_FK
-    
+    #ifdef FK_DEBUG
+    Serial.println("FK OUTPUT: ");
+    Serial.print("X_c: ");
+    Serial.print('\t');
+    Serial.print(c_x);
+    Serial.print('\t');
+    Serial.print("Y_c: ");
+    Serial.print('\t');
+    Serial.print(c_y);
+    Serial.print('\t');
+    Serial.print("Z_c: ");
+    Serial.print('\t');
+    Serial.println(c_z);
     #endif
 }
 
@@ -58,6 +70,28 @@ J_Position Kinematics::ik(bool config){
     st3 = sqrt(ct3);
     t3_1 = M_PI + (st3, ct3); // check angle sense
     t3_2 = M_PI + atan2(-st3, ct3);
+    // debug section
+    #ifdef IK_DEBUG
+    Serial.println("Mult. solutions output [rads]");
+    Serial.print("T1: ");
+    Serial.print('\t');
+    Serial.print(t1);
+    Serial.print("T2_1: ");
+    Serial.print('\t');
+    Serial.print(t2_1);
+    Serial.print("T2_2: ");
+    Serial.print('\t');
+    Serial.print(t2_1);
+    Serial.print('\t');
+    Serial.print("T3_1: ");
+    Serial.print('\t');
+    Serial.print(t3_1);
+    Serial.print("T3_2: ");
+    Serial.print('\t');
+    Serial.println(t3_2);
+    #endif
+
+
     // Solve desired configuration and return
     return configCheck(true);
 }
@@ -93,11 +127,51 @@ float Kinematics::distance(C_Position desired, C_Position calculated){
     float dz = desired.getZ() - calculated.getZ();
     float total_d = sqrt(dx*dx + dy*dy + dz*dz);
     // DEBUG condition compile -> figure out how to pass serial monitor references?
-    #ifdef DEBUG_IK
-    
-
-
-
+    #ifdef IK_DEBUG
+    Serial.println("IK-FK Comparison");
+    // X error printout
+    Serial.print("x_d: ");
+    Serial.print('\t');
+    Serial.print(desired.getX());
+    Serial.print('\t');
+    Serial.print("x_c: ");
+    Serial.print('\t');
+    Serial.print(calculated.getX());
+    Serial.print('\t');
+    Serial.print("dx: ");
+    Serial.print('\t');
+    Serial.print(dx);
+    Serial.print('\t');
+    // Y error printout
+    Serial.print("y_d: ");
+    Serial.print('\t');
+    Serial.print(desired.getY());
+    Serial.print('\t');
+    Serial.print("y_c: ");
+    Serial.print('\t');
+    Serial.print(calculated.getY());
+    Serial.print('\t');
+    Serial.print("dy: ");
+    Serial.print('\t');
+    Serial.print(dy);
+    Serial.print('\t');
+    // Z error printout
+    Serial.print("z_d: ");
+    Serial.print('\t');
+    Serial.print(desired.getZ());
+    Serial.print('\t');
+    Serial.print("z_c: ");
+    Serial.print('\t');
+    Serial.print(calculated.getZ());
+    Serial.print('\t');
+    Serial.print("dz: ");
+    Serial.print('\t');
+    Serial.print(dz);
+    Serial.print('\t');
+    // Total Distance Printout
+    Serial.print("Distance error: ");
+    Serial.print('\t');
+    Serial.println(total_d);
     #endif
     
     return total_d;

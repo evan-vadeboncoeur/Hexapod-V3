@@ -11,17 +11,22 @@ Leg L4 = Leg(13, 14, 15, 4);
 Leg L5 = Leg(16, 17, 18, 5);
 
 Leg Legs[6] = {L0, L1, L2, L3, L4, L5};
-
+#ifndef IK_DEBUG
 MotionPlanner plan = MotionPlanner(Legs);
 
 Hexapod chester = Hexapod(plan);
+#endif
+
+C_Position pos = C_Position(200.0, 100.0, -40.0);
 
 
 void setup(){
-
+  Serial.begin(9600);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  delay(5000);
+  //L0.setTarget(pos);
+  L0.moveToIK(pos, true);
 }
 

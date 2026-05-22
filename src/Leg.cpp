@@ -42,6 +42,7 @@ void Leg::moveToJV(){
 void Leg::moveToIK(C_Position tp, bool config){
     setTarget(tp); // set target position
     inverseKinematics(config); // calculate IK to do so
+    #ifndef IK_DEBUG
     moveToJV(); // move to position
-    
+    #endif
 }
