@@ -14,28 +14,28 @@ Implementing as many gaits as I can.
     - Photos
         - CAD Photos
         - Build Photos
-            OnShape
-                Link, Design Choices/Features (loft, sweep, rib, extend) 
-                Variable Tables (exported) 
-            Kinematics 
-                FK Diagram and Equations
-                IK Diagram and Equations
-        Electrical Design
-            Electrical BOM (CSV)
-            Schematic Layout
-            PCB Layout
-            Photos
-                EasyEDA (link, design choices)
-                Build Photos
-            Electrical Specifications (single leg/total current draw, voltage stability study with caps, radio frequencies)
-        Software Design
-            UML Diagram
-            Design choices
-    Code
-        src
-        lib
-        platformio.ini
-        push.sh
-        ...
+    - OnShape
+        - Link, Design Choices/Features (loft, sweep, rib, extend) 
+        - Variable Tables (exported) 
+    - Kinematics 
+        - FK Diagram and Equations
+        - IK Diagram and Equations
+- Electrical Design
+    - Electrical BOM (CSV)
+        - Schematic Layout
+        - PCB Layout
+        - Photos
+            - EasyEDA (link, design choices)
+            - Build Photos
+        - Electrical Specifications (single leg/total current draw, voltage stability study with caps, radio frequencies)
+- Software Design
+    - UML Diagram
+    - Design choices
+## Code
+    - src code
+    - include headers
+    - platformio.ini configuration file for ATMEGA2560
+    - push.sh bash script for auto-push to repository
+    - etc.
             
     
