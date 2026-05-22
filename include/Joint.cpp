@@ -9,3 +9,7 @@ Joint::Joint(int id){
     servo_id = id;
 }
 
+void Joint::setAngle(float ang){
+    servo.write(ang);
+}
+

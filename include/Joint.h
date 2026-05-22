@@ -9,6 +9,7 @@ class Joint{
         Joint(int id);
         float getAngle();
         void setupServo();
+        void setAngle(float);
     private:
         int servo_id;
         float angle;
