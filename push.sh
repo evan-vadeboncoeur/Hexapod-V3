@@ -9,7 +9,7 @@ echo "Please enter commit message."
 # Get user input commit message
 read commit_msg
 
-# Commit changes
+# Commit changes ($ references variables)
 git commit -m "$commit_msg"
 
 # Push to origin of repository
