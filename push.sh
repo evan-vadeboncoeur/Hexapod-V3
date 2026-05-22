@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Stage all files changes
+# Stage all files changes.
 git add .
 
 # Prompt user for input
