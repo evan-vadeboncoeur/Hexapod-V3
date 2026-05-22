@@ -10,7 +10,7 @@ echo "Please enter commit message."
 read commit_msg
 
 # Commit changes
-git commit -m commit_msg
+git commit -m "$commit_msg"
 
 # Push to origin of repository
 git push origin head
