@@ -3,6 +3,10 @@
 
 #include "C_Position.h"
 
+C_Position::C_Position(){
+    
+}
+
 C_Position::C_Position(float x_s, float y_s, float z_s){
     x = x_s;
     y = y_s;

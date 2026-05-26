@@ -8,6 +8,4 @@ void Hexapod::gaitSet(){
     ;
 }
 
-void Hexapod::gaitSet(){
-    ;
-}
+

@@ -15,8 +15,11 @@ class Leg{
         char id; // leg ID
         Joint joints[3]; // 3 joints per leg: J0, J1, J2
         float L1 = 70, L2 = 100, L3 = 150; // link lengths
-        C_Position local_p, global_p, target_p; // keep track of local, global, and target (local) positions
-        J_Position local_j, target_j; // joint vector of 3 servos at present
+        C_Position local_p = C_Position(); 
+        C_Position global_p = C_Position();
+        C_Position target_p = C_Position(); // keep track of local, global, and target (local) positions
+        J_Position local_j = J_Position();
+        J_Position target_j = J_Position(); // joint vector of 3 servos at present
         Kinematics kinematic = Kinematics(L1, L2, L3);
         void forwardKinematics();
         void inverseKinematics(bool);
