@@ -10,6 +10,9 @@ class J_Position{
         float getT1();
         float getT2();
         float getT3();
+        float setT1(float);
+        float setT2(float);
+        float setT3(float);
 };
 
 #endif

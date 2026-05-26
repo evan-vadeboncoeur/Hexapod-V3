@@ -1,6 +1,13 @@
 #ifndef LEG_H
 #define LEG_H
 
+#define COXA (0)
+#define FEMUR (1)
+#define FOOT (2)
+#define COXA_SERVO_OFFSET (90.0)
+#define FEMUR_SERVO_OFFSET (90.0)
+#define FOOT_SERVO_OFFSET (90.0)
+
 #include "Joint.h"
 #include "C_Position.h"
 #include "J_Position.h"
@@ -25,6 +32,7 @@ class Leg{
         void inverseKinematics(bool);
         void moveToPV(); // move to position vector
         void moveToJV(); // move to joint vector
+        void adjustServos(); // adjust angles to servo values
     public:
         Leg();
         Leg(int j1, int j2, int j3, int id);

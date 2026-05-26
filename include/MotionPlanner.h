@@ -11,15 +11,18 @@ class MotionPlanner{
         Leg* legs; // pointer to array of legs (6)
         Leg tp_1[3];
         Leg tp_2[3];
+        float s, steps, dir; 
     public:
-        enum Gait {TRIPOD, RIPPLE, WAVE, QUADRUPED} gait;
+        enum Gait {TRIPOD, RIPPLE, WAVE, QUADRUPED} gait=TRIPOD;
         MotionPlanner();
         MotionPlanner(Leg* legs);
         void setLocomotion(); // receives command from Hexapod after Hexapod receives transmission from controller. sets gait, direction, etc.
-        void setGait();
-        void setDirection();
-        void setTargetSteps();
-        bool tripodGait();
+        void setGait(int);
+        void setDirection(int);
+        void setTargetSteps(int);
+        bool tripodGait(int, int, int);
+        void setupTripod(int, int, int);
+        void setDistanceIncrement(int);
         bool waveGait();
         bool rippleGait();
         bool quadrapedGait();

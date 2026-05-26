@@ -15,21 +15,22 @@ Leg Legs[6] = {L0, L1, L2, L3, L4, L5};
 #ifndef IK_DEBUG
 MotionPlanner plan = MotionPlanner(Legs);
 
-Hexapod chester = Hexapod(plan);
+Hexapod cheeto = Hexapod(plan);
 #endif
 
 C_Position pos = C_Position(270.0, -30.0, -80.0);
 C_Position test_1 = C_Position(180.0, 0.0, 0.0);
 C_Position test_2 = C_Position(-150.0, -124.5, 67.0);
+
 void setup(){
   Serial.begin(9600);
 }
 
 void loop() {
-  delay(5000);
+  delay(2000);
   
-  L0.setTarget(pos);
-  L0.moveToIK(pos, true);
+  //L0.setTarget(test_1);
+  L0.moveToIK(test_1, true);
   #ifdef IK_DEBUG
   delay(2000);
   exit(1);

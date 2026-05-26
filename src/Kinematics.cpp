@@ -62,13 +62,14 @@ J_Position Kinematics::ik(bool config){
     cb = (L2*L2 + L4*L4 - L3*L3) / (2*L2*L4); // x component of beta
     sb = sqrt(1 - cb*cb); // y component of beta (2 solutions for 2 configurations)
     beta1 = atan2(sb, cb); // angle between L2 and L4 (check for angle sense)
-    beta2 = atan2(-sb, cb);
+    beta2 = -beta1; //atan2(-sb, cb);
     gamma = atan2(p_z, L4_x); // angle between X axis and L4
     #ifdef IK_DEBUG
     Serial.println("Gamma/Beta Angles [rads]");
     Serial.print("L4_x");
     Serial.print('\t');
     Serial.print(L4_x);
+    Serial.print('\t');
     Serial.print("Gamma: ");
     Serial.print('\t');
     Serial.print(gamma);
@@ -81,13 +82,13 @@ J_Position Kinematics::ik(bool config){
     Serial.print('\t');
     Serial.println(beta2);
     #endif
-    t2_1 = beta1 - gamma;
-    t2_2 = beta2 - gamma;
+    t2_1 = beta1 + gamma;
+    t2_2 = beta2 + gamma;
     // Calculate t3
     ct3 = (L2*L2 + L3*L3 - L4*L4) / (2*L2*L3);
     st3 = sqrt(1 - ct3*ct3);
     t3_1 = M_PI + atan2(st3, ct3); // check angle sense???
-    t3_2 = M_PI - atan2(-st3, ct3);
+    t3_2 = M_PI + atan2(-st3, ct3);
     // debug section
     #ifdef IK_DEBUG
     Serial.println("Mult. solutions output [rads]");
@@ -101,7 +102,7 @@ J_Position Kinematics::ik(bool config){
     Serial.print('\t');
     Serial.print("T2_2: ");
     Serial.print('\t');
-    Serial.print(t2_1);
+    Serial.print(t2_2);
     Serial.print('\t');
     Serial.print("T3_1: ");
     Serial.print('\t');
@@ -137,6 +138,22 @@ J_Position Kinematics::configCheck(bool config){
         t2 = (t2_1 < 0) ? t2_1 : t2_2; // elbow up
         t3 = (t3_1 > 0) ? t3_1 : t3_2;
     }
+    #ifdef IK_DEBUG
+    Serial.println("Branch Selection Angles [rads]");
+    Serial.println("Leg down:");
+    Serial.print("T1: ");
+    Serial.print('\t');
+    Serial.print(t1);
+    Serial.print('\t');
+    Serial.print("T2: ");
+    Serial.print('\t');
+    Serial.print(t2);
+    Serial.print('\t');
+    Serial.print("T2: ");
+    Serial.print('\t');
+    Serial.println(t3);
+    #endif
+
     #ifdef FK_DEBUG
     ikCheck();
     #endif

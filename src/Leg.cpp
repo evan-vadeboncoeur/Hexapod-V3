@@ -21,8 +21,6 @@ void Leg::setTarget(C_Position goal){
 // outsource to kinematic class to compute kinematics
 void Leg::forwardKinematics(){
     kinematic.fk();
-
-
 }
 void Leg::inverseKinematics(bool config){
     target_j = kinematic.ik(config); // set joint space vector to inverse kinematics
@@ -30,19 +28,26 @@ void Leg::inverseKinematics(bool config){
 
 // after computing IK with target joint vector, move each servo joint
 void Leg::moveToJV(){
-    joints[1].setAngle(target_j.getT2());
+    joints[FEMUR].setAngle(target_j.getT2());
     delay(100);
-    joints[2].setAngle(target_j.getT3());
+    joints[FOOT].setAngle(target_j.getT3());
     delay(100);
-    joints[0].setAngle(target_j.getT1());
+    joints[COXA].setAngle(target_j.getT1()); // move hip last
     delay(100);
 
+}
+
+void Leg::adjustServos(){
+    target_j.setT1(target_j.getT1() + COXA_SERVO_OFFSET);
+    target_j.setT2(target_j.getT2() + FEMUR_SERVO_OFFSET);
+    target_j.setT3(target_j.getT3() + FOOT_SERVO_OFFSET);
 }
 
 void Leg::moveToIK(C_Position tp, bool config){
     setTarget(tp); // set target position
     inverseKinematics(config); // calculate IK to do so
-    forwardKinematics();
+    adjustServos(); // adjust joint vector angles to match servo offsets
+    //forwardKinematics();
     #ifndef IK_DEBUG
     moveToJV(); // move to position
     #endif
