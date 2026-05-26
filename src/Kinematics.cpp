@@ -55,7 +55,7 @@ C_Position Kinematics::fk(){
 J_Position Kinematics::ik(bool config){
     // Calculate theta 1 using XY projection of leg
     t1 = atan2(p_y, p_x);
-    // Calculate theta 2 using beta, gamma, r/L4
+    // Calculate theta 2 using beta, gamma, L4_x (x-component of L4 in the yaw plane), L4
     r = sqrt(p_x*p_x + p_y*p_y);
     L4_x = r - L1; // x component of L4 (J1 to P)
     L4 = sqrt(L4_x*L4_x + p_z*p_z);
@@ -64,13 +64,30 @@ J_Position Kinematics::ik(bool config){
     beta1 = atan2(sb, cb); // angle between L2 and L4 (check for angle sense)
     beta2 = atan2(-sb, cb);
     gamma = atan2(p_z, L4_x); // angle between X axis and L4
+    #ifdef IK_DEBUG
+    Serial.println("Gamma/Beta Angles [rads]");
+    Serial.print("L4_x");
+    Serial.print('\t');
+    Serial.print(L4_x);
+    Serial.print("Gamma: ");
+    Serial.print('\t');
+    Serial.print(gamma);
+    Serial.print('\t');
+    Serial.print("Beta1: ");
+    Serial.print('\t');
+    Serial.print(beta1);
+    Serial.print('\t');
+    Serial.print("Beta2: ");
+    Serial.print('\t');
+    Serial.println(beta2);
+    #endif
     t2_1 = beta1 - gamma;
     t2_2 = beta2 - gamma;
     // Calculate t3
     ct3 = (L2*L2 + L3*L3 - L4*L4) / (2*L2*L3);
     st3 = sqrt(1 - ct3*ct3);
-    t3_1 = M_PI + atan2(st3, ct3); // check angle sense
-    t3_2 = M_PI + atan2(-st3, ct3);
+    t3_1 = M_PI + atan2(st3, ct3); // check angle sense???
+    t3_2 = M_PI - atan2(-st3, ct3);
     // debug section
     #ifdef IK_DEBUG
     Serial.println("Mult. solutions output [rads]");
@@ -94,8 +111,6 @@ J_Position Kinematics::ik(bool config){
     Serial.print('\t');
     Serial.println(t3_2);
     #endif
-
-    
 
     // Solve desired configuration and return
     return configCheck(true);
