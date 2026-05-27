@@ -9,7 +9,7 @@ Leg::Leg(){
 Leg::Leg(int j1, int j2, int j3, int id){
     joints[0] = Joint(j1);
     joints[1] = Joint(j2);
-    joints[3] = Joint(j3);
+    joints[3] = Joint(j3, PWM_MIN, PWM_MAX); // clamp J2 from 0-270
     this->id = id;
 }
 
@@ -34,13 +34,13 @@ void Leg::moveToJV(){
     delay(100);
     joints[COXA].setAngle(target_j.getT1()); // move hip last
     delay(100);
-
 }
 
+// adjust raw FK angle value to work with servo effort direction/offset
 void Leg::adjustServos(){
     target_j.setT1(target_j.getT1() + COXA_SERVO_OFFSET);
     target_j.setT2(target_j.getT2() + FEMUR_SERVO_OFFSET);
-    target_j.setT3(target_j.getT3() + FOOT_SERVO_OFFSET);
+    target_j.setT3(map(FOOT_SERVO_MAX - (target_j.getT3() + FOOT_SERVO_OFFSET), FOOT_SERVO_MIN, FOOT_SERVO_MAX_INT, PWM_MIN, PWM_MAX));
 }
 
 void Leg::moveToIK(C_Position tp, bool config){

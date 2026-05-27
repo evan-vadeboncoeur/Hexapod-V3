@@ -20,7 +20,7 @@ Hexapod cheeto = Hexapod(plan);
 
 C_Position pos = C_Position(270.0, -30.0, -80.0);
 C_Position test_1 = C_Position(180.0, 0.0, 0.0);
-C_Position test_2 = C_Position(-150.0, -124.5, 67.0);
+C_Position test_2 = C_Position(-150.0, -221.0, 67.0);
 
 void setup(){
   Serial.begin(9600);
@@ -29,8 +29,7 @@ void setup(){
 void loop() {
   delay(2000);
   
-  //L0.setTarget(test_1);
-  L0.moveToIK(test_1, true);
+  L0.moveToIK(test_2, true);
   #ifdef IK_DEBUG
   delay(2000);
   exit(1);

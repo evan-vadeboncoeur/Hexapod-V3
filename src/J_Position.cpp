@@ -23,14 +23,14 @@ float J_Position::getT3(){
     return t3;
 }
 
-float J_Position::setT1(float t){
+void J_Position::setT1(float t){
     t1 = t;
 }
 
-float J_Position::setT2(float t){
+void J_Position::setT2(float t){
     t2 = t;
 }
 
-float J_Position::setT1(float t){
+void J_Position::setT3(float t){
     t3 = t;
 }

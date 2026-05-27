@@ -6,7 +6,11 @@
 #define FOOT (2)
 #define COXA_SERVO_OFFSET (90.0)
 #define FEMUR_SERVO_OFFSET (90.0)
-#define FOOT_SERVO_OFFSET (90.0)
+#define FOOT_SERVO_OFFSET (135.0)
+#define FOOT_SERVO_MAX (270.0)
+#define FOOT_SERVO_MAX_INT (270)
+#define FOOT_SERVO_MIN (0)
+
 
 #include "Joint.h"
 #include "C_Position.h"

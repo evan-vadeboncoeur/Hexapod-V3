@@ -118,7 +118,7 @@ J_Position Kinematics::ik(bool config){
 }
 
 float Kinematics::normalizeAngles(float ang){
-    while (ang < M_PI) ang += 2.00*M_PI; // turn negative angle < PI into positive [0, PI]
+    while (ang < -M_PI) ang += 2.00*M_PI; // turn negative angle < PI into positive [0, PI]
     while (ang > M_PI) ang -= 2.00*M_PI; // turn positive angle > PI into negative [-PI, 0]
     return ang;
 }
@@ -149,7 +149,7 @@ J_Position Kinematics::configCheck(bool config){
     Serial.print('\t');
     Serial.print(t2);
     Serial.print('\t');
-    Serial.print("T2: ");
+    Serial.print("T3: ");
     Serial.print('\t');
     Serial.println(t3);
     #endif
