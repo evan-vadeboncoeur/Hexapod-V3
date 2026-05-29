@@ -18,6 +18,7 @@ Leg L0 = Leg(LEG_0_J0, LEG_0_J1, LEG_0_J2, LEG_0);
 //Hexapod cheeto = Hexapod(plan);
 #endif
 
+// test positions
 C_Position pos = C_Position(270.0, -30.0, -80.0);
 C_Position test_1 = C_Position(180.0, 0.0, 0.0);
 C_Position test_2 = C_Position(-150.0, -221.0, 67.0);
