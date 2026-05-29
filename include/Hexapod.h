@@ -1,6 +1,9 @@
 #ifndef HEXAPOD_H
 #define HEXAPOD_H
 
+#define LEG_0 (0)
+#define LEG_1 (1)
+
 #include "MotionPlanner.h"
 #include "CommunicationManager.h"
 
