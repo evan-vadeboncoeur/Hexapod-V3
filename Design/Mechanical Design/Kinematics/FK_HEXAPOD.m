@@ -32,7 +32,7 @@ d_3 = 0;
 o_1 = 0; %[deg] - figure out 'home' angles
 o_2 = 0;%-pi/4;
 o_3 = 0; %pi/4;
-ap_1 = pi/2;
+ap_1 = -pi/2;
 ap_2 = 0;
 ap_3 = 0;
 
@@ -63,22 +63,24 @@ FK_S = simplify(FK_S, 'IgnoreAnalyticConstraints', true)
 %FK_S = double(vpa(FK_S, 6));  % Convert symbolic to numerical
 % tolerance = 1e-10;  
 % FK_S(abs(FK_S) < tolerance) = 0;  % Zero out small values
-% [cos(t2 + t3)*cos(t1) - 0.000000000000000061232339957367574077026692924754*sin(t2 + t3)*sin(t1), - 0.000000000000000061232339957367574077026692924754*cos(t2 + t3)*sin(t1) - 1.0*sin(t2 + t3)*cos(t1),                                            sin(t1), 70.0*cos(t1) + cos(t1)*(150.0*cos(t2 + t3) + 100.0*cos(t2)) - 1.0*sin(t1)*(0.0000000000000091848509936052118422009051558464*sin(t2 + t3) + 0.0000000000000061232339957368078948006034372309*sin(t2))]
-% [cos(t2 + t3)*sin(t1) + 0.000000000000000061232339957367574077026692924754*sin(t2 + t3)*cos(t1),   0.000000000000000061232339957367574077026692924754*cos(t2 + t3)*cos(t1) - 1.0*sin(t2 + t3)*sin(t1),                                       -1.0*cos(t1),     70.0*sin(t1) + sin(t1)*(150.0*cos(t2 + t3) + 100.0*cos(t2)) + cos(t1)*(0.0000000000000091848509936052118422009051558464*sin(t2 + t3) + 0.0000000000000061232339957368078948006034372309*sin(t2))]
-% [                                                                                  sin(t2 + t3),                                                                                         cos(t2 + t3), 0.000000000000000061232339957367574077026692924754,                                                                                                                                                                   150.0*sin(t2 + t3) + 100.0*sin(t2)]
-% [                                                                                             0,                                                                                                    0,                                                  0,                                                                                                                                                                                                  1.0]
+ 
+[cos(t2 + t3)*cos(t1), - 1.0*sin(t2 + t3)*cos(t1), -1.0*sin(t1), 70.0*cos(t1) + cos(t1)*(150.0*cos(t2 + t3) + 100.0*cos(t2))]
+[cos(t2 + t3)*sin(t1), - 1.0*sin(t2 + t3)*sin(t1), cos(t1), 70.0*sin(t1) + sin(t1)*(150.0*cos(t2 + t3) + 100.0*cos(t2))]
+[-1.0*sin(t2 + t3), -1.0*cos(t2 + t3), 0,   - 150.0*sin(t2 + t3) - 100.0*sin(t2)]
+[ 0, 0, 0, 1.0]
+                                                                                                                                                                                 
 
 % 3 x 3 rotation matrix
 R1_1 = cos(t2 + t3)*cos(t1);
 R1_2 = - 1.0*sin(t2 + t3)*cos(t1);
-R1_3 = sin(t1);
+R1_3 = -1.0*sin(t1);
 R2_1 = cos(t2 + t3)*sin(t1);
 R2_2 = - 1.0*sin(t2 + t3)*sin(t1);
-R2_3 = -1.0*cos(t1);
-R3_1 = sin(t2 + t3);
-R3_2 = cos(t2 + t3);
+R2_3 = cos(t1);
+R3_1 = -1.0*sin(t2 + t3);
+R3_2 = -1.0*cos(t2 + t3);
 R3_3 = 0.0;
 % 3 x 1 positon vector of EE frame represented in global frame
 R1_4 = 70.0*cos(t1) + cos(t1)*(150.0*cos(t2 + t3) + 100.0*cos(t2)); % d_x
 R2_4 = 70.0*sin(t1) + sin(t1)*(150.0*cos(t2 + t3) + 100.0*cos(t2)); % d_y
-R3_4 = 150.0*sin(t2 + t3) + 100.0*sin(t2); %d_z
+R3_4 = -150.0*sin(t2 + t3) - 100.0*sin(t2); %d_z

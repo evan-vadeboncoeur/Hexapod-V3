@@ -25,11 +25,11 @@ void Leg::setTarget(C_Position goal){
 }
 
 // outsource to kinematic class to compute kinematics
-void Leg::forwardKinematics(){
-    kinematic.fk();
+void Leg::forwardKinematics(float side){
+    kinematic.fk(side);
 }
-void Leg::inverseKinematics(bool config){
-    target_j = kinematic.ik(config); // set joint space vector to inverse kinematics
+void Leg::inverseKinematics(bool config, float side){
+    target_j = kinematic.ik(config, side); // set joint space vector to inverse kinematics
 }
 
 // after computing IK with target joint vector, move each servo joint
@@ -83,9 +83,9 @@ void Leg::adjustServos(){
     #endif
 }
 
-void Leg::moveToIK(C_Position tp, bool config){
+void Leg::moveToIK(C_Position tp, bool config, float side){
     setTarget(tp); // set target position
-    inverseKinematics(config); // calculate IK to do so
+    inverseKinematics(config, side); // calculate IK to do so
     moveToJV(); // adjust servos and move to joint vector
 }
 

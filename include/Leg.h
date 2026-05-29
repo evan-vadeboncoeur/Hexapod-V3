@@ -32,8 +32,8 @@ class Leg{
         J_Position local_j = J_Position();
         J_Position target_j = J_Position(); // joint vector of 3 servos at present
         Kinematics kinematic = Kinematics(L1, L2, L3);
-        void forwardKinematics();
-        void inverseKinematics(bool);
+        void forwardKinematics(float);
+        void inverseKinematics(bool, float);
         void moveToPV(); // move to position vector
         void moveTo(); // move the servos
         void adjustServos(); // adjust angles to servo values
@@ -42,7 +42,7 @@ class Leg{
         Leg(int j1, int j2, int j3, int id);
         void computeGlobal(); // conver local position to global
         void setTarget(C_Position goal);
-        void moveToIK(C_Position tp, bool config);
+        void moveToIK(C_Position tp, bool config, float side);
         void moveToJV(); // move to joint vector
         void moveToJV(J_Position jv); // overloaded
         

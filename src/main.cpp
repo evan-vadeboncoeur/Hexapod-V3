@@ -18,7 +18,7 @@ Leg L0 = Leg(LEG_0_J0, LEG_0_J1, LEG_0_J2, LEG_0);
 //Hexapod cheeto = Hexapod(plan);
 #endif
 
-C_Position pos = C_Position(270.0, -30.0, 80.0);
+C_Position pos = C_Position(270.0, -30.0, -80.0);
 C_Position test_1 = C_Position(180.0, 0.0, 0.0);
 C_Position test_2 = C_Position(-150.0, -221.0, 67.0);
 J_Position srvo_tst = J_Position(3.1415/2, 3.1415/2, 2.0);
@@ -41,8 +41,9 @@ void loop() {
   // s1.write((int)105.55);
   // delay(1000);
   // s2.write((int)1944.00);
-  //L0.moveToIK(pos, ELBOW_DOWN);
-  L0.moveToJV(srvo_tst);
+  L0.moveToIK(pos, ELBOW_UP, LHS);
+
+  //L0.moveToJV(srvo_tst);
   //int x = map(21, FOOT_SERVO_MIN, FOOT_SERVO_MAX, PWM_MIN, PWM_MAX);
   //Serial.println(x);
   //#ifdef IK_DEBUG
