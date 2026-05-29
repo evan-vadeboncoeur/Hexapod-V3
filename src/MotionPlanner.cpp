@@ -4,8 +4,9 @@ MotionPlanner::MotionPlanner(){
 
 }
 
-MotionPlanner::MotionPlanner(Leg* legs){
-    this->legs = legs;
+MotionPlanner::MotionPlanner(Leg** l, int g){
+    legs = l; // pointer to array of legs
+    setGait(g);
     // tripod setup code...
     // for(int i =0, j=0; i<2; i++, j++){
     //     tp_1[i];
@@ -27,7 +28,7 @@ void MotionPlanner::setDistanceIncrement(int s_inc){
 }
 
 void MotionPlanner::setDirection(int d){
-    dir = d;
+    direction = d;
 }
 void MotionPlanner::setTargetSteps(int s){
     steps = s;
@@ -37,6 +38,16 @@ void MotionPlanner::setupTripod(int steps, int dir, int s_inc){
     setDirection(dir);
     setTargetSteps(steps);
     setDistanceIncrement(s_inc);
+}
+
+// sorts tripod based on chosen direction into left and right "halves"
+// divides legs into two groups split along the edge of the chosen direction
+void MotionPlanner::sortTripod(){
+    for(int i=0,j=2,k=5; i<3; i++,j+=2){
+        tp_1[i] = legs[(direction + j) % NUM_LEGS];
+        tp_2[i] = legs[(direction + k) % NUM_LEGS];
+    }
+    // set directions ??? (we now know which half is which, and which foot is the "pivot")
 }
 
 bool MotionPlanner::tripodGait(int steps, int dir, int s_inc){

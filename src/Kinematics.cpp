@@ -85,13 +85,13 @@ J_Position Kinematics::ik(bool config, float side){
     Serial.print('\t');
     Serial.println(beta2, 6);
     #endif
-    t2_1 = CCW_CONFIG*(beta1 - gamma); // CCW to flip angle sense (LHS mounted servos)
-    t2_2 = CCW_CONFIG*(beta2 - gamma);
+    t2_1 = CCW_CONFIG*(side*beta1 - gamma); // CCW to flip angle sense (LHS mounted servos)
+    t2_2 = CCW_CONFIG*(side*beta2 - gamma);
     // Calculate t3
     ct3 = (L2*L2 + L3*L3 - L4*L4) / (2*L2*L3);
     st3 = sqrt(1 - ct3*ct3);
-    t3_1 = M_PI - atan2(st3, ct3); // check angle sense???
-    t3_2 = M_PI - atan2(-st3, ct3);
+    t3_1 = M_PI + side*CCW_CONFIG*atan2(st3, ct3); // check angle sense???
+    t3_2 = M_PI + side*CCW_CONFIG*atan2(-st3, ct3);
     // debug section
     #ifdef IK_DEBUG
     Serial.println("Mult. solutions output [rads]");
@@ -134,13 +134,24 @@ J_Position Kinematics::configCheck(bool config, float side){
     t3_1 = normalizeAngles(t3_1);
     t3_2 = normalizeAngles(t3_2);
     // check angle signs and associate with configurations
-    if(config){
-        t2 = (t2_1 < 0) ? t2_1 : t2_2; // elbow down
-        t3 = (t3_1 > 0) ? t3_1 : t3_2;
-    } else {
-        t2 = (t2_1 > 0) ? t2_1 : t2_2; // elbow up
-        t3 = (t3_1 < 0) ? t3_1 : t3_2;
+    if(side > 0){ // LHS Branch Logic
+        if(config){
+            t2 = (t2_1 < 0) ? t2_1 : t2_2; // elbow down
+            t3 = (t3_1 > 0) ? t3_1 : t3_2;
+        } else {
+            t2 = (t2_1 > 0) ? t2_1 : t2_2; // elbow up
+            t3 = (t3_1 < 0) ? t3_1 : t3_2;
+        }
+    } else { // RHS Branch Logic
+        if(config){
+            t2 = (t2_1 > 0) ? t2_1 : t2_2; // elbow down
+            t3 = (t3_1 < 0) ? t3_1 : t3_2;
+        } else {
+            t2 = (t2_1 < 0) ? t2_1 : t2_2; // elbow up
+            t3 = (t3_1 > 0) ? t3_1 : t3_2;
+        }
     }
+    
     #ifdef IK_DEBUG
     Serial.println("Branch Selection Angles [rads]");
     if(config){

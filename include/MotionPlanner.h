@@ -1,6 +1,8 @@
 #ifndef MTN_PLNR_H
 #define MTN_PLNR_H
 
+#define NUM_LEGS (6)
+
 #include "Tripod.h"
 #include <math.h>
 
@@ -8,14 +10,15 @@
 
 class MotionPlanner{
     private:
-        Leg* legs; // pointer to array of legs (6)
-        Leg tp_1[3];
-        Leg tp_2[3];
-        float s, steps, dir; 
+        Leg** legs;
+        Leg* tp_1[3]; // points to leg pointers
+        Leg* tp_2[3];
+        float s;
+        int steps, direction; 
     public:
         enum Gait {TRIPOD, RIPPLE, WAVE, QUADRUPED} gait=TRIPOD;
         MotionPlanner();
-        MotionPlanner(Leg* legs);
+        MotionPlanner(Leg** l, int g);
         void setLocomotion(); // receives command from Hexapod after Hexapod receives transmission from controller. sets gait, direction, etc.
         void setGait(int);
         void setDirection(int);
@@ -23,6 +26,7 @@ class MotionPlanner{
         bool tripodGait(int, int, int);
         void setupTripod(int, int, int);
         void setDistanceIncrement(int);
+        void sortTripod();
         bool waveGait();
         bool rippleGait();
         bool quadrapedGait();
