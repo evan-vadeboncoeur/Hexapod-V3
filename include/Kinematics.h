@@ -3,6 +3,11 @@
 #define IK_DEBUG
 #define FK_DEBUG
 
+#define LEFT (true)
+#define RIGHT (false)
+#define ELBOW_UP (false)
+#define ELBOW_DOWN (true)
+
 #include <math.h>
 #include <HardwareSerial.h>
 #include <Arduino.h>

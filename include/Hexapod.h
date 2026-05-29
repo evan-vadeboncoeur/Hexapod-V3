@@ -3,6 +3,28 @@
 
 #define LEG_0 (0)
 #define LEG_1 (1)
+#define LEG_2 (2)
+#define LEG_3 (3)
+#define LEG_4 (4)
+#define LEG_5 (5)
+#define LEG_0_J0 (7)
+#define LEG_0_J1 (8)
+#define LEG_0_J2 (9)
+#define LEG_1_J0 ()
+#define LEG_1_J1 ()
+#define LEG_1_J2 ()
+#define LEG_2_J0 ()
+#define LEG_2_J1 ()
+#define LEG_2_J2 ()
+#define LEG_3_J0 ()
+#define LEG_3_J1 ()
+#define LEG_3_J2 ()
+#define LEG_4_J0 ()
+#define LEG_4_J1 ()
+#define LEG_4_J2 ()
+#define LEG_5_J0 ()
+#define LEG_5_J1 ()
+#define LEG_5_J2 ()
 
 #include "MotionPlanner.h"
 #include "CommunicationManager.h"

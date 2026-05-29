@@ -9,8 +9,8 @@
 #define FOOT_SERVO_OFFSET (135.0)
 #define FOOT_SERVO_MAX (270.0)
 #define FOOT_SERVO_MAX_INT (270)
-#define FOOT_SERVO_MIN (0)
-
+#define FOOT_SERVO_MIN (0.0)
+#define LEG_DELAY (1000)
 
 #include "Joint.h"
 #include "C_Position.h"
@@ -35,7 +35,7 @@ class Leg{
         void forwardKinematics();
         void inverseKinematics(bool);
         void moveToPV(); // move to position vector
-        void moveToJV(); // move to joint vector
+        void moveTo(); // move the servos
         void adjustServos(); // adjust angles to servo values
     public:
         Leg();
@@ -43,6 +43,8 @@ class Leg{
         void computeGlobal(); // conver local position to global
         void setTarget(C_Position goal);
         void moveToIK(C_Position tp, bool config);
+        void moveToJV(); // move to joint vector
+        void moveToJV(J_Position jv); // overloaded
         
 
 };
