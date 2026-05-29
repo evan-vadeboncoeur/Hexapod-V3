@@ -25,6 +25,7 @@ class Leg{
     private:
         Joint joints[3]; // 3 joints per leg: J0, J1, J2
         char id; // leg ID
+        float direction; // +/- 1.0
         float L1 = 70, L2 = 100, L3 = 150; // link lengths
         C_Position local_p = C_Position(); 
         C_Position global_p = C_Position();
@@ -45,6 +46,7 @@ class Leg{
         void moveToIK(C_Position tp, bool config, float side);
         void moveToJV(); // move to joint vector
         void moveToJV(J_Position jv); // overloaded
+        void setDirection(float);
         
 
 };

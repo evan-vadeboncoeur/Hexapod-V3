@@ -43,12 +43,15 @@ void MotionPlanner::setupTripod(int steps, int dir, int s_inc){
 // sorts tripod based on chosen direction into left and right "halves"
 // divides legs into two groups split along the edge of the chosen direction
 void MotionPlanner::sortTripod(){
-    for(int i=0,j=2,k=5; i<3; i++,j+=2){
+    for(int i=0,j=2,k=5; i<3; i++,j+=2, k+=2){
         tp_1[i] = legs[(direction + j) % NUM_LEGS];
-        // code placeholder to decide if left or right in loop...
         tp_2[i] = legs[(direction + k) % NUM_LEGS];
     }
-    // set directions ??? (we now know which half is which, and which foot is the "pivot")
+    // negative is always 3 left CW of direction, positive is always 3 right CCW of direction
+    for(int i=0; i<5; i++){
+        if(i<3)legs[(direction + i) % NUM_LEGS]->setDirection(-1.0); // 3 CCW of leg are negative
+        else legs[(direction + i) % NUM_LEGS]->setDirection(1.0); // 3 CW of leg are positive
+    }
 }
 
 bool MotionPlanner::tripodGait(int steps, int dir, int s_inc){
