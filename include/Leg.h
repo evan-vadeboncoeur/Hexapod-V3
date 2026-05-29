@@ -23,8 +23,8 @@
 
 class Leg{
     private:
-        char id; // leg ID
         Joint joints[3]; // 3 joints per leg: J0, J1, J2
+        char id; // leg ID
         float L1 = 70, L2 = 100, L3 = 150; // link lengths
         C_Position local_p = C_Position(); 
         C_Position global_p = C_Position();
