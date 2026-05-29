@@ -45,6 +45,7 @@ void MotionPlanner::setupTripod(int steps, int dir, int s_inc){
 void MotionPlanner::sortTripod(){
     for(int i=0,j=2,k=5; i<3; i++,j+=2){
         tp_1[i] = legs[(direction + j) % NUM_LEGS];
+        // code placeholder to decide if left or right in loop...
         tp_2[i] = legs[(direction + k) % NUM_LEGS];
     }
     // set directions ??? (we now know which half is which, and which foot is the "pivot")
