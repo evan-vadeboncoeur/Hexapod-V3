@@ -5,7 +5,7 @@
 #define PWM_MAX (2500)
 
 #include "Servo.h"
-
+#include "HardwareSerial.h"
 class Joint{
     public:
         Joint();
@@ -18,6 +18,7 @@ class Joint{
         int servo_id;
         float angle;
         Servo servo;
+
 };
 
 #endif

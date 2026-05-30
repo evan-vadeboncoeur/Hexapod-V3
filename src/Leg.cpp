@@ -110,11 +110,10 @@ void Leg::moveTo(){
     Serial.println(target_j.getT3());
     #endif
     
-    //joints[FEMUR].setAngle((int)target_j.getT2());
+    joints[FEMUR].setAngle((int)target_j.getT2());
     delay(LEG_DELAY);
-    //joints[FOOT].setAngle((int)target_j.getT3());
+    joints[FOOT].setAngle((int)target_j.getT3());
     delay(LEG_DELAY);
-    
     joints[COXA].setAngle((int)target_j.getT1()); // move hip last
     delay(LEG_DELAY);
 }

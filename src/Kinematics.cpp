@@ -8,7 +8,7 @@ Kinematics::Kinematics(float L1, float L2, float L3){
     this->L1 = L1;
     this->L2 = L2;
     this->L3 = L3;
-    serial = &Serial;
+    //serial = &Serial;
 }
 
 void Kinematics::setTarget(float x, float y, float z){

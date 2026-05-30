@@ -35,7 +35,7 @@ class Kinematics {
         J_Position configCheck(bool config, float side);
         bool ikCheck(float);
         float distance(C_Position desired, C_Position calculated);
-        HardwareSerial* serial;
+        // /HardwareSerial* serial;
 
 };
 
