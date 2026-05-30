@@ -2,18 +2,18 @@
 #include "Hexapod.h"
 
 // might have to do joints & everything else BEFORE runtime, too, so that it's on the heap, not the stack?
-//Servo s0, s1, s2;
+Servo s0, s1, s2;
 
-Leg L0 = Leg(LEG_0_J0, LEG_0_J1, LEG_0_J2, LEG_0);
-Leg L1 = Leg(4, 5, 6, LEG_1);
-Leg L2 = Leg(19, 20, 21, LEG_2);
-Leg L3 = Leg(10, 11, 12, LEG_3);
-Leg L4 = Leg(13, 14, 15, LEG_4);
-Leg L5 = Leg(16, 17, 18, LEG_5);
+// Leg L0 = Leg(LEG_0_J0, LEG_0_J1, LEG_0_J2, LEG_0);
+// Leg L1 = Leg(4, 5, 6, LEG_1);
+// Leg L2 = Leg(19, 20, 21, LEG_2);
+// Leg L3 = Leg(10, 11, 12, LEG_3);
+// Leg L4 = Leg(13, 14, 15, LEG_4);
+// Leg L5 = Leg(16, 17, 18, LEG_5);
 
-Leg* Legs[6] = {&L0, &L1, &L2, &L3, &L4, &L5};
+//Leg* Legs[6] = {&L0, &L1, &L2, &L3, &L4, &L5};
 
-MotionPlanner plan = MotionPlanner(Legs, 0);
+//MotionPlanner plan = MotionPlanner(Legs, 0);
 
 //Hexapod cheeto = Hexapod(plan);
 
@@ -25,12 +25,12 @@ J_Position srvo_tst = J_Position(3.1415/2, 3.1415/2, 2.0);
 
 void setup(){
   Serial.begin(9600);
-  // pinMode(7, OUTPUT);
-  // pinMode(8, OUTPUT);
-  // pinMode(9, OUTPUT);
-  //  s0.attach(7);
-  //  s1.attach(8);
-  //  s2.attach(9);
+  //pinMode(7, OUTPUT);
+  //pinMode(8, OUTPUT);
+   //pinMode(9, OUTPUT);
+  //s0.attach(7);
+    //s1.attach(8);
+  s2.attach(9);
 }
 
 void loop() {
@@ -38,16 +38,19 @@ void loop() {
 
   // s0.write((int)83.66);
   // delay(1000);
-  // s1.write((int)105.55);
+  //s0.write((int)2);
   // delay(1000);
-  // s2.write((int)1944.00);
-  L0.moveToIK(pos, ELBOW_DOWN, LHS);
+  s2.write((int)1944);
+  //L0.moveToIK(pos, ELBOW_DOWN, LHS);
 
   //L0.moveToJV(srvo_tst);
   //int x = map(21, FOOT_SERVO_MIN, FOOT_SERVO_MAX, PWM_MIN, PWM_MAX);
   //Serial.println(x);
   //#ifdef IK_DEBUG
-  delay(1000);
+  delay(2000);
+  s2.write((int)1300);
+  delay(2000);
+  //s0.write(120);
   exit(1);
   //#endif
 }

@@ -16,7 +16,7 @@ Joint::Joint(int id, int pwm_min, int pwm_max){
     servo_id = id;
 }
 
-void Joint::setAngle(float ang){
+void Joint::setAngle(int ang){
     servo.write(ang);
 }
 

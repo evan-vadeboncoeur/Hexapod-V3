@@ -7,9 +7,9 @@ Leg::Leg(){
 
 // leg constructor. takes 3 servo pin IDs and attaches them, sets leg ID number (physical)
 Leg::Leg(int j1, int j2, int j3, int id) : joints{ // initializer lists directly creates the class members before the constructor body
-        Joint(COXA), // bypasses creating temporary objects to assign into the joint[] array
-        Joint(FEMUR),
-        Joint(FOOT, PWM_MIN, PWM_MAX)
+        Joint(j1), // bypasses creating temporary objects to assign into the joint[] array
+        Joint(j2),
+        Joint(j3, PWM_MIN, PWM_MAX)
     },
     id(id)
     // joints[COXA] = Joint(j1);
@@ -110,10 +110,11 @@ void Leg::moveTo(){
     Serial.println(target_j.getT3());
     #endif
     
-    joints[FEMUR].setAngle((int)target_j.getT2());
+    //joints[FEMUR].setAngle((int)target_j.getT2());
     delay(LEG_DELAY);
-    joints[FOOT].setAngle((int)target_j.getT3());
+    //joints[FOOT].setAngle((int)target_j.getT3());
     delay(LEG_DELAY);
+    
     joints[COXA].setAngle((int)target_j.getT1()); // move hip last
     delay(LEG_DELAY);
 }

@@ -13,7 +13,7 @@ class Joint{
         Joint(int id, int pwm_min, int pwm_max);
         float getAngle();
         void setupServo();
-        void setAngle(float);
+        void setAngle(int);
     private:
         int servo_id;
         float angle;
