@@ -40,7 +40,7 @@ void loop() {
   //s1.write(90);
   //delay(2000);
   //s2.write(1000);
-  L0.moveToIK(pos, ELBOW_UP, LHS);
+  L0.moveToIK(pos, ELBOW_DOWN, LHS);
 
   //L0.moveToJV(home);
   //int x = map(21, FOOT_SERVO_MIN, FOOT_SERVO_MAX, PWM_MIN, PWM_MAX);
