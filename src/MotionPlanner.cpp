@@ -38,6 +38,7 @@ void MotionPlanner::setupTripod(int steps, int dir, int s_inc){
     setDirection(dir);
     setTargetSteps(steps);
     setDistanceIncrement(s_inc);
+    sortTripod();
 }
 
 // sorts tripod based on chosen direction into left and right "halves"

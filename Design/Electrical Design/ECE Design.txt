@@ -1,0 +1,165 @@
+PCB TODO
+----------
+0) NRF connected LED
+1) check IRF4905 circuit for R10k R100 VD vs. Series
+2) get mounting specs/footpring for XT60 connector
+3) spec 2s/3s battery (i think 2S is 7.4-8.4V)  
+
+RELAY vs. MOSFET
+------------------
+Relay needs a flyback diode (diode in reverse bias mode) that creates a grounding loop when dI/dt -> -infinity, therefore V_coil spikes and reverses polarity, damaging the relay
+	Diode should be specced @ ____
+JQC-3F 5VDC -> 28VDC, 10A is not enough for the estimated load of 15A maximum (I_stall*6)
+
+MOSFET
+-------
+IRF4905 is rated for:
+I_D = -74A (current flow from load to drain/drain to source)
+V_GS = +/- 20V (range of gate operation)
+V_GS_th = -2.0V (MOSFET turns on to some degree)
+V_(BR)_DSS = -55V (maximum voltage that can be applied between the drain and source without damaging parts)
+R_DS = .02 ohms (resistance of drain when turned on at certain voltage)
+
+
+POWER INPUT CONNECTOR
+-----------------------
+Screw mount terminal is only rated for 10A (5mm pitch)
+XT60 Connector is rated for 60A
+Power polygons are needed for the battery input and drain output, with stitching between the top and bottom layer
+	Note that for stitches between the top and bottom layer, Caps and other components can't be placed in the center of the stitch since the ground will be in its own island
+
+XT60 Wire gauge:
+
+Battery Sizing
+---------------
+Energy = current rating * time 
+	ex. 10A = 10A * 1000mA /A = 10000mA, at 1 hour = 10000mA * hr = 10000mAh battery
+2S LiPo:
+V_full_Charge = 8.4V
+V_nominal = 7.4V
+V_depleted = 6.0V
+V_cell = 3.7V
+N_cells = 2
+Cell_Connection = series
+V_nominal = N_cells * V_cell = 2*3.7 = 7.4V
+
+I_average_robot = I_leg*num_leg + I_aruduino_and_periph = 1.5A * 6 + 1A = 10A = 10000mA
+1 hour usage time at nominal current draw = 1 hr * 10000mA = 10000mAh 2S LiPo Battery
+Worse case: I_max = 20A = 20000mA-> T = 10000mAh / 20000mA = 30 minutes of run time
+
+
+CAPS
+------
+Battery Input:
+Bulk Cap: 1000uF (10, 5)
+CAP-TH_BD10.0-P5.00-D0.6-FD-H18.0
+Bypass Cap: 1uF
+
+
+Relay Output:
+Bulk Cap: 1000uF
+CAP-TH_BD10.0-P5.00-D0.6-FD-H18.0
+Bypass Cap: 1uF (5)
+
+Servo Branch Rail (ea.):
+Bulk Cap: 500+uF - 680uF (8, 3)
+CAP-TH_BD8.0-P3.50-D0.6-FD
+Bypass Cap: 0.1uF
+
+NRF24L01:
+Decoupling Cap: 10-50uF - (6.3, 2.5)
+CAP-TH_BD6.3-P2.50-D0.5-FD
+Bypass Cap: 0.1uF (5)
+CAP-TH_BD5.0-P5.00-D1.0-FD
+
+Trace Width/Copper Area:
+-------------------------
+
+I = k(DT)^(0.44)*A^(0.725)
+k_external = 0.048
+k_internal = 0.024
+I: current
+A: copper area
+DT: temp. rise limit
+
+
+Branch: 
+I = 5A (2 legs) (HiWonder HPS-2018 I_stall = 2.3A)
+
+DT = 20C
+
+External layer (2 layers)
+
+Copper Weight = 1 oz/ft^2
+
+A_c = 98.5 mil^2
+Trace Width = 70.4 mil
+
+Relay:
+
+I = 15A (sum of all stall currents)
+DT = 20C
+External Layer
+Copper Weight = 1 oz/ft^2
+
+A_C = 448 mil^2
+TW = 320 mil
+
+Power Inlet:
+
+I = Motors + Arduino + PWR_LED + NRF24L01
+
+I_motors = 15A
+I_Arduino = 
+I_LEDs = 
+I_NRF = 
+
+
+3500 mil X 2085 mil
+
+Voltage Divider for Battery read
+---------------------------------
+Use analog read on analog pin to determine battery percentage. Use voltage divider to step voltage down and read. Make sure voltage has a buffer in case LiPo 2S battery is greater than 8.4V at full charge
+
+Choose:
+R2 = 10000 ohms
+V_s = 8.4V
+V_2 = 4.7V (padding)
+
+V_2 = V_s (R2) / (R1+R2) -> R2 = ~7800 ohms
+
+V_ref = 5.0V
+N = 10
+ADC_Max = 2^N - 1 = 1023
+
+ADC value = V_in/V_ref * ADC Max
+V_in = ADC / ADC_Max * V_ref (voltage from 0-5V)
+
+V_s = V_2 * (R1 + R2) / R2 (voltage from 0-8.4V)
+
+Percent = V_s / V_total
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

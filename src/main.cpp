@@ -24,24 +24,12 @@ void setup(){
 //MotionPlanner plan = MotionPlanner(Legs, 0);
 
 //Hexapod cheeto = Hexapod(plan);
-  //pinMode(7, OUTPUT);
-  //pinMode(8, OUTPUT);
-   //pinMode(9, OUTPUT);
-  //s0.attach(7);
-  //s1.attach(8);
-  //s2.attach(9);
+
 }
 
 void loop() {
   delay(2000);
-
-  // s0.write((int)83.66);
-  // delay(1000);
-  //s1.write(90);
-  //delay(2000);
-  //s2.write(1000);
   L0.moveToIK(pos, ELBOW_DOWN, LHS);
-
   //L0.moveToJV(home);
   //int x = map(21, FOOT_SERVO_MIN, FOOT_SERVO_MAX, PWM_MIN, PWM_MAX);
   //Serial.println(x);

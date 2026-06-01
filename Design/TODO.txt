@@ -1,0 +1,21 @@
+PCB TODO
+----------
+0) NRF connected LED
+1) check IRF4905 circuit for R10k R100 VD vs. Series (YT Video)
+2) calculate VD resistors for analog in
+3) get mounting specs/footpring for XT60 connector
+4) spec 2s/3s battery (i think 2S is 7.4-8.4V)  
+
+CAD TODO
+---------
+1) make a stronger chassis
+2) slot link 2 links 360/25*2 degrees (centered) to offset gear teeth not lining up
+
+Code TODO
+----------
+1) test gait assignment
+2) add position macros
+3) program tripod gait (Lift, swing, push, stance, alternate)
+    3a) make sure Y values are reflected based on leg division
+
+
