@@ -1,12 +1,16 @@
 PCB/ECE TODO
 ----------
 1) NRF connected LED
-2) calculate VD resistors for analog in
-3) get mounting specs/footpring for XT60 connector
-4) spec 2s/3s battery (i think 2S is 7.4-8.4V)  
+2) get mounting specs/footpring for XT60 connector 
+3) add dipswitch array for gait type in EasyEDA 
 
 CAD & Mechanics TODO
 ---------------------
+0) hardcode positions as joint vectors:
+    a) home (0, 0, 0) -> moveToHome 
+    b) storage () -> moveToStorage
+    c) stance (hanging out standing before moving) -> moveToStance
+    d) macro function moveHome that goes from storage to home to stance when robot is turned on 
 1) adjust motion planner to:
     1a) generate global coordinates for each leg, depending on:
         i) leg

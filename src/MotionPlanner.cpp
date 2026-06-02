@@ -7,12 +7,7 @@ MotionPlanner::MotionPlanner(){
 MotionPlanner::MotionPlanner(Leg** l, int g){
     legs = l; // pointer to array of legs
     setGait(g);
-    delay(100);
-    //Serial.println((*(legs+2))->getID());
-    // tripod setup code...
-    // for(int i =0, j=0; i<2; i++, j++){
-    //     tp_1[i];
-    // }
+    delay(5);
 }
 
 // enum gait type
