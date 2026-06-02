@@ -10,7 +10,7 @@
 #define FOOT_SERVO_MAX (270.0)
 #define FOOT_SERVO_MAX_INT (270)
 #define FOOT_SERVO_MIN (0.0)
-#define LEG_DELAY (1000)
+#define LEG_DELAY (10)
 
 #include "Joint.h"
 #include "C_Position.h"

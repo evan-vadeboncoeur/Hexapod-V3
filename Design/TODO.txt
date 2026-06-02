@@ -5,16 +5,18 @@ PCB/ECE TODO
 3) get mounting specs/footpring for XT60 connector
 4) spec 2s/3s battery (i think 2S is 7.4-8.4V)  
 
-CAD TODO
----------
+CAD & Mechanics TODO
+---------------------
 1) make a stronger chassis
 2) slot link 2 links 360/25*2 degrees (centered) to offset gear teeth not lining up
+3) attach global frame to robot center
+4) attach global frame to ground plane???
 
 Code TODO
 ----------
-1) test gait assignment
-2) add position macros
-3) program tripod gait (Lift, swing, push, stance, alternate)
-    3a) make sure Y values are reflected based on leg division
+1) add position macros
+2) program tripod gait (Lift, swing, push, plant, alternate)
+    2a) verify positions w/ CAD/measurements
+    2b) linear advance calculations based on leg (dynamic in motion planner)
 
 

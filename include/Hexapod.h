@@ -1,5 +1,6 @@
 #ifndef HEXAPOD_H
 #define HEXAPOD_H
+//#define GLOBAL_DEBUG
 
 #define LEG_0 (0)
 #define LEG_1 (1)
@@ -32,18 +33,15 @@
 
 class Hexapod{
     private:
-        MotionPlanner motion;
+        MotionPlanner plan;
         CommunicationManager comm;
-        PowerManager batt;
+        PowerManager battery;
     public:
-        Hexapod(MotionPlanner plan); // constructor 1 (all objects instantiated)
+        Hexapod(MotionPlanner m, PowerManager b); // constructor 1 (all objects instantiated)
         void opMode(); // set operation mode: teleop (0), computer/robot (1)
         void gaitSet(); // set gait (2 dipswitch array for 4 combinations of gait)
         void checkPower(); // checks robot battery power / operates LEDs
         void walkFor(int steps, int direction);
-
 };
-
-
 
 #endif

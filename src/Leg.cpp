@@ -25,7 +25,9 @@ void Leg::setDirection(float d){
 }
 
 void Leg::setTarget(C_Position goal){
-    target_p.setPosition(goal.getX(), goal.getY(), goal.getZ());
+    float y_adjust = goal.getY();
+    if(direction < 0) y_adjust = -y_adjust;
+    target_p.setPosition(goal.getX(), y_adjust, goal.getZ());
     this->kinematic.setTarget(target_p.getX(), target_p.getY(), target_p.getZ());
 }
 
