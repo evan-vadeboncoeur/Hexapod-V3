@@ -17,6 +17,7 @@ Leg::Leg(int j1, int j2, int j3, int id) : joints{ // initializer lists directly
     // joints[FOOT] = Joint(j3, PWM_MIN, PWM_MAX); // clamp J2 from 0-270
     // this->id = id;
 {
+    //Serial.println(id);
 }
 
 void Leg::setDirection(float d){
@@ -116,4 +117,12 @@ void Leg::moveTo(){
     delay(LEG_DELAY);
     joints[COXA].setAngle((int)target_j.getT1()); // move hip last
     delay(LEG_DELAY);
+}
+
+float Leg::getDirection(){
+    return direction;
+}
+
+int Leg::getID(){
+    return id;
 }

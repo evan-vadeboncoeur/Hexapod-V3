@@ -1,7 +1,6 @@
-PCB TODO
+PCB/ECE TODO
 ----------
-0) NRF connected LED
-1) check IRF4905 circuit for R10k R100 VD vs. Series (YT Video)
+1) NRF connected LED
 2) calculate VD resistors for analog in
 3) get mounting specs/footpring for XT60 connector
 4) spec 2s/3s battery (i think 2S is 7.4-8.4V)  

@@ -1,7 +1,6 @@
 PCB TODO
 ----------
-0) NRF connected LED
-1) check IRF4905 circuit for R10k R100 VD vs. Series
+1) NRF connected LED
 2) get mounting specs/footpring for XT60 connector
 3) spec 2s/3s battery (i think 2S is 7.4-8.4V)  
 
@@ -20,6 +19,15 @@ V_GS_th = -2.0V (MOSFET turns on to some degree)
 V_(BR)_DSS = -55V (maximum voltage that can be applied between the drain and source without damaging parts)
 R_DS = .02 ohms (resistance of drain when turned on at certain voltage)
 
+The 10k pull up and 100 ohm resistor form a voltage divider because the gate takes on no current:
+
+V = IR, R = 10k + 100 ohm = 10.1k ohm, V_ss = 7.4V -> I = V/R = 7.4 / 10.1k = 0.733mA
+
+V_R_10k = I*R(10k) = 0.733mA * 10k ohms = 7.33V drop across R 10k
+
+V_G = V_SS - V_R_10k = 7.4V - 7.33V = 0.07V 
+
+V_GSS = V_G - V_SS = 0.07V - 7.4V = -7.33V -> current may now flow from Source to Drain
 
 POWER INPUT CONNECTOR
 -----------------------

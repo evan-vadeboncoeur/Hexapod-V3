@@ -4,24 +4,35 @@
 // might have to do joints & everything else BEFORE runtime, too, so that it's on the heap, not the stack?
 //Servo s0, s1, s2;
 Leg L0, L1, L2, L3, L4, L5;
+
+Leg** legs;
 // test positions
 C_Position pos = C_Position(270.0, 80.0, -80.0);
 C_Position pos2 = C_Position(180.0, 0.0, 0.0);
 C_Position pos3 = C_Position(-150.0, -221.0, 67.0);
 J_Position home = J_Position(0.0, 0.0, 0.0);
 
+MotionPlanner plan = MotionPlanner();
+
 void setup(){
   Serial.begin(9600); // open before creating legs (at least in testing phases)
-  L0 = Leg(LEG_0_J0, LEG_0_J1, LEG_0_J2, LEG_0);
-// Leg L1 = Leg(4, 5, 6, LEG_1);
-// Leg L2 = Leg(19, 20, 21, LEG_2);
-// Leg L3 = Leg(10, 11, 12, LEG_3);
-// Leg L4 = Leg(13, 14, 15, LEG_4);
-// Leg L5 = Leg(16, 17, 18, LEG_5);
+  delay(1000);
+  Serial.println("test1");
+  // L0 = Leg(LEG_0_J0, LEG_0_J1, LEG_0_J2, LEG_0);
+  // L1 = Leg(LEG_1_J0, LEG_1_J1, LEG_1_J2, LEG_1);
+  // L2 = Leg(LEG_2_J0, LEG_2_J1, LEG_2_J2, LEG_2);
+  // L3 = Leg(LEG_3_J0, LEG_3_J1, LEG_3_J2, LEG_3);
+  // L4 = Leg(LEG_4_J0, LEG_4_J1, LEG_4_J2, LEG_4);
+  // L5 = Leg(LEG_5_J0, LEG_5_J1, LEG_5_J2, LEG_5);
 
-//Leg* Legs[6] = {&L0, &L1, &L2, &L3, &L4, &L5};
+  // legs[LEG_0] = &L0;
+  // legs[LEG_1] = &L1;
+  // legs[LEG_2] = &L2;
+  // legs[LEG_3] = &L3;
+  // legs[LEG_4] = &L4;
+  // legs[LEG_5] = &L5;
 
-//MotionPlanner plan = MotionPlanner(Legs, 0);
+  //plan = MotionPlanner(legs, 0);
 
 //Hexapod cheeto = Hexapod(plan);
 
@@ -29,10 +40,12 @@ void setup(){
 
 void loop() {
   delay(2000);
-  L0.moveToIK(pos, ELBOW_DOWN, LHS);
+  //plan.setDirection(1);
+  //plan.sortTripod();
+  //L0.moveToIK(pos, ELBOW_DOWN, LHS);
   //L0.moveToJV(home);
-  //int x = map(21, FOOT_SERVO_MIN, FOOT_SERVO_MAX, PWM_MIN, PWM_MAX);
-  //Serial.println(x);
+
+  Serial.println("test");
   //#ifdef IK_DEBUG
   
   //s2.write((int)1300);

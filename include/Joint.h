@@ -1,5 +1,7 @@
 #ifndef JOINT_H
 #define JOINT_H
+//#define JOINT_DEBUG
+
 
 #define PWM_MIN (500)
 #define PWM_MAX (2500)

@@ -1,7 +1,11 @@
 #ifndef MTN_PLNR_H
 #define MTN_PLNR_H
+//#define PLAN_DEBUG
+
 
 #define NUM_LEGS (6)
+#define FWD (1.0)
+#define RVRS (-1.0)
 
 #define HOME_J0 (0)
 #define HOME_J1 (0)
@@ -82,6 +86,7 @@ class MotionPlanner{
         bool quadrapedGait();
         bool moveHome();
         bool moveStorage(); // folded up position, power down
+        
         
 };
 
