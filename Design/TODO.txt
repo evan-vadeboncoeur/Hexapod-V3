@@ -7,10 +7,14 @@ PCB/ECE TODO
 
 CAD & Mechanics TODO
 ---------------------
-1) make a stronger chassis
-2) slot link 2 links 360/25*2 degrees (centered) to offset gear teeth not lining up
-3) attach global frame to robot center
-4) attach global frame to ground plane???
+1) adjust motion planner to:
+    1a) generate global coordinates for each leg, depending on:
+        i) leg
+        ii) walking direction
+    2a) convert to local coordinates for leg to understand
+    3a) have leg purely take values into account, no other context
+2) make a stronger chassis
+3) slot link 2 links 360/25*2 degrees (centered) to offset gear teeth not lining up
 
 Code TODO
 ----------

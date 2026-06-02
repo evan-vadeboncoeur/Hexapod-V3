@@ -98,6 +98,7 @@ class MotionPlanner{
         bool quadrapedGait();
         bool moveHome();
         bool moveStorage(); // folded up position, power down
+        C_Position Body_Leg_TF(Leg* l, C_Position target);
         
         
 };

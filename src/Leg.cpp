@@ -17,7 +17,7 @@ Leg::Leg(int j1, int j2, int j3, int id) : joints{ // initializer lists directly
     // joints[FOOT] = Joint(j3, PWM_MIN, PWM_MAX); // clamp J2 from 0-270
     // this->id = id;
 {
-    //Serial.println(id);
+    alpha = (float)(id)*mount_angle - M_PI_2; // 0 leg is -PI/2 from X_G about Z_G
 }
 
 void Leg::setDirection(float d){
@@ -127,4 +127,12 @@ float Leg::getDirection(){
 
 int Leg::getID(){
     return id;
+}
+
+float Leg::getAlpha(){
+    return alpha;
+}
+
+float Leg::getLink0(){
+    return L0;
 }

@@ -170,3 +170,23 @@ bool MotionPlanner::pushLeg(Leg** trip, C_Position p){
     return true;
 }
 
+// RBTF kinematics
+// 1) generate movement direction, steps, and linear advance
+// 2) generate global coordinates for each leg based on above (ie. start at L0 then extrapolate for L1-L5, lift, swing, plant, push)
+// 3) convert to local coordinates for each leg
+// 4) sequence motions for each leg
+// 5) figure out how to handle CCW, config etc. in Leg class
+// 6) maintain steps and direction until motion complete 
+
+// express robot body coordinates in leg coordinate frame by transforming from G to B (global to body)
+C_Position MotionPlanner::Body_Leg_TF(Leg* l, C_Position target){
+    float x_b, y_b, z_b;
+    float x = target.getX(), y = target.getY();
+    float a = l->getAlpha(), Link0_L = l->getLink0();
+    x_b = x*cos(a) - Link0_L + y*sin(a);
+    y_b = y*cos(a) - x*sin(a);
+    z_b = target.getZ();
+    //                         1                  
+    C_Position output = C_Position(x_b, y_b, z_b);
+    return output;
+}
