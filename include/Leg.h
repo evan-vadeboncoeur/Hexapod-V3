@@ -26,7 +26,7 @@ class Leg{
         Joint joints[3]; // 3 joints per leg: J0, J1, J2
         int id; // leg ID
         float direction; // +/- 1.0, depends on CCW or CW movement of the leg
-        float alpha, mount_angle = 1.04719; // mounting offset relative to home frame, PI/3 multiple 
+        float alpha, mount_angle = M_PI/6.0; // mounting offset relative to home frame, PI/3 multiple 
         float L0 = 77.5, L1 = 70, L2 = 100, L3 = 150; // link lengths
         C_Position local_p = C_Position(); 
         C_Position global_p = C_Position();

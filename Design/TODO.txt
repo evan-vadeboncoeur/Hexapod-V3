@@ -1,7 +1,9 @@
 PCB/ECE TODO
 ----------
 1) NRF connected LED
-2) get mounting specs/footpring for XT60 connector 
+2) check spacing on PCB for MOSFET w/ heatsink
+    MOSFET w/ Heatsink Thickness: 10.2mm
+    MOSFET w/ Heatsink Width: 15.1mm
 3) add dipswitch array for gait type in EasyEDA 
 
 CAD & Mechanics TODO

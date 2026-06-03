@@ -1,8 +1,11 @@
 PCB TODO
 ----------
 1) NRF connected LED
-2) get mounting specs/footpring for XT60 connector
-3) spec 2s/3s battery (i think 2S is 7.4-8.4V)  
+2) dipswitch gait array (find footprint and route to D12 ish)
+3) MOSFET Spacing with heatsink dimensions (CHECK)
+    MOSFET w/ Heatsink Thickness: 10.2mm (393mil) <- target
+    MOSFET w/ Heatsink Width: 15.1mm (594.58mil) <- target
+	XT60 Connector Thickness: 9.5mm (374mil) -> Okay
 
 RELAY vs. MOSFET
 ------------------
@@ -36,7 +39,10 @@ XT60 Connector is rated for 60A
 Power polygons are needed for the battery input and drain output, with stitching between the top and bottom layer
 	Note that for stitches between the top and bottom layer, Caps and other components can't be placed in the center of the stitch since the ground will be in its own island
 
-XT60 Wire gauge:
+XT60 pin width: 4.2mm (165.35mils) -> board hole is 4.5mm -> OK
+XT60 pin pitch: 7.21mm (283.35mils) -> board is about 7.188mm -> OK
+
+XT60 Wire gauge: 12 AWG (200C, 20A nominal)
 
 Battery Sizing
 ---------------
@@ -54,6 +60,9 @@ V_nominal = N_cells * V_cell = 2*3.7 = 7.4V
 I_average_robot = I_leg*num_leg + I_aruduino_and_periph = 1.5A * 6 + 1A = 10A = 10000mA
 1 hour usage time at nominal current draw = 1 hr * 10000mA = 10000mAh 2S LiPo Battery
 Worse case: I_max = 20A = 20000mA-> T = 10000mAh / 20000mA = 30 minutes of run time
+
+https://www.amazon.com/Zeee-Connector-Ultra-Low-Internal-Resistance/dp/B0F8MTZ3YT/ref=sxin_17_pa_sp_search_thematic_sspa?content-id=amzn1.sym.01aa14fa-4579-4c26-b8d1-2f3675a5e8b7%3Aamzn1.sym.01aa14fa-4579-4c26-b8d1-2f3675a5e8b7&crid=3KEKUEGI1KC81&cv_ct_cx=2s+lipo+battery&keywords=2s+lipo+battery&pd_rd_i=B0F8MTZ3YT&pd_rd_r=d4055a68-57fa-4fe3-a21d-3cd353a1f7a5&pd_rd_w=3z2QL&pd_rd_wg=GlThL&pf_rd_p=01aa14fa-4579-4c26-b8d1-2f3675a5e8b7&pf_rd_r=2JDJY3V6F3XBTT1NS2TB&qid=1780450555&sbo=9ZOMT9Jm0JH%2Ft%2BWi68iDSA%3D%3D&sprefix=2s+lipo+battery%2Caps%2C210&sr=1-2-9428117c-b940-4daa-97e9-ad363ada7940-spons&aref=duWTfLSmQc&sp_csd=d2lkZ2V0TmFtZT1zcF9zZWFyY2hfdGhlbWF0aWM&psc=1
+E = 6000mAh / 20000mA = 20 minute @ max current draw
 
 
 CAPS
