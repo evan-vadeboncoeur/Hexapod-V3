@@ -1,3 +1,15 @@
+TODO Priority (ALL)
+-----------
+1) print slotted L2 
+2) macros test
+3) MOSFET heatsink spacing
+4) dipswitch array
+5) NRF connected
+    5a) Code
+    5b) LED
+6) "trajectory generation"
+ 
+
 PCB/ECE TODO
 ----------
 1) NRF connected LED
@@ -14,12 +26,22 @@ CAD TODO
 Code TODO
 ----------
 0) test macro functions
-1) adjust motion planner to:
-    1a) generate global coordinates for each leg, depending on:
+1) motion planner "trajectory generation"
+    0) create template coordinates for each position in the body frame (treated as body frame = walking frame), (with adjustable linear advance magnitude)
+        i) plant(LEG(i))
+        ii) lift(LEG(i))
+        iii) swing
+        iv) push
+        v) plant
+    1) fill in template coordinates for magnitude
+    2a) choose walking direction
+        i) establish tripods, leg orientations (if using old version)
+    
+    generate global coordinates for each leg, depending on:
         i) leg
         ii) walking direction
-    2a) convert to local coordinates for leg to understand
-    3a) have leg purely take values into account, no other context
-2b) linear advance calculations based on leg (dynamic in motion planner)
+    3a) convert to local coordinates for leg to understand
+    4a) have leg purely take values into account, no other context
+2b) dynamic linear advance calculations based on leg (dynamic in motion planner)
 
 
