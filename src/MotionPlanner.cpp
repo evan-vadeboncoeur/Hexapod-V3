@@ -1,5 +1,7 @@
 #include "MotionPlanner.h"
 
+// CONSTRUCTORS
+
 MotionPlanner::MotionPlanner(){
 
 }
@@ -9,6 +11,8 @@ MotionPlanner::MotionPlanner(Leg** l, int g){
     setGait(g);
     delay(5);
 }
+
+// SETTERS 
 
 // enum gait type
 void MotionPlanner::setGait(int g){
@@ -31,6 +35,41 @@ void MotionPlanner::setDirection(int d){
 }
 void MotionPlanner::setTargetSteps(int s){
     target_steps = s;
+}
+
+// GETTERS
+
+
+// TRIPOD V1 CODE
+
+bool MotionPlanner::tripodGait(int steps, int dir, int s_inc){
+    int s_c=0;
+    setupTripod(steps, dir, s_inc);
+    prev_move = millis();
+    while(s_c != steps){
+        #ifdef PLAN_DEBUG
+        Serial.println();
+        Serial.println();
+        Serial.print("Tripod Cycle: ");
+        Serial.print('\t');
+        Serial.println(s_c);
+        #endif
+        halfTripod(tp_L, tp_R);
+        halfTripod(tp_R, tp_L);
+        // leg cycle complete, increment steps
+        s_c++;
+        total_steps++;
+        move_time = millis() - prev_move;
+        prev_move = millis();
+        #ifdef PLAN_DEBUG
+        Serial.print("Gait cycle time: ");
+        Serial.print('\t');
+        Serial.print(move_time/1000.0);
+        Serial.println('s');
+        #endif
+    }
+    return true;
+
 }
 
 void MotionPlanner::setupTripod(int steps, int dir, int s_inc){
@@ -74,36 +113,6 @@ void MotionPlanner::sortTripod(){
             Serial.println(tp_R[b]->getDirection());
         }
     #endif
-}
-
-bool MotionPlanner::tripodGait(int steps, int dir, int s_inc){
-    int s_c=0;
-    setupTripod(steps, dir, s_inc);
-    prev_move = millis();
-    while(s_c != steps){
-        #ifdef PLAN_DEBUG
-        Serial.println();
-        Serial.println();
-        Serial.print("Tripod Cycle: ");
-        Serial.print('\t');
-        Serial.println(s_c);
-        #endif
-        halfTripod(tp_L, tp_R);
-        halfTripod(tp_R, tp_L);
-        // leg cycle complete, increment steps
-        s_c++;
-        total_steps++;
-        move_time = millis() - prev_move;
-        prev_move = millis();
-        #ifdef PLAN_DEBUG
-        Serial.print("Gait cycle time: ");
-        Serial.print('\t');
-        Serial.print(move_time/1000.0);
-        Serial.println('s');
-        #endif
-    }
-    return true;
-
 }
 
 bool MotionPlanner::halfTripod(Leg** l, Leg** p){
@@ -174,14 +183,64 @@ bool MotionPlanner::pushLeg(Leg** trip, C_Position p){
 // 6) maintain steps and direction until motion complete 
 
 // express robot body coordinates in leg coordinate frame by transforming from G to B (global to body)
-C_Position MotionPlanner::Body_Leg_TF(Leg* l, C_Position target){
-    float x_b, y_b, z_b;
-    float x = target.getX(), y = target.getY();
+C_Position MotionPlanner::Body_TF_Leg(Leg* l, C_Position target){
+    float x_L, y_L, z_L; // coordinates in the leg's base frame
+    float x_B = target.getX(), y_B = target.getY(); // coordinates in the robot Body frame
     float a = l->getAlpha(), Link0_L = l->getLink0();
-    x_b = x*cos(a) - Link0_L + y*sin(a);
-    y_b = y*cos(a) - x*sin(a);
-    z_b = target.getZ();
+    x_L = x_B*cos(a) - Link0_L + y_B*sin(a);
+    y_L = y_B*cos(a) - x_B*sin(a);
+    z_L = target.getZ();
     //                         1                  
-    C_Position output = C_Position(x_b, y_b, z_b);
+    C_Position output = C_Position(x_L, y_L, z_L); // body coordinates in leg frame
     return output;
 } 
+
+// takes a target position in the walking frame (dictated by direction) and a given leg (which stores mount angle and attachment orientation) and computes TF from walking to leg
+// frame is rotating alpha, and translated r along x_B
+C_Position MotionPlanner::Walking_TF_Leg(Leg* l, C_Position target){
+    float x_L, y_L, z_L; // coordinates in the leg's base frame
+    float x_B = target.getX(), y_B = target.getY(); // coordinates in the robot Body frame
+    float a = l->getAlpha(), Link0_L = l->getLink0();
+    x_L = x_B*cos(a) - Link0_L + y_B*sin(a);
+    y_L = y_B*cos(a) - x_B*sin(a);
+    z_L = target.getZ();
+    //                              1                  
+    C_Position output = C_Position(x_L, y_L, z_L); // body coordinates in leg frame
+    return output;
+}
+
+float MotionPlanner::computeWalkingAlpha(int id){
+    float ret = M_PI_6*(2*(id-direction)-1); // simplified expression to calculate angular distance from walking direction to given leg
+    if(ret > M_PI) ret-= (2*M_PI); // make shortest angle to X_W axis (measured about Z_W)
+    if(ret < M_PI) ret+= (2*M_PI);
+    return ret;
+}
+
+// MOVEMENT MACROS
+
+bool MotionPlanner::moveHome(){
+    delay(20);
+    for(int l=0; l<(NUM_LEGS-1); l++){
+        legs[l]->moveToJV(home);
+        delay(25);
+    }
+    return true;
+}
+
+bool MotionPlanner::moveStorage(){
+    delay(20);
+    for(int l=0; l<(NUM_LEGS-1); l++){
+        legs[l]->moveToJV(storage);
+        delay(25);
+    }
+    return true;
+}
+
+bool MotionPlanner::moveStance(){
+    delay(20);
+    for(int l=0; l<(NUM_LEGS-1); l++){
+        legs[l]->moveToJV(stance);
+        delay(25);
+    }
+    return true;
+}

@@ -65,9 +65,9 @@ class MotionPlanner{
         float s; // linear advance
         int target_steps, direction, total_steps=0; 
         // position definitions
-        J_Position home = J_Position();
-        J_Position storage = J_Position();
-        J_Position stance = J_Position();
+        J_Position home = J_Position(0, 0, 0); // rads
+        J_Position storage = J_Position(0, -1.81, -M_PI_2);
+        J_Position stance = J_Position(0, -0.69, 1.95);
         J_Position lift = J_Position();
         J_Position swing = J_Position();
         J_Position plant = J_Position();
@@ -96,10 +96,12 @@ class MotionPlanner{
         bool waveGait();
         bool rippleGait();
         bool quadrapedGait();
-        bool moveHome();
+        bool moveHome(); // legs @ 0 pos (0, 0, 0)
         bool moveStorage(); // folded up position, power down
-        C_Position Body_Leg_TF(Leg* l, C_Position target);
-        
+        bool moveStance(); // wait for gait (setup pose)
+        C_Position Body_TF_Leg(Leg* l, C_Position target); // TF body coordinates to leg coordinates
+        C_Position Walking_TF_Leg(Leg* l, C_Position target); // TF walking coordinates to leg coordinates
+        float computeWalkingAlpha(int id);
         
 };
 

@@ -17,7 +17,7 @@ Leg::Leg(int j1, int j2, int j3, int id) : joints{ // initializer lists directly
     // joints[FOOT] = Joint(j3, PWM_MIN, PWM_MAX); // clamp J2 from 0-270
     // this->id = id;
 {
-    alpha = mount_angle*(2*id-1); // 0 leg is -PI/2 from X_G about Z_G
+    alpha = M_PI_6*(2*id-1); // 0 leg is -PI/2 from X_G about Z_G
 }
 
 void Leg::setDirection(float d){
@@ -135,4 +135,12 @@ float Leg::getAlpha(){
 
 float Leg::getLink0(){
     return L0;
+}
+
+float Leg::getWalkingAlpha(){
+    return walking_alpha;
+}
+
+void Leg::setWalkingAlpha(float a){
+    walking_alpha=a;
 }

@@ -6,27 +6,20 @@ PCB/ECE TODO
     MOSFET w/ Heatsink Width: 15.1mm
 3) add dipswitch array for gait type in EasyEDA 
 
-CAD & Mechanics TODO
+CAD TODO
 ---------------------
-0) hardcode positions as joint vectors:
-    a) home (0, 0, 0) -> moveToHome 
-    b) storage () -> moveToStorage
-    c) stance (hanging out standing before moving) -> moveToStance
-    d) macro function moveHome that goes from storage to home to stance when robot is turned on 
+1) print slotted link and test
+2) make a stronger chassis
+
+Code TODO
+----------
+0) test macro functions
 1) adjust motion planner to:
     1a) generate global coordinates for each leg, depending on:
         i) leg
         ii) walking direction
     2a) convert to local coordinates for leg to understand
     3a) have leg purely take values into account, no other context
-2) make a stronger chassis
-3) slot link 2 links 360/25*2 degrees (centered) to offset gear teeth not lining up
-
-Code TODO
-----------
-1) add position macros
-2) program tripod gait (Lift, swing, push, plant, alternate)
-    2a) verify positions w/ CAD/measurements
-    2b) linear advance calculations based on leg (dynamic in motion planner)
+2b) linear advance calculations based on leg (dynamic in motion planner)
 
 

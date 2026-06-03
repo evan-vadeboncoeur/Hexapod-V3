@@ -1,6 +1,9 @@
 #ifndef LEG_H
 #define LEG_H
 
+#define M_PI_3 (1.04719755)
+#define M_PI_6 (0.523598776)
+
 #define COXA (0)
 #define FEMUR (1)
 #define FOOT (2)
@@ -26,7 +29,7 @@ class Leg{
         Joint joints[3]; // 3 joints per leg: J0, J1, J2
         int id; // leg ID
         float direction; // +/- 1.0, depends on CCW or CW movement of the leg
-        float alpha, mount_angle = M_PI/6.0; // mounting offset relative to home frame, PI/3 multiple 
+        float alpha, pi_6 = M_PI/6.0, pi_3 = M_PI/3.0, walking_alpha; // mounting offset relative to home frame, PI/3 multiple 
         float L0 = 77.5, L1 = 70, L2 = 100, L3 = 150; // link lengths
         C_Position local_p = C_Position(); 
         C_Position global_p = C_Position();
@@ -52,7 +55,8 @@ class Leg{
         int getID();
         float getAlpha();
         float getLink0();
-        
+        void setWalkingAlpha(float a);
+        float getWalkingAlpha();
 
 };
 
