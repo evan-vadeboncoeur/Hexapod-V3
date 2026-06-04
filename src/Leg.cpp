@@ -7,8 +7,8 @@ Leg::Leg(){
 
 // leg constructor. takes 3 servo pin IDs and attaches them, sets leg ID number (physical)
 Leg::Leg(int j1, int j2, int j3, int id) : joints{ // initializer lists directly creates the class members before the constructor body
-        Joint(j1), // bypasses creating temporary objects to assign into the joint[] array
-        Joint(j2),
+        Joint(j1, PWM_MIN, PWM_MAX), // bypasses creating temporary objects to assign into the joint[] array
+        Joint(j2, PWM_MIN, PWM_MAX),
         Joint(j3, PWM_MIN, PWM_MAX)
     },
     id(id)

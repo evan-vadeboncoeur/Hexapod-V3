@@ -1,6 +1,6 @@
 TODO Priority (ALL)
 -----------
-1) print slotted L2 
+1) test slotted L2
 2) macros test
 3) MOSFET heatsink spacing
 4) dipswitch array

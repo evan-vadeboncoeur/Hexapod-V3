@@ -66,7 +66,7 @@ class MotionPlanner{
         int target_steps, direction, total_steps=0; 
         // position definitions
         J_Position home = J_Position(0, 0, 0); // rads
-        J_Position storage = J_Position(0, -1.81, -M_PI_2);
+        J_Position storage = J_Position(0, 0, -M_PI_2);
         J_Position stance = J_Position(0, -0.69, 1.95);
         J_Position lift = J_Position();
         J_Position swing = J_Position();

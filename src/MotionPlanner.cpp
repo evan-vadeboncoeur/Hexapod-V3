@@ -229,9 +229,9 @@ bool MotionPlanner::moveHome(){
 
 bool MotionPlanner::moveStorage(){
     delay(20);
-    for(int l=0; l<(NUM_LEGS-1); l++){
+    for(int l=0; l<(1); l++){
         legs[l]->moveToJV(storage);
-        delay(25);
+        delay(10);
     }
     return true;
 }
