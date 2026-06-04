@@ -2,25 +2,20 @@ TODO Priority (ALL)
 -----------
 1) test slotted L2
 2) macros test
-3) MOSFET heatsink spacing
-4) dipswitch array
-5) NRF connected
-    5a) Code
-    5b) LED
-6) "trajectory generation"
+3) "trajectory generation"
+4) Connector controller design
+    a) ECE - layout, etc
+    b) CAD
  
 
 PCB/ECE TODO
 ----------
-1) NRF connected LED
-2) check spacing on PCB for MOSFET w/ heatsink
-    MOSFET w/ Heatsink Thickness: 10.2mm
-    MOSFET w/ Heatsink Width: 15.1mm
-3) add dipswitch array for gait type in EasyEDA 
+1) board design
+    a) lay out components
 
 CAD TODO
 ---------------------
-1) print slotted link and test
+1) make controller design
 2) make a stronger chassis
 
 Code TODO

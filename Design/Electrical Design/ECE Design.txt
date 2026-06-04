@@ -1,11 +1,8 @@
 PCB TODO
 ----------
-1) NRF connected LED
-2) dipswitch gait array (find footprint and route to D12 ish)
-3) MOSFET Spacing with heatsink dimensions (CHECK)
-    MOSFET w/ Heatsink Thickness: 10.2mm (393mil) <- target
-    MOSFET w/ Heatsink Width: 15.1mm (594.58mil) <- target
-	XT60 Connector Thickness: 9.5mm (374mil) -> Okay
+1) Connector board design
+	a) ESP32 pinout headers
+	b) board layout
 
 RELAY vs. MOSFET
 ------------------
@@ -31,6 +28,13 @@ V_R_10k = I*R(10k) = 0.733mA * 10k ohms = 7.33V drop across R 10k
 V_G = V_SS - V_R_10k = 7.4V - 7.33V = 0.07V 
 
 V_GSS = V_G - V_SS = 0.07V - 7.4V = -7.33V -> current may now flow from Source to Drain
+
+MFET dimensions
+----------------
+MOSFET w/ Heatsink Thickness (front to back): 10.2mm (393mil) <- target
+MOSFET w/ Heatsink Width (side to side): 15.1mm (594.58mil) <- target
+Center of Pins to back: 8.28mm (326mil)
+Pin D: .54mm 
 
 POWER INPUT CONNECTOR
 -----------------------
@@ -156,7 +160,80 @@ V_s = V_2 * (R1 + R2) / R2 (voltage from 0-8.4V)
 
 Percent = V_s / V_total
 
+NRF Module
+-----------
+NRF has 7 pins total:
+Vcc (3v3)
+GND
+5 of which are IO:
+CE (chip enable)
+CSN (chip selection)
+SCK (serial clock)
+MOSI (master out slave in)
+MISO (master in slave out)
 
+NRF uses SPI to communicate, Arduino 2560 mega dedicates SPI to certain pins:
+MISO: D50
+MOSI: D51
+SCK: D52
+SS: D53 -> look into this more
+
+
+I_LEDs
+-------
+Powered by analog pins or 3v3 staight up
+220 ohm - 500 ohm resistance gives I = V/R = 3.3 / 220, 3.3 / 500 = [15mA, 6.6mA]
+
+RD: Low power
+GN: BD on
+BU: NRF Controller Connected
+
+COMM BOARD DESIGN
+--------------------
+
+board selection
+-----------------
+Result: ESP32
+Pico vs Nano vs Nano ESP32 vs ESP32
+Selecting the board depends on power levels and number of IO needed. 
+a) NRF TF (5 PINs (CE - OUT, CSN - OUT, SCK, MOSI, MISO))
+b) Dipswitch gait (4 pins - IN)
+c) LEDs (3 pins - 2 OUT, 1 AIN )
+	On LED (0 pin - use power rail and resistor)
+	LOW BATTERY LED (1 AIN, 1 OUT)
+	Connected LED (1 OUT, 0 IN - NRF pin will maintain this)
+d) Joysticks (6 dir translate, 2 dir rotate) (6 pins - IN (x - ANA, y - ANA, sw - D)*2 )
+Total: 5 + 4 + 3 + 6 = 18 pins, 5 analog, 13 digital
+
+Nano ESP32:
+14 Digital IO -> 12 pins taken by NRF, dipswitch, LEDs
+8 Analog IO -> 6 pins taken by joysticks
+3v3 Voltage
+
+Nano:
+Same pinout as nano esp32
+8 dual function analog pins -> 
+14 analog pins 
+result: no
+
+Pico:
+26 GPIO Pins
+3 ADC pins -> need 4 minimum (x,y)
+Result: no
+
+ESP32 WROOM 32:
+about 24 GPIO
+lots of ADC
+wifi and bluetooth able
+result: yes
+ 
+
+dipswitch
+-----------
+SW-TH_DIPSWITCHEI-04
+
+Needs pull down resistors so inputs are not floating
+need way to make first 2 switches for gaits (2 bits) and second 2 for something else useful (mode etc)
 
 
 
