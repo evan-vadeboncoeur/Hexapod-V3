@@ -51,14 +51,14 @@ void loop() {
   // /plan.tripodGait(4, 1, 8);
   //plan.moveStorage();
   
-s0.writeMicroseconds(1500);
+s0.write(90);
 
 
   delay(3000);
-  s0.write(500);
+  s0.write(180);
   //plan.moveHome();
   delay(3000);
-  s0.write(2500);
+  s0.write(0);
   //plan.moveStance();
   //L0.moveToJV(home);
 
