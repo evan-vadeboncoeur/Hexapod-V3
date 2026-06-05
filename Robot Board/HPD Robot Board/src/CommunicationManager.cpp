@@ -4,12 +4,12 @@ CommunicationManager::CommunicationManager(){
 
 }
 
-CommunicationManager::CommunicationManager(char ce, char cs) : radio(ce, cs) {
+CommunicationManager::CommunicationManager(uint8_t ce, uint8_t cs) : radio(ce, cs) {
     // initialize the RF24 radio object with the given CE and CSN pins
     // this constructor uses an initializer list to directly initialize the radio member
     // without needing to create a temporary RF24 object and assign it to radio
     radio.begin();
-    radio.openReadingPipe(0, address);
+    radio.openReadingPipe(pipe, address); // TX/RX must agree on address
     radio.setPALevel(RF24_PA_MIN);
     radio.startListening(); 
 }

@@ -24,7 +24,8 @@ class CommunicationManager{
         Packet buildPacket(char g, int lx, int ly, bool lb, int rx, int ry, bool rb);
     private:
         RF24 radio; // filled out in initializer list of constructor
-        uint8_t address[6] = "00001"; // 6 recieving pipes (0-5)
+        const uint64_t address = 0xDEADBEEF01; 
+        const uint8_t pipe = 0;
         
 
 
