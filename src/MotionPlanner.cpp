@@ -221,7 +221,7 @@ float MotionPlanner::computeWalkingAlpha(int id){
 bool MotionPlanner::moveHome(){
     delay(20);
     for(int l=0; l<(NUM_LEGS-1); l++){
-        legs[l]->moveToJV(home);
+        legs[l]->moveToJV(&home);
         delay(25);
     }
     return true;
@@ -229,8 +229,9 @@ bool MotionPlanner::moveHome(){
 
 bool MotionPlanner::moveStorage(){
     delay(20);
+    Serial.println(storage.getT3()); // why does having this line here make it so that the object persists? timing on the stack?
     for(int l=0; l<(1); l++){
-        legs[l]->moveToJV(storage);
+        legs[l]->moveToJV(&storage);
         delay(10);
     }
     return true;
@@ -239,7 +240,7 @@ bool MotionPlanner::moveStorage(){
 bool MotionPlanner::moveStance(){
     delay(20);
     for(int l=0; l<(NUM_LEGS-1); l++){
-        legs[l]->moveToJV(stance);
+        legs[l]->moveToJV(&stance);
         delay(25);
     }
     return true;

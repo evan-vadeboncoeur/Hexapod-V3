@@ -1,5 +1,6 @@
 #ifndef J_POS_H
 #define J_POS_H
+#define J_POS_DEBUG
 
 class J_Position{
     private:

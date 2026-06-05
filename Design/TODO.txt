@@ -1,7 +1,7 @@
 TODO Priority (ALL)
 -----------
-1) test slotted L2
-2) macros test
+1) test J2 mount angle, doesn't seem to be at what the kinematics expects at t3 = 0 (-90 degrees off)
+2) make sure macro motion works
 3) "trajectory generation"
 4) Connector controller design
     a) ECE - layout, etc

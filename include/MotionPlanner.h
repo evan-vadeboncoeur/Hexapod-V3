@@ -59,14 +59,14 @@
 
 class MotionPlanner{
     private:
-        Leg** legs;
-        Leg* tp_L[3]; // points to leg pointers
+        Leg** legs; // 6 legs
+        Leg* tp_L[3]; // 3 legs/tripod
         Leg* tp_R[3];
         float s; // linear advance
         int target_steps, direction, total_steps=0; 
         // position definitions
-        J_Position home = J_Position(0, 0, 0); // rads
-        J_Position storage = J_Position(0, 0, -M_PI_2);
+        J_Position home = J_Position(0.0, 0.0, 0.0); // rads
+        J_Position storage = J_Position(0.0, 0.0, -1.2);
         J_Position stance = J_Position(0, -0.69, 1.95);
         J_Position lift = J_Position();
         J_Position swing = J_Position();

@@ -45,8 +45,24 @@ void Leg::moveToJV(){
     moveTo();
 }
 
-void  Leg::moveToJV(J_Position jv){ // overloaded
-    target_j = jv; // set target vector to desired
+void  Leg::moveToJV(J_Position *jv){ // overloaded
+    
+    target_j.setT1(jv->getT1());
+    target_j.setT2(jv->getT2());
+    target_j.setT3(jv->getT3());
+    delay(1);
+    Serial.println("moveToJV JV (rad): ");
+    Serial.print("T1: ");
+    Serial.print('\t');
+    Serial.print(target_j.getT1());
+    Serial.print('\t');
+    Serial.print("T2: ");
+    Serial.print('\t');
+    Serial.print(target_j.getT2());
+    Serial.print('\t');
+    Serial.print("T3: ");
+    Serial.print('\t');
+    Serial.println(target_j.getT3());
     adjustServos();
     moveTo();
 }
@@ -54,7 +70,7 @@ void  Leg::moveToJV(J_Position jv){ // overloaded
 // adjust raw FK angle value to work with servo effort direction/offset
 void Leg::adjustServos(){
     #ifdef IK_DEBUG
-    Serial.println("Moving to (rad): ");
+    Serial.println("Adjust Servos (rad): ");
     Serial.print("T1: ");
     Serial.print('\t');
     Serial.print(target_j.getT1());
@@ -75,7 +91,7 @@ void Leg::adjustServos(){
     target_j.setT2(_t2);
     target_j.setT3(_t3);
     #ifdef IK_DEBUG
-    Serial.println("Moving to (servo angle): ");
+    Serial.println("Adjusted Servos (deg): ");
     Serial.print("T1: ");
     Serial.print('\t');
     Serial.print(target_j.getT1());
@@ -99,7 +115,7 @@ void Leg::moveToIK(C_Position tp, bool config, float side){
 // move servos after all other commands
 void Leg::moveTo(){
     #ifdef IK_DEBUG
-    Serial.println("Moving to: ");
+    Serial.println("Commanding movement to (deg): ");
     Serial.print("T1: ");
     Serial.print('\t');
     Serial.print(target_j.getT1());

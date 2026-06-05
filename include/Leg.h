@@ -49,7 +49,7 @@ class Leg{
         void setTarget(C_Position goal);
         void moveToIK(C_Position tp, bool config, float side);
         void moveToJV(); // move to joint vector
-        void moveToJV(J_Position jv); // overloaded
+        void moveToJV(J_Position *jv); // overloaded
         void setDirection(float);
         float getDirection();
         int getID();
