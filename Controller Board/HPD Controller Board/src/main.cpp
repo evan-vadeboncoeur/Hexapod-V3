@@ -1,6 +1,6 @@
-#include "CommBoard.h"
+#include "RemoteControl.h"
 
-CommBoard cb;
+RemoteControl rc;
 
 void setup() {
     

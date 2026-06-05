@@ -29,15 +29,15 @@
 
 #include "MotionPlanner.h"
 #include "CommunicationManager.h"
-#include "PowerManager.h"
+#include "BoardManager.h"
 
 class Hexapod{
     private:
         MotionPlanner plan;
         CommunicationManager comm;
-        PowerManager battery;
+        BoardManager battery;
     public:
-        Hexapod(MotionPlanner m, PowerManager b); // constructor 1 (all objects instantiated)
+        Hexapod(MotionPlanner m, BoardManager b); // constructor 1 (all objects instantiated)
         void opMode(); // set operation mode: teleop (0), computer/robot (1)
         void gaitSet(); // set gait (2 dipswitch array for 4 combinations of gait)
         void checkPower(); // checks robot battery power / operates LEDs

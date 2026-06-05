@@ -1,20 +1,20 @@
-#include "PowerManager.h"
+#include "BoardManager.h"
 
-PowerManager::PowerManager(int i_pin, int o_pin){
+BoardManager::BoardManager(int i_pin, int o_pin){
     in_pin = i_pin;
     out_pin = o_pin;
     pinMode(i_pin, INPUT);
     pinMode(o_pin, OUTPUT);
 }
 
-float PowerManager::readBattery(){
+float BoardManager::readBattery(){
     float v2 = (analogRead(in_pin) / resolution) * ref; // voltage from 0-5V
     v_out = v2 *((r2 + r2)/r1); // convert back to 8.4V
     battery = (v_out / max_battery)*100;
     return v_out;
 }
 
-void PowerManager::processBattery(){
+void BoardManager::processBattery(){
     readBattery();
     if(v_out >= clamp){
         analogWrite(out_pin, LED_ON);

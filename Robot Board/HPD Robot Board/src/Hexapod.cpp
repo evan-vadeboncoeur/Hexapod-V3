@@ -1,6 +1,6 @@
 #include "Hexapod.h"
 
-Hexapod::Hexapod(MotionPlanner m, PowerManager b){
+Hexapod::Hexapod(MotionPlanner m, BoardManager b){
     plan = m;
     battery = b;
 }

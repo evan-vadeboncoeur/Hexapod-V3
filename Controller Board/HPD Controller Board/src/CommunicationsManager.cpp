@@ -1,0 +1,29 @@
+#include "CommunicationManager.h"
+
+CommunicationManager::CommunicationManager(int ce, int cs) : radio(ce, cs) {
+    // initialize the RF24 radio object with the given CE and CSN pins
+    // this constructor uses an initializer list to directly initialize the radio member
+    // without needing to create a temporary RF24 object and assign it to radio
+    radio.begin();
+    radio.openWritingPipe(address);
+    radio.setPALevel(RF24_PA_MIN);
+    radio.stopListening(); // stop listening for incoming messages, switch to transmit mode
+}
+
+// transmit the packet to the reciever (packet already constructed)
+void CommunicationManager::sendMessage(Packet *p){
+    radio.write(p, sizeof(*p));
+}
+
+// construct a packet struct (data values already read - probably isolate to power class)
+Packet CommunicationManager::buildPacket(char g, int lx, int ly, bool lb, int rx, int ry, bool rb){
+    Packet p;
+    p.g = g;
+    p.lx = lx;
+    p.ly = ly;
+    p.lb = lb;
+    p.rx = rx;
+    p.ry = ry;
+    p.rb = rb;
+    return p;
+}

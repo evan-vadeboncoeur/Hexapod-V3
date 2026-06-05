@@ -1,5 +1,5 @@
-#ifndef PWR_MNG_H
-#define PWR_MNG_H
+#ifndef BRD_H_H
+#define BRD_H_H
 
 #define LED_ON (500)
 #define LED_OFF (0)
@@ -11,7 +11,7 @@
 // add LED to board for NRF connection
 // measures from 0-4.7V (padding to not damage ADC)
 
-class PowerManager{
+class BoardManager{
     private:
         int in_pin, out_pin;    
         float battery;
@@ -22,8 +22,8 @@ class PowerManager{
         float readBattery();
         void processBattery();
     public:
-        PowerManager();
-        PowerManager(int, int);
+        BoardManager();
+        BoardManager(int, int);
 
 
 };
