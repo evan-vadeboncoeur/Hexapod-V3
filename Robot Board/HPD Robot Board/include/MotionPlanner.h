@@ -66,7 +66,7 @@ class MotionPlanner{
         int target_steps, direction, total_steps=0; 
         // position definitions
         J_Position home = J_Position(0.0, 0.0, 0.0); // rads
-        J_Position storage = J_Position(0.0, 0.0, -1.2);
+        J_Position storage = J_Position(0.0, -M_PI_3, -2.0);
         J_Position stance = J_Position(0, -0.69, 1.95);
         J_Position lift = J_Position();
         J_Position swing = J_Position();
@@ -96,6 +96,8 @@ class MotionPlanner{
         bool waveGait();
         bool rippleGait();
         bool quadrapedGait();
+        bool powerOnSequence();
+        bool powerOffSequence();
         bool moveHome(); // legs @ 0 pos (0, 0, 0)
         bool moveStorage(); // folded up position, power down
         bool moveStance(); // wait for gait (setup pose)

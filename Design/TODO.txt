@@ -1,11 +1,11 @@
 TODO Priority (ALL)
 -----------
-1) test J2 mount angle, doesn't seem to be at what the kinematics expects at t3 = 0 (-90 degrees off)
-2) make sure macro motion works
-3) "trajectory generation"
-4) Connector controller design
+1) "trajectory generation"
+    a) read chapter in motion planning book to get a better idea of implementation
+2) Connector controller design
     a) ECE - layout, etc
     b) CAD
+3) make macro for motor / leg setup on servos
  
 
 PCB/ECE TODO
@@ -20,7 +20,6 @@ CAD TODO
 
 Code TODO
 ----------
-0) test macro functions
 1) motion planner "trajectory generation"
     0) create template coordinates for each position in the body frame (treated as body frame = walking frame), (with adjustable linear advance magnitude)
         i) plant(LEG(i))

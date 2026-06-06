@@ -1,5 +1,7 @@
 #include "Leg.h"
 
+//#define MOVE_JV_DEBUG
+
 //default empty constructor
 Leg::Leg(){
 
@@ -51,6 +53,7 @@ void  Leg::moveToJV(J_Position *jv){ // overloaded
     target_j.setT2(jv->getT2());
     target_j.setT3(jv->getT3());
     delay(1);
+    #ifdef MOVE_JV_DEBUG
     Serial.println("moveToJV JV (rad): ");
     Serial.print("T1: ");
     Serial.print('\t');
@@ -63,6 +66,7 @@ void  Leg::moveToJV(J_Position *jv){ // overloaded
     Serial.print("T3: ");
     Serial.print('\t');
     Serial.println(target_j.getT3());
+    #endif
     adjustServos();
     moveTo();
 }

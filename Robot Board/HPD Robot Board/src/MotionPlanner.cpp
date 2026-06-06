@@ -9,6 +9,7 @@ MotionPlanner::MotionPlanner(){
 MotionPlanner::MotionPlanner(Leg** l, int g){
     legs = l; // pointer to array of legs
     setGait(g);
+    setupTripod(0, 1, 20);
     delay(5);
 }
 
@@ -217,31 +218,73 @@ float MotionPlanner::computeWalkingAlpha(int id){
 }
 
 // MOVEMENT MACROS
+bool MotionPlanner::powerOnSequence(){
+    #ifdef PLAN_DEBUG
+    Serial.println("Powering On: ");
+    #endif
+    moveHome();
+    delay(1000);
+    moveStance();
+}
+
+bool MotionPlanner::powerOffSequence(){
+    #ifdef PLAN_DEBUG
+    Serial.println("Powering Off: ");
+    #endif
+    moveStance();
+    delay(1000);
+    moveHome();
+    delay(1000);
+    moveStorage();
+}
 
 bool MotionPlanner::moveHome(){
-    delay(20);
-    for(int l=0; l<(NUM_LEGS-1); l++){
-        legs[l]->moveToJV(&home);
-        delay(25);
+    #ifdef PLAN_DEBUG
+    Serial.println("Moving to Home: ");
+    #endif
+    for(int l=0; l<(NUM_LEGS/2-1); l++){
+        tp_L[l]->moveToJV(&home);
     }
+    for(int l=0; l<(NUM_LEGS/2-1); l++){
+        tp_R[l]->moveToJV(&home);
+    }
+    // for(int l=0; l<(NUM_LEGS-1); l++){
+    //     legs[l]->moveToJV(&home);
+    //     delay(10);
+    // }
     return true;
 }
 
 bool MotionPlanner::moveStorage(){
-    delay(20);
-    Serial.println(storage.getT3()); // why does having this line here make it so that the object persists? timing on the stack?
-    for(int l=0; l<(1); l++){
-        legs[l]->moveToJV(&storage);
-        delay(10);
+    #ifdef PLAN_DEBUG
+    Serial.println("Moving to Storage: ");
+    #endif
+    for(int l=0; l<(NUM_LEGS/2-1); l++){
+        tp_L[l]->moveToJV(&storage);
     }
+    for(int l=0; l<(NUM_LEGS/2-1); l++){
+        tp_R[l]->moveToJV(&storage);
+    }
+    // for(int l=0; l<(NUM_LEGS-1); l++){
+    //     legs[l]->moveToJV(&storage);
+    //     delay(10);
+    // }
     return true;
 }
 
 bool MotionPlanner::moveStance(){
-    delay(20);
-    for(int l=0; l<(NUM_LEGS-1); l++){
-        legs[l]->moveToJV(&stance);
-        delay(25);
+    #ifdef PLAN_DEBUG
+    Serial.println("Moving to Stance: ");
+    #endif
+    for(int l=0; l<(NUM_LEGS/2-1); l++){
+        tp_L[l]->moveToJV(&stance);
     }
+    for(int l=0; l<(NUM_LEGS/2-1); l++){
+        tp_R[l]->moveToJV(&stance);
+    }
+    // for(int l=0; l<(NUM_LEGS-1); l++){
+    //     legs[l]->moveToJV(&stance);
+    //     delay(25);
+    // }
     return true;
 }
