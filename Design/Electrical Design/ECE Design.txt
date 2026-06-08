@@ -1,13 +1,22 @@
 PCB TODO
 ----------
-1) Connector board design
-	a) ESP32 pinout headers
-	b) board layout
+1) design of Remote controller board
+	b) pinout for analog inputs
+		i) controller vx, vys (4)
+			MOUNT 1-4 -> NC
+			SEL+ SEL- -> Button ?
+		ii) battery input (1) (re-calculate voltage divider based on input battery voltage)
+	c) joystick reverse engineer
+		i) verify joystick pinout (power, output...)
+		ii) figure out button DIs (looks like it gets switched to GND, need pull-ups on D inputs, but can I connect both pins to GND plane? prob not)
+		iiI) desolder joystick and test
+	d) 5V buck converter power input from some small batter(ies)
+	e) work on board outline and spacing/hard dimensions
 
 RELAY vs. MOSFET
 ------------------
 Relay needs a flyback diode (diode in reverse bias mode) that creates a grounding loop when dI/dt -> -infinity, therefore V_coil spikes and reverses polarity, damaging the relay
-	Diode should be specced @ ____
+	Diode should be specced @ ____ ("Schotkey Diode")
 JQC-3F 5VDC -> 28VDC, 10A is not enough for the estimated load of 15A maximum (I_stall*6)
 
 MOSFET

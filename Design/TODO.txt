@@ -6,6 +6,7 @@ TODO Priority (ALL)
     a) ECE - layout, etc
     b) CAD
 3) make macro for motor / leg setup on servos
+4) calculate workspace limitations and maximum swing angles / J1/2 interaction monitoring
  
 
 PCB/ECE TODO
