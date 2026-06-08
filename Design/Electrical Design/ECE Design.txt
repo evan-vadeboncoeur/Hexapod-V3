@@ -1,17 +1,11 @@
-PCB TODO
+ECE TODO
 ----------
-1) design of Remote controller board
-	b) pinout for analog inputs
-		i) controller vx, vys (4)
-			MOUNT 1-4 -> NC
-			SEL+ SEL- -> Button ?
-		ii) battery input (1) (re-calculate voltage divider based on input battery voltage)
-	c) joystick reverse engineer
-		i) verify joystick pinout (power, output...)
-		ii) figure out button DIs (looks like it gets switched to GND, need pull-ups on D inputs, but can I connect both pins to GND plane? prob not)
-		iiI) desolder joystick and test
-	d) 5V buck converter power input from some small batter(ies)
-	e) work on board outline and spacing/hard dimensions
+1) LM2596 pin measurements
+2) test joystick continuties for Vx Vy, power, ground
+3) test esp32 5V power via buck converter, probe 3v3 etc
+4) setup esp-mega 2560 nrf test in two terminals
+5) rough CAD controller design
+6) order PCBs
 
 RELAY vs. MOSFET
 ------------------
@@ -242,14 +236,54 @@ dipswitch
 SW-TH_DIPSWITCHEI-04
 
 Needs pull down resistors so inputs are not floating
-need way to make first 2 switches for gaits (2 bits) and second 2 for something else useful (mode etc)
+need way to make first 2 switches for gaits (2 bits) and second 2 for something else useful (connect, mode, etc.)
 
+joysticks
+----------
+joysticks have 4 pins purely for mechanical fastening (large rectangular pattern)
+button simply pulls the digital input to ground, so need PU resistor on the associated DI
 
+joystick POT
+--------------
+2 pots 
+upper/left POT pin is power pin
+	power needs to be 3v3 because esp32 adc expects 0-3v3, not 5v
+lower/right POT pin is GND
+center pin is analog output
 
+NRF24L01
+---------
+radio-side points from GND to 3V3
 
+LM2596
+-------
+linear voltage regulator module that has adjustable output (via potentiometer)
+will be mounted from 4-single pin male headers (instead of standoffs/actually adding the IC to the board)
 
+mount holes
+-------------
+2470 x 1950 mil^2 mount pattern, 118 mil diameter, no plating
+62.73 x 49.53 mm^2, 3mm OD (for M2.5 mount screws)
 
+battery
+--------
+anything >5V will suffice, since the ESP32 only requires 3v3 to operate, but in this case, will be powered from the 5V0 pin.
+before plugging into the 5V0 supply pin, the current will go from input terminal -> SPDT switch -> LM2596 regulator set to 5V
 
+probably just go with 2S lipo 8.4V max, 7.4V nominal and go from there:
+
+V_max = 8.4V
+V_nominal = 7.4V
+V_low = 6V
+
+V_adc_max = 3.3V
+V_2S_FC_potential = 8.45V
+V_adc_cushion = 3.2V max
+R2 = 10k ohms
+
+V_2 = V_ss * (R2 / (R1+R2))
+R1 = R2/V_2 (V_ss - V_2)
+R1 = 16250 ohms
 
 
 
