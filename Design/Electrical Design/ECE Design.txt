@@ -1,8 +1,7 @@
 ECE TODO
 ----------
-2) edit for dev board, not wroom
-5) make controller width less (closer to buttons) and taller (too short right now for thru holes) (fix bridging curves for body - use fit spline and points)
-6) order PCBs
+1) verify pinout
+2) order PCBs
 
 RELAY vs. MOSFET
 ------------------
