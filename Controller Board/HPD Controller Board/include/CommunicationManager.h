@@ -4,11 +4,11 @@
 #define CE_T (4)
 #define CSN_T (5)
 
-// MOSI: D23
-// MISO: D19
-// SCK: D18
-// CE: D4
-// CSN: D5
+// MOSI: GPIO23
+// MISO: GPIOD19
+// SCK: GPIO18
+// CE:  GPIO4
+// CSN: GPIO5
 // VCC: 3V3
 
 
@@ -22,6 +22,7 @@ class CommunicationManager{
         CommunicationManager(int ce, int cs);
         void sendMessage(Packet *p);
         Packet buildPacket(char g, int lx, int ly, bool lb, int rx, int ry, bool rb);
+        void sendMessage(char msg[]);
     private:
         RF24 radio; // filled out in initializer list of constructor
         const uint64_t address = 0xDEADBEEF01; 

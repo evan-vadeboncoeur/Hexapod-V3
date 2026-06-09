@@ -15,6 +15,14 @@ void CommunicationManager::sendMessage(Packet *p){
     radio.write(p, sizeof(*p));
 }
 
+void CommunicationManager::sendMessage(char msg[]){
+    int i = 0;
+    while(msg[i] != '\0') i++;
+    
+    Serial.println(i);
+    radio.write(msg, i);
+}
+
 // construct a packet struct (data values already read - probably isolate to power class)
 Packet CommunicationManager::buildPacket(char g, int lx, int ly, bool lb, int rx, int ry, bool rb){
     Packet p;

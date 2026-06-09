@@ -19,11 +19,14 @@ C_Position pos3 = C_Position(-150.0, -221.0, 67.0);
 J_Position home = J_Position(0.0, 0.0, 0.0);
 
 MotionPlanner plan = MotionPlanner();
+CommunicationManager cm = CommunicationManager(CE_H, CSN_H);
 
 void setup(){
   Serial.begin(9600); // open before creating legs (at least in testing phases)
   delay(1000);
-
+  cm.commBegin();
+  delay(50);
+  Serial.println("In setup");
   #ifdef GLOBAL_DEBUG
   Serial.println("In setup");
   #endif
@@ -52,7 +55,7 @@ void setup(){
   s2.attach(j2, PWM_MIN, PWM_MAX);
   #endif
 //Hexapod cheeto = Hexapod(plan);
-  plan.powerOnSequence();
+  //plan.powerOnSequence();
 }
 
 void loop() {
@@ -77,10 +80,14 @@ void loop() {
   // delay(3000);
   // plan.moveStance();
   //L0.moveToJV(home);  
-  plan.powerOffSequence();
+  //plan.powerOffSequence();
+  #endif
+  #ifdef COMM_H_DEBUG
+  cm.receiveMessage();
+  
   #endif
   delay(2000);
-  exit(1);
+  //exit(1);
   
 }
 

@@ -1,13 +1,10 @@
 TODO Priority (ALL)
 -------------------
-1) LM2596 pin measurements
-2) test joystick continuties for Vx Vy, power, ground
-3) test esp32 5V power via buck converter, probe 3v3 etc
-4) setup esp-mega 2560 nrf test in two terminals
-5) rough CAD controller design
-6) "trajectory generation"
+1) adjust RC schematic and pcb to match devkit, not wroom
+2) rough CAD controller design
+3) "trajectory generation"
     a) read chapter 1 and hex chapter in motion planning book to get a better idea of implementation (probably not 100% applicable due to no time, velocity, acceleration control for path planning)
-7) calculate workspace limitations and maximum swing angles / J1/2 interaction monitoring
+4) calculate workspace limitations and maximum swing angles / J1/2 interaction monitoring
  
 
 PCB/ECE TODO

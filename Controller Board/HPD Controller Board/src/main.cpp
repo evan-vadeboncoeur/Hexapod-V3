@@ -1,12 +1,16 @@
 #include "RemoteControl.h"
 
 RemoteControl rc;
+char msg[] = "test 2!!!";
 
 void setup() {
     Serial.begin(9600);
+    Serial.println("In Setup");
+    delay(50);
 }
 
 void loop() {
-    Serial.println("Hello, World!");
-    delay(2000);
+    rc.transmitMessage(msg);
+    Serial.println(msg);
+    delay(50);
 }

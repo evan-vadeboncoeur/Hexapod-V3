@@ -8,6 +8,10 @@ CommunicationManager::CommunicationManager(uint8_t ce, uint8_t cs) : radio(ce, c
     // initialize the RF24 radio object with the given CE and CSN pins
     // this constructor uses an initializer list to directly initialize the radio member
     // without needing to create a temporary RF24 object and assign it to radio
+    
+}
+
+void CommunicationManager::commBegin(){
     radio.begin();
     radio.openReadingPipe(pipe, address); // TX/RX must agree on address
     radio.setPALevel(RF24_PA_MIN);
@@ -15,7 +19,7 @@ CommunicationManager::CommunicationManager(uint8_t ce, uint8_t cs) : radio(ce, c
 }
 
 // transmit the packet to the reciever (packet already constructed)
-void CommunicationManager::receiveMessage(){
+void CommunicationManager::receivePacket(){
     if(radio.available()){
         radio.read(&p, sizeof(p));
         #ifdef COMM_H_DEBUG
@@ -27,8 +31,21 @@ void CommunicationManager::receiveMessage(){
         Serial.print('\t');
         Serial.print(p.lx);
         #endif
-        //p = radio.read
     }
+}
+
+// use for debugging
+void CommunicationManager::receiveMessage(){
+    if(radio.available()){
+        Serial.println("Message is available. ");
+        radio.read(&msg, sizeof(msg));
+        #ifdef COMM_H_DEBUG
+        Serial.println(msg);
+        #endif
+    } 
+    #ifdef COMM_H_DEBUG
+    else Serial.println("Message not available");
+    #endif
 }
 
 // construct a packet struct (data values already read - probably isolate to power class)

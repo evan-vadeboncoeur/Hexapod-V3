@@ -1,9 +1,6 @@
 ECE TODO
 ----------
-1) LM2596 pin measurements
-2) test joystick continuties for Vx Vy, power, ground
-3) test esp32 5V power via buck converter, probe 3v3 etc
-4) setup esp-mega 2560 nrf test in two terminals
+2) edit for dev board, not wroom
 5) make controller width less (closer to buttons) and taller (too short right now for thru holes) (fix bridging curves for body - use fit spline and points)
 6) order PCBs
 
@@ -276,14 +273,16 @@ V_max = 8.4V
 V_nominal = 7.4V
 V_low = 6V
 
+voltage divider for adc input
+------------------------------
 V_adc_max = 3.3V
-V_2S_FC_potential = 8.45V
 V_adc_cushion = 3.2V max
+V_ss (buck) = 5V0
 R2 = 10k ohms
 
 V_2 = V_ss * (R2 / (R1+R2))
 R1 = R2/V_2 (V_ss - V_2)
-R1 = 16250 ohms
+R1 = 5625 ohms
 
 
 

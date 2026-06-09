@@ -14,8 +14,10 @@ class RemoteControl{
         void commandUpdate();
         void readSensors();
         void transmitMessage();
+        
     public:
         RemoteControl();
+        void transmitMessage(char msg[]);
 };
 
 #endif
