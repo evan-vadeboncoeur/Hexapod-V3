@@ -15,16 +15,12 @@ TODO Priority (ALL)
 
 PCB/ECE TODO
 ----------
-1) LM2596 pin measurements
-2) test joystick continuties for Vx Vy, power, ground
-3) test esp32 5V power via buck converter, probe 3v3 etc
-4) setup esp-mega 2560 nrf test in two terminals
-5) rough CAD controller design
-6) order PCBs
+1) verify pinout
+2) order PCBs
 
 CAD TODO
 ---------------------
-1) make controller design
+1) finishs controller design by taking measurements/figuring out where battery goes
 2) make a stronger chassis
 
 Code TODO
