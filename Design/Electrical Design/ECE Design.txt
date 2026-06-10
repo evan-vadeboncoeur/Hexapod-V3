@@ -2,6 +2,12 @@ ECE TODO
 ----------
 1) change CAD of controller
 
+GENERAL
+--------
+2 layer PCB, bottom layer is mostly ground plane, with a few signals routed signals and power powers
+Use via stitching to connect ground and power pours to dissipate heat and provide more return path for the current to the source
+Use a GND plane on top at the end of routing to allow for even more GND, add stithing vias to ensure no weird islands
+
 RELAY vs. MOSFET
 ------------------
 Relay needs a flyback diode (diode in reverse bias mode) that creates a grounding loop when dI/dt -> -infinity, therefore V_coil spikes and reverses polarity, damaging the relay

@@ -4,6 +4,7 @@ TODO Priority (ALL)
 2) "trajectory generation"
     a) read chapter 1 and hex chapter in motion planning book to get a better idea of implementation (probably not 100% applicable due to no time, velocity, acceleration control for path planning)
 3) calculate workspace limitations and maximum swing angles / J1/2 interaction monitoring
+4) print L2 legs with proper link lengths (100 mm!)
  
 
 PCB/ECE TODO
