@@ -1,27 +1,22 @@
 TODO Priority (ALL)
 -------------------
-2) v3 RC design
-    a) compare pinout on PCB to chip
-    b) determine max non-js height on board (ESP + header...)
-    c) battery and LM2596 mount location OR 18650 battery and fix backside of controller with project curves (may effect sweeps, extrudes etc on cover side)
-        hole pattern on LM for standoffs
-        figure out how to go from battery -> LM, LM -> jumper input
-            2S -> wire leads -> switch -> screw mount terminal +/- -> LM -> screw mount terminal +/- -> wire -> screw mount terminal -> switch
-    
-3) "trajectory generation"
+1) work on CAD for controller: battery location
+2) "trajectory generation"
     a) read chapter 1 and hex chapter in motion planning book to get a better idea of implementation (probably not 100% applicable due to no time, velocity, acceleration control for path planning)
-4) calculate workspace limitations and maximum swing angles / J1/2 interaction monitoring
+3) calculate workspace limitations and maximum swing angles / J1/2 interaction monitoring
  
 
 PCB/ECE TODO
 ----------
-1) verify pinout
-2) order PCBs
+
 
 CAD TODO
 ---------------------
-1) finishs controller design by taking measurements/figuring out where battery goes
-2) make a stronger chassis
+1) clean up slots for switches / LEDs
+2) add battery slot for 18650
+    order 18650, charger, and lead kit
+    measure lead kit
+3) make a stronger and larger chassis to accomodate battery pack size
 
 Code TODO
 ----------

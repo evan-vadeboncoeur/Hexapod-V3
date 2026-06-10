@@ -1,7 +1,6 @@
 ECE TODO
 ----------
-1) verify pinout
-2) order PCBs
+1) change CAD of controller
 
 RELAY vs. MOSFET
 ------------------
