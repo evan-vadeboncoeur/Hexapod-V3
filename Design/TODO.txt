@@ -4,6 +4,9 @@ TODO Priority (ALL)
 2) "trajectory generation"
     a) read chapter 1 and hex chapter in motion planning book to get a better idea of implementation (probably not 100% applicable due to no time, velocity, acceleration control for path planning)
 3) calculate workspace limitations and maximum swing angles / J1/2 interaction monitoring
+    maximum done
+    need to work on leg interaction
+    J2 J3 collision monitoring
 4) print L2 legs with proper link lengths (100 mm!)
  
 
@@ -17,26 +20,21 @@ CAD TODO
 2) add battery slot for 18650
     order 18650, charger, and lead kit
     measure lead kit
-3) make a stronger and larger chassis to accomodate battery pack size
+3) make a stronger and larger chassis to accomodate battery pack size, L2 print
 
 Code TODO
 ----------
-1) motion planner "trajectory generation"
-    0) create template coordinates for each position in the body frame (treated as body frame = walking frame), (with adjustable linear advance magnitude)
-        i) plant(LEG(i))
-        ii) lift(LEG(i))
-        iii) swing
-        iv) push
-        v) plant
-    1) fill in template coordinates for magnitude
-    2a) choose walking direction
-        i) establish tripods, leg orientations (if using old version)
-    
-    generate global coordinates for each leg, depending on:
-        i) leg
-        ii) walking direction
-    3a) convert to local coordinates for leg to understand
-    4a) have leg purely take values into account, no other context
-2b) dynamic linear advance calculations based on leg (dynamic in motion planner)
+1) motion planner class
+    0) input command: adc x, adc y -> r, theta -> r = magnitude of speed, theta = direction : construct twist vector
+    a) accepts gait, twist vector (v_x_B, v_y_B, w_z_B = w_Z_G)
+    b) computes foot velocity in base frame needed for each foot to make the twist vector true (w_z_B = 0 -> pure translation)
+    c) computes position change based on time step (T_STANCE/T_CYCLE) * speed vector
+    d) computes final position based on current leg position (start at plant macro), leg will be moving backward in the body frame (relative to body - in reality, it stays grounded in the body and global frame)
+    e) compute final position in each leg frame for the stance vector
+    f) use interpolation for swing to plant position (curve radius that moves leg along curve to point equidistant in the motion frame)
+        center position will have a (J1/J2 lift)
+    g) consider leg's contribution to motion???
+2) controller function to map x,y adc to r, theta, speed
+2) dynamic duty cycle change for varying gait speeds
 
 

@@ -1,16 +1,14 @@
 #ifndef PACKET_H
 #define PACKET_H
 
+#include "Twist.h"
 // struct for un/packing data packets for the NRF24L01
 
 struct Packet{
+    Twist t; // twist command
     char g; // gait
-    int lx;
-    int ly;
     bool lb; // left button
-    int rx;
-    int ry;
-    bool rb;
+    bool rb; // right button
         
 };
 

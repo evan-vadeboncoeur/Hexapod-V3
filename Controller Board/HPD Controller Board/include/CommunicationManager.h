@@ -21,7 +21,7 @@ class CommunicationManager{
     public:
         CommunicationManager(int ce, int cs);
         void sendMessage(Packet *p);
-        Packet buildPacket(char g, int lx, int ly, bool lb, int rx, int ry, bool rb);
+        Packet buildPacket(Twist t, char g, bool lb, bool rb);
         void sendMessage(char msg[]);
     private:
         RF24 radio; // filled out in initializer list of constructor
