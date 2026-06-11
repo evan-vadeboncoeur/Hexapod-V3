@@ -35,8 +35,10 @@ void Leg::setTarget(C_Position goal){
 
 // outsource to kinematic class to compute kinematics
 void Leg::forwardKinematics(float side){
-    kinematic.fk(side);
+    C_Position out = kinematic.fk(side);
+    local_p = out;
 }
+
 void Leg::inverseKinematics(bool config, float side){
     target_j = kinematic.ik(config, side); // set joint space vector to inverse kinematics
 }
@@ -69,6 +71,7 @@ void  Leg::moveToJV(J_Position *jv){ // overloaded
     #endif
     adjustServos();
     moveTo();
+    
 }
 
 // adjust raw FK angle value to work with servo effort direction/offset

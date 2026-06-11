@@ -1,5 +1,6 @@
 #ifndef REMOTE_H
 #define REMOTE_H
+#define REMOTE_DEBUG
 
 #define L0 (0)
 #define L1 (1)
@@ -10,9 +11,10 @@
 #define M_PI_3 (1.04791)
 #define M_PI_6 (0.52359)
 #define ADC_MIN (0)
-#define ADC_MAX (1023)
+#define ADC_MAX (4095) // 12-bit
 #define V_MIN (5) // mm/s, maginute, not maximum
 #define V_MAX (80)
+#define CMD_DELAY (1000)
 
 #include "CommunicationManager.h"
 #include "BoardManager.h"
@@ -24,13 +26,13 @@ class RemoteControl{
         BoardManager bmr = BoardManager();
         Packet cmd;
         Twist t;
-        void commandUpdate();
         void readSensors();
         void transmitMessage();
         float v_ref = 3.3; // reference voltage on the ESP32
         
     public:
         RemoteControl();
+        void commandUpdate();
         void transmitMessage(char msg[]);
         Twist buildTwist();
 };

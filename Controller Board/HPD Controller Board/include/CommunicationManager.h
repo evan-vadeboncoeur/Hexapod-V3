@@ -1,5 +1,6 @@
 #ifndef COMM_R_H
 #define COMM_R_H
+//#define COMM_R_DEBUG
 
 #define CE_T (4)
 #define CSN_T (5)

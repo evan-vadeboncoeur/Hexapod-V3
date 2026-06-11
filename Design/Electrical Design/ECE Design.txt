@@ -1,7 +1,9 @@
 ECE TODO
 ----------
 1) change CAD of controller
-
+2) dipswitch resistors - not needed on array board, can configure as pull-downs
+3) change +7.4V net to 18650 voltage net(+3.6V) after testing board power
+4) change VIN resistance value to map 3.6V to 3.2V should (3) be successful 
 GENERAL
 --------
 2 layer PCB, bottom layer is mostly ground plane, with a few signals routed signals and power powers

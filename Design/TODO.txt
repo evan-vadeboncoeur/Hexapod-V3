@@ -1,5 +1,8 @@
 TODO Priority (ALL)
 -------------------
+0) double check power and ground pin locations for ADC output
+    continuity from 3v3 pins to source, gnd to gnd
+    test on esp32 - update code as necessary for direction
 1) work on CAD for controller: battery location
 2) "trajectory generation"
     a) read chapter 1 and hex chapter in motion planning book to get a better idea of implementation (probably not 100% applicable due to no time, velocity, acceleration control for path planning)
@@ -24,6 +27,19 @@ CAD TODO
 
 Code TODO
 ----------
+0) redo motion planner so that initialization functions use the body class / coordinates (TF body to leg, figure out leg position macros in body frame)
+    motion planner
+        6 legs
+        2 tripod (L, R)
+        twist command input
+        body velocity
+        leg (1-6 foot velocities in body frame)
+        leg (1-6 current points in body frame)
+        leg (1-6 position change vectors in body frame)
+        T_CYCLE
+        T_STANCE
+        duty_factor
+
 1) motion planner class
     0) input command: adc x, adc y -> r, theta -> r = magnitude of speed, theta = direction : construct twist vector
         figure out sign conventions / when to use sine / cos !!! maybe get rid of - angles

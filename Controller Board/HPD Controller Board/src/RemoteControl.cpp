@@ -6,7 +6,8 @@ RemoteControl::RemoteControl(){
 
 void RemoteControl::commandUpdate(){
     readSensors(); // updates sensor values in BM class
-    transmitMessage();
+    buildTwist(); // calculate twist command
+    transmitMessage(); // send to designated address on designated pipe using NRF
 }
 
 void RemoteControl::readSensors(){
@@ -22,10 +23,11 @@ void RemoteControl::transmitMessage(char msg[]){
 }
 
 Twist RemoteControl::buildTwist(){
-    // X > 0 is left, Y > 0 is up
+    // X_JS > 0 is left, Y_JS > 0 is up
     // therefore, to match X_R, Y_R, we map the vertical pot to X and the horizontal to Y to not have to adjust the frame
     int x = bmr.getLy(), y = bmr.getLx();
     float r = sqrt(x*x - y*y); // magnitude of the command, will designate speed, (or position if desired. if T_Stance and Duty Factor are constant, this is the same thing)
+    r = map (r, ADC_MIN, ADC_MAX, V_MIN, V_MAX); // map adc value to velocity min/max range
     float theta = atan2(y,x);
     while(theta < M_PI) theta += 2*M_PI; // normalize angle, remember theta starts at 0, straight up
     while(theta > M_PI) theta -= 2*M_PI;
@@ -41,7 +43,7 @@ Twist RemoteControl::buildTwist(){
     else theta = 0.00; // default to D1 
 
     Twist t_r;
-    r = map (r, ADC_MIN, ADC_MAX, V_MIN, V_MAX);
+    
     float vx, vy;
     vx = r*sin(theta); // flip x and y components since X is up, y is left... or not, despends on sign stuff
     vy = r*cos(theta); // figure out if we need a negative... yeah we need some sort of angle handling here

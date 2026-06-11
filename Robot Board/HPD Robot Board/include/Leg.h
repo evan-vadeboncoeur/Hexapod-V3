@@ -31,13 +31,15 @@ class Leg{
         float direction; // +/- 1.0, depends on CCW or CW movement of the leg
         float alpha, pi_6 = M_PI/6.0, pi_3 = M_PI/3.0, walking_alpha; // mounting offset relative to home frame, PI/3 multiple 
         float L0 = 77.5, L1 = 70, L2 = 100, L3 = 150; // link lengths
-        C_Position local_p = C_Position(); 
+        C_Position b_foot_p = C_Position(); // current foot position in the body frame
+        C_Position local_p = C_Position();
         C_Position global_p = C_Position();
         C_Position target_p = C_Position(); // keep track of local, global, and target (local) positions
+        C_Position prev_p = C_Position();
         J_Position local_j = J_Position();
         J_Position target_j = J_Position(); // joint vector of 3 servos at present
         Kinematics kinematic = Kinematics(L1, L2, L3);
-        void forwardKinematics(float);
+        
         void inverseKinematics(bool, float);
         void moveToPV(); // move to position vector
         void moveTo(); // move the servos
@@ -57,6 +59,9 @@ class Leg{
         float getLink0();
         void setWalkingAlpha(float a);
         float getWalkingAlpha();
+        void forwardKinematics(float);
+        C_Position getTargetC(){return target_p;}
+        J_Position getTargetJ(){return target_j;}
 
 };
 

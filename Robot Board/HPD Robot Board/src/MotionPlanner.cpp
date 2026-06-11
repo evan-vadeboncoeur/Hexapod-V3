@@ -196,6 +196,19 @@ C_Position MotionPlanner::Body_TF_Leg(Leg* l, C_Position target){
     return output;
 } 
 
+// edit to reverse values / negatives/ transpose whatever
+Vector MotionPlanner::Foot_TF_Body(Leg* l, C_Position target){
+    float x_L, y_L, z_L; // coordinates in the leg's base frame
+    float x_B = target.getX(), y_B = target.getY(); // coordinates in the robot Body frame
+    float a = l->getAlpha(), Link0_L = l->getLink0();
+    x_L = x_B*cos(a) - Link0_L + y_B*sin(a);
+    y_L = y_B*cos(a) - x_B*sin(a);
+    z_L = target.getZ();
+    //                         1                  
+    Vector output = Vector(x_L, y_L, z_L); // body coordinates in leg frame
+    return output;
+}
+
 // takes a target position in the walking frame (dictated by direction) and a given leg (which stores mount angle and attachment orientation) and computes TF from walking to leg
 // frame is rotating alpha, and translated r along x_B
 C_Position MotionPlanner::Walking_TF_Leg(Leg* l, C_Position target){
@@ -210,6 +223,7 @@ C_Position MotionPlanner::Walking_TF_Leg(Leg* l, C_Position target){
     return output;
 }
 
+//new version, call at object instantiation and save alpha values
 float MotionPlanner::computeWalkingAlpha(int id){
     float ret = M_PI_6*(2*(id-direction)-1); // simplified expression to calculate angular distance from walking direction to given leg
     if(ret > M_PI) ret-= (2*M_PI); // make shortest angle to X_W axis (measured about Z_W)
@@ -224,14 +238,20 @@ bool MotionPlanner::powerOnSequence(){
     #endif
     moveHome();
     delay(1000);
-    moveStance();
+    moveIdle();
+    // set Pn in body frame for the first time
+    // legs[0]->forwardKinematics(legs[0]->getTargetJ());
+    // C_Position target_idle = legs[0]->getTargetC();
+    // for(int i =0; i<(NUM_LEGS-1); i++){
+    //    R_Pn_foot[i] = Foot_TF_Body(legs[i], legs[i]->getTargetC()); // tf each leg's most recent target position to the body frame
+    // }
 }
 
 bool MotionPlanner::powerOffSequence(){
     #ifdef PLAN_DEBUG
     Serial.println("Powering Off: ");
     #endif
-    moveStance();
+    moveIdle();
     delay(1000);
     moveHome();
     delay(1000);
@@ -248,10 +268,7 @@ bool MotionPlanner::moveHome(){
     for(int l=0; l<(NUM_LEGS/2-1); l++){
         tp_R[l]->moveToJV(&home);
     }
-    // for(int l=0; l<(NUM_LEGS-1); l++){
-    //     legs[l]->moveToJV(&home);
-    //     delay(10);
-    // }
+    
     return true;
 }
 
@@ -265,26 +282,52 @@ bool MotionPlanner::moveStorage(){
     for(int l=0; l<(NUM_LEGS/2-1); l++){
         tp_R[l]->moveToJV(&storage);
     }
-    // for(int l=0; l<(NUM_LEGS-1); l++){
-    //     legs[l]->moveToJV(&storage);
-    //     delay(10);
-    // }
     return true;
 }
 
-bool MotionPlanner::moveStance(){
+bool MotionPlanner::moveIdle(){
     #ifdef PLAN_DEBUG
-    Serial.println("Moving to Stance: ");
+    Serial.println("Moving to Idle: ");
     #endif
     for(int l=0; l<(NUM_LEGS/2-1); l++){
-        tp_L[l]->moveToJV(&stance);
+        tp_L[l]->moveToJV(&idle);
     }
     for(int l=0; l<(NUM_LEGS/2-1); l++){
-        tp_R[l]->moveToJV(&stance);
+        tp_R[l]->moveToJV(&idle);
     }
-    // for(int l=0; l<(NUM_LEGS-1); l++){
-    //     legs[l]->moveToJV(&stance);
-    //     delay(25);
-    // }
+
     return true;
 }
+
+// end movement macros
+
+// v2.1 kinematics 
+void MotionPlanner::setTwist(Twist tw){
+    t.v_x = tw.v_x;
+    t.v_y = tw.v_y;
+    t.w_z = tw.w_z;
+}
+// load twist values into object members
+void MotionPlanner::unpackTwist(){
+    vx = t.v_x;
+    vy = t.v_y;
+    wz = t.w_z;
+    v_R = Vector(vx, vy);
+}
+
+// commandSetup()
+
+// calculate all the position vectors of the feet in the body frame
+void MotionPlanner::Body_r_Foot(){
+
+}
+
+// compute each foot velocity in the body frame of the robot needed to obtain twist vector
+// B_VFoot_F = -
+void MotionPlanner::Body_V_Foot(){
+    for(int i=0; i<(NUM_LEGS-1); i++){
+
+    }
+}
+
+// end v2.1 kinematics
