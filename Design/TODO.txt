@@ -26,6 +26,7 @@ Code TODO
 ----------
 1) motion planner class
     0) input command: adc x, adc y -> r, theta -> r = magnitude of speed, theta = direction : construct twist vector
+        figure out sign conventions / when to use sine / cos !!! maybe get rid of - angles
     a) accepts gait, twist vector (v_x_B, v_y_B, w_z_B = w_Z_G)
     b) computes foot velocity in base frame needed for each foot to make the twist vector true (w_z_B = 0 -> pure translation)
     c) computes position change based on time step (T_STANCE/T_CYCLE) * speed vector
