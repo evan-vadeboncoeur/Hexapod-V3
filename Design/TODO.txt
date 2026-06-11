@@ -3,19 +3,22 @@ TODO Priority (ALL)
 0) double check power and ground pin locations for ADC output
     continuity from 3v3 pins to source, gnd to gnd
     test on esp32 - update code as necessary for direction
-1) work on CAD for controller: battery location
-2) "trajectory generation"
-    a) read chapter 1 and hex chapter in motion planning book to get a better idea of implementation (probably not 100% applicable due to no time, velocity, acceleration control for path planning)
-3) calculate workspace limitations and maximum swing angles / J1/2 interaction monitoring
+1) "trajectory generation"
+    a) re-work Motion Planner, Leg, Kinematic classes
+        structure top-down in a cleaner way to make it possible to access functions from the outside
+    b) add code in motion planner class for template velocity, position generators
+    c) calculate residual positions (interpolate) based on stance positions
+    d) add into gait control and walk
+2) calculate workspace limitations and maximum swing angles / J1/2 interaction monitoring
     maximum done
     need to work on leg interaction
     J2 J3 collision monitoring
-4) print L2 legs with proper link lengths (100 mm!)
- 
+3) print L2 legs with proper link lengths (100 mm!)
+4) work on CAD for controller: battery location
 
+ 
 PCB/ECE TODO
 ----------
-
 
 CAD TODO
 ---------------------
