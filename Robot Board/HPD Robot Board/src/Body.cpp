@@ -31,3 +31,24 @@ void Body::computeAlphaI(){
         alpha_i[i] = M_PI_3*i + M_PI_6;
     }
 }
+
+// TF all new foot coordinates to Leg respective frames
+void Body::R_TF_L(float alph){
+    for(int i=0; i<(NUM_LEGS-1); i++){
+        
+        //foot_p_L[i] = ;
+        //legs[i].setTargetFootP();
+    }
+}
+/*** 
+   float x_L, y_L, z_L; // coordinates in the leg's base frame
+    float x_B = target.getX(), y_B = target.getY(); // coordinates in the robot Body frame
+    float a = l->getAlpha(), Link0_L = l->getLink0();
+    x_L = x_B*cos(a) - Link0_L + y_B*sin(a);
+    y_L = y_B*cos(a) - x_B*sin(a);
+    z_L = target.getZ();
+    //                         1                  
+    C_Position output = C_Position(x_L, y_L, z_L); // body coordinates in leg frame
+    return output;
+***/
+    

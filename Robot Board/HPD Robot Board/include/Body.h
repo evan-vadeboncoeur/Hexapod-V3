@@ -49,6 +49,7 @@ class Body{
         float d_i = 75.0; // constant for every leg, travel distance along x_i
         void computeAlphaI();
         void unpackTwist();
+        void R_TF_L(float alph);
         
 };
 
