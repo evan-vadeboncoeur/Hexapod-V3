@@ -2,9 +2,9 @@
 #define BRD_R_H
 #define BRD_R_DEBUG
 
-#define LX_P (34) // fill in place holders after reading the schematic
-#define LY_P (39)
-#define LB_P (2)
+#define LX_P (39) // fill in place holders after reading the schematic
+#define LY_P (34)
+#define LB_P (16) // need to change to pin 16 (from 2)
 #define RX_P (14)
 #define RY_P (12)
 #define RB_P (13)
@@ -12,7 +12,7 @@
 #define GP_2 (25)
 #define GP_3 (26)
 #define GP_4 (27)
-#define BATT_IN_P (15)
+#define BATT_IN_P (15) // does indeed work, is not boot-strapped
 #define LOW_BATT_P (35)
 #define NRFR_P (32)
 

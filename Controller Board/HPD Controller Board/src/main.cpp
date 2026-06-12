@@ -1,5 +1,5 @@
 #include "RemoteControl.h"
-
+#include "HardwareSerial.h"
 RemoteControl rc;
 #ifdef COMM_R_DEBUG
 char msg[] = "test 2!!!";
@@ -7,7 +7,9 @@ char msg[] = "test 2!!!";
 
 void setup() {
     Serial.begin(9600);
+    delay(1000);
     Serial.println("In Setup");
+    rc.initComm();
     delay(50);
 }
 

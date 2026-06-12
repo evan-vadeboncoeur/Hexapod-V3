@@ -6,10 +6,6 @@ BoardManager::BoardManager(){
     pinMode(LB_P, INPUT_PULLUP);
     pinMode(RB_P, INPUT_PULLUP);
     // pulled-down on board for dipswitch array
-    // pinMode(GP_1, INPUT);
-    // pinMode(GP_1, INPUT);
-    // pinMode(GP_3, INPUT);
-    // pinMode(GP_4, INPUT);
     pinMode(GP_1, INPUT_PULLDOWN);
     pinMode(GP_1, INPUT_PULLDOWN);
     pinMode(GP_3, INPUT_PULLDOWN);
@@ -21,7 +17,7 @@ BoardManager::BoardManager(){
     pinMode(LY_P, INPUT);
     pinMode(RX_P, INPUT);
     pinMode(RY_P, INPUT);
-    pinMode(BATT_IN_P, INPUT);
+    //pinMode(BATT_IN_P, INPUT);
     // output setup
     pinMode(LOW_BATT_P, OUTPUT);
     pinMode(NRFR_P, OUTPUT);

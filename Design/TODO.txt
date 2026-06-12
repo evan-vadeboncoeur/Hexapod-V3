@@ -1,8 +1,5 @@
 TODO Priority (ALL)
 -------------------
-0) double check power and ground pin locations for ADC output
-    continuity from 3v3 pins to source, gnd to gnd
-    test on esp32 - update code as necessary for direction
 1) "trajectory generation"
     a) re-work Motion Planner, Leg, Kinematic classes
         structure top-down in a cleaner way to make it possible to access functions from the outside

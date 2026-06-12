@@ -12,6 +12,7 @@
 #define M_PI_6 (0.52359)
 #define ADC_MIN (0)
 #define ADC_MAX (4095) // 12-bit
+#define ADC_MID (ADC_MAX/2)
 #define V_MIN (5) // mm/s, maginute, not maximum
 #define V_MAX (80)
 #define CMD_DELAY (1000)
@@ -26,6 +27,7 @@ class RemoteControl{
         BoardManager bmr = BoardManager();
         Packet cmd;
         Twist t;
+        
         void readSensors();
         void transmitMessage();
         float v_ref = 3.3; // reference voltage on the ESP32
@@ -33,6 +35,7 @@ class RemoteControl{
     public:
         RemoteControl();
         void commandUpdate();
+        void initComm();
         void transmitMessage(char msg[]);
         Twist buildTwist();
 };

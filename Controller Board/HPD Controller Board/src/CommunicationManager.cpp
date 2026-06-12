@@ -4,15 +4,14 @@ CommunicationManager::CommunicationManager(int ce, int cs) : radio(ce, cs) {
     // initialize the RF24 radio object with the given CE and CSN pins
     // this constructor uses an initializer list to directly initialize the radio member
     // without needing to create a temporary RF24 object and assign it to radio
-    radio.begin();
-    radio.openWritingPipe(address);
-    radio.setPALevel(RF24_PA_MIN);
-    radio.stopListening(); // stop listening for incoming messages, switch to transmit mode
+    
 }
 
 // transmit the packet to the reciever (packet already constructed)
 void CommunicationManager::sendMessage(Packet *p){
+    Serial.println("sending.");
     radio.write(p, sizeof(*p));
+    Serial.println("sent");
 }
 
 void CommunicationManager::sendMessage(char msg[]){
@@ -21,6 +20,13 @@ void CommunicationManager::sendMessage(char msg[]){
     
     Serial.println(i);
     radio.write(msg, i);
+}
+
+void CommunicationManager::initCM(){
+    radio.begin();
+    radio.openWritingPipe(address);
+    radio.setPALevel(RF24_PA_MIN);
+    radio.stopListening(); // stop listening for incoming messages, switch to transmit mode
 }
 
 // construct a packet struct (data values already read - probably isolate to power class)

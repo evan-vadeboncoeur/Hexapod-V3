@@ -24,6 +24,7 @@ class CommunicationManager{
         void sendMessage(Packet *p);
         Packet buildPacket(Twist t, char g, bool lb, bool rb);
         void sendMessage(char msg[]);
+        void initCM();
     private:
         RF24 radio; // filled out in initializer list of constructor
         const uint64_t address = 0xDEADBEEF01; 
