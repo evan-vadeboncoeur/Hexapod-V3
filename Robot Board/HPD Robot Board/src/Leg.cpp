@@ -1,7 +1,5 @@
 #include "Leg.h"
 
-
-
 //default empty constructor
 Leg::Leg(){
 

@@ -12,7 +12,7 @@ Vector::Vector(float xv1, float xv2, float xv3){
     x2 = xv2;
     x3 = xv3;
     m = sqrt(x1*x1 + x2*x2 + x3*x3);
-    //t = atan2(y,x); // check for angle sense...
+    t = atan2(x2,x1); // give angle between x and y components
 }
 
 Vector::Vector(float xv1, float xv2){
@@ -20,4 +20,5 @@ Vector::Vector(float xv1, float xv2){
     x2 = xv2;
     x3 = 0.0;
     m = sqrt(x1*x1 + x2*x2 + x3*x3);
+    t = atan2(x2,x1); // give angle between x and y components
 }

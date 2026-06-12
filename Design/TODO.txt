@@ -1,8 +1,7 @@
 TODO Priority (ALL)
 -------------------
 1) "trajectory generation"
-    a) re-work Motion Planner, Leg, Kinematic classes
-        structure top-down in a cleaner way to make it possible to access functions from the outside
+    a) re-work Motion Planner
     b) add code in motion planner class for template velocity, position generators
     c) calculate residual positions (interpolate) based on stance positions
     d) add into gait control and walk

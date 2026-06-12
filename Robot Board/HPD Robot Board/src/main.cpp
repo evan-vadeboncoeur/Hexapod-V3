@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "Leg.h"
+#include "Body.h"
 //#include "Hexapod.h"
 //#define LEG_SETUP_DEBUG
 
@@ -11,9 +11,9 @@ int j1 = LEG_0_J1;
 int j2 = LEG_0_J2;
 #endif
 
-Leg L0, L1, L2, L3, L4, L5;
 
-//Leg* legs[NUM_LEGS];
+
+Leg *legs[NUM_LEGS];
 
 Vector j_home = Vector(0.0, 0.0, 0.0);
 Vector j_pos_1 = Vector(M_PI_4, -M_PI_4, -M_PI_4);
@@ -34,13 +34,8 @@ void setup(){
   #endif
 
   #ifndef LEG_SETUP_DEBUG
-  L0 = Leg(0, 28, 29, 30, CCW_CONFIG);
-  //L0 = Leg(LEG_0_J0, LEG_0_J1, LEG_0_J2, LEG_0);
-  // L1 = Leg(LEG_1_J0, LEG_1_J1, LEG_1_J2, LEG_1);
-  // L2 = Leg(LEG_2_J0, LEG_2_J1, LEG_2_J2, LEG_2);
-  // L3 = Leg(LEG_3_J0, LEG_3_J1, LEG_3_J2, LEG_3);
-  // L4 = Leg(LEG_4_J0, LEG_4_J1, LEG_4_J2, LEG_4);
-  // L5 = Leg(LEG_5_J0, LEG_5_J1, LEG_5_J2, LEG_5);
+
+
 
   // legs[LEG_0] = &L0;
   // legs[LEG_1] = &L1;
@@ -66,9 +61,9 @@ void loop() {
   Serial.println("In loop");
   #endif
   delay(2000);
-  L0.moveFootToJV(j_home);
+  //L0.moveFootToJV(j_home);
   delay(2000);
-  L0.moveFootToPV(p_home, ELBOW_DOWN);
+  //L0.moveFootToPV(p_home, ELBOW_DOWN);
   //lk.fk(storage1);
   //lk.ik(p_pos_1, ELBOW_DOWN);
 
