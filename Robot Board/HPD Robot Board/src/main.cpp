@@ -1,5 +1,6 @@
 #include <Arduino.h>
-#include "Hexapod.h"
+#include "Leg.h"
+//#include "Hexapod.h"
 //#define LEG_SETUP_DEBUG
 
 // might have to do joints & everything else BEFORE runtime, too, so that it's on the heap, not the stack?
@@ -9,22 +10,23 @@ int j0 = LEG_0_J0;
 int j1 = LEG_0_J1;
 int j2 = LEG_0_J2;
 #endif
+
 Leg L0, L1, L2, L3, L4, L5;
 
-Leg* legs[NUM_LEGS];
-// test positions
-C_Position pos = C_Position(270.0, 80.0, -80.0);
-C_Position pos2 = C_Position(180.0, 0.0, 0.0);
-C_Position pos3 = C_Position(-150.0, -221.0, 67.0);
-J_Position home = J_Position(0.0, 0.0, 0.0);
+//Leg* legs[NUM_LEGS];
 
-MotionPlanner plan = MotionPlanner();
-CommunicationManager cm = CommunicationManager(CE_H, CSN_H);
+Vector j_home = Vector(0.0, 0.0, 0.0);
+Vector j_pos_1 = Vector(M_PI_4, -M_PI_4, -M_PI_4);
+Vector storage1 = Vector(0.0, -M_PI_3, -2.0);
+Vector p_home = Vector(320.0, 0.0, 0.0);
+Vector p_pos_1 = Vector(99.5, 99.5, 1.41);
+//MotionPlanner plan = MotionPlanner();
+//CommunicationManager cm = CommunicationManager(CE_H, CSN_H);
 
 void setup(){
   Serial.begin(9600); // open before creating legs (at least in testing phases)
   delay(1000);
-  cm.commBegin();
+  //cm.commBegin();
   delay(50);
   Serial.println("In setup");
   #ifdef GLOBAL_DEBUG
@@ -32,22 +34,23 @@ void setup(){
   #endif
 
   #ifndef LEG_SETUP_DEBUG
-  L0 = Leg(LEG_0_J0, LEG_0_J1, LEG_0_J2, LEG_0);
-  L1 = Leg(LEG_1_J0, LEG_1_J1, LEG_1_J2, LEG_1);
-  L2 = Leg(LEG_2_J0, LEG_2_J1, LEG_2_J2, LEG_2);
-  L3 = Leg(LEG_3_J0, LEG_3_J1, LEG_3_J2, LEG_3);
-  L4 = Leg(LEG_4_J0, LEG_4_J1, LEG_4_J2, LEG_4);
-  L5 = Leg(LEG_5_J0, LEG_5_J1, LEG_5_J2, LEG_5);
+  L0 = Leg(0, 28, 29, 30, CCW_CONFIG);
+  //L0 = Leg(LEG_0_J0, LEG_0_J1, LEG_0_J2, LEG_0);
+  // L1 = Leg(LEG_1_J0, LEG_1_J1, LEG_1_J2, LEG_1);
+  // L2 = Leg(LEG_2_J0, LEG_2_J1, LEG_2_J2, LEG_2);
+  // L3 = Leg(LEG_3_J0, LEG_3_J1, LEG_3_J2, LEG_3);
+  // L4 = Leg(LEG_4_J0, LEG_4_J1, LEG_4_J2, LEG_4);
+  // L5 = Leg(LEG_5_J0, LEG_5_J1, LEG_5_J2, LEG_5);
 
-  legs[LEG_0] = &L0;
-  legs[LEG_1] = &L1;
-  legs[LEG_2] = &L2;
-  legs[LEG_3] = &L3;
-  legs[LEG_4] = &L4;
-  legs[LEG_5] = &L5;
+  // legs[LEG_0] = &L0;
+  // legs[LEG_1] = &L1;
+  // legs[LEG_2] = &L2;
+  // legs[LEG_3] = &L3;
+  // legs[LEG_4] = &L4;
+  // legs[LEG_5] = &L5;
   //*(legs + LEG_0) = &L0; (equivalent to the above)
 
-  plan = MotionPlanner(legs, 0);
+  // plan = MotionPlanner(legs, 0);
   #endif
   #ifdef LEG_SETUP_DEBUG
   s0.attach(j0, PWM_MIN, PWM_MAX);
@@ -55,7 +58,7 @@ void setup(){
   s2.attach(j2, PWM_MIN, PWM_MAX);
   #endif
 //Hexapod cheeto = Hexapod(plan);
-  //plan.powerOnSequence();
+//plan.powerOnSequence();
 }
 
 void loop() {
@@ -63,6 +66,12 @@ void loop() {
   Serial.println("In loop");
   #endif
   delay(2000);
+  L0.moveFootToJV(j_home);
+  delay(2000);
+  L0.moveFootToPV(p_home, ELBOW_DOWN);
+  //lk.fk(storage1);
+  //lk.ik(p_pos_1, ELBOW_DOWN);
+
   #ifdef LEG_SETUP_DEBUG
   s0.write(HPS_2018_CTR);
   delay(2000);

@@ -2,6 +2,7 @@
 #define JOINT_H
 //#define JOINT_DEBUG
 
+#define JOINT_DELAY (30)
 #define HPS_2018_CTR (90)
 #define HPS_2027_CTR (1500)
 #define PWM_MIN (500)

@@ -1,8 +1,12 @@
 #ifndef LEG_H
 #define LEG_H
+#define LEG_DEBUG
 
 #define M_PI_3 (1.04719755)
 #define M_PI_6 (0.523598776)
+
+//#define CCW_CONFIG (-1)
+#define CW_CONFIG (1)
 
 #define COXA (0)
 #define FEMUR (1)
@@ -19,7 +23,7 @@
 #include "C_Position.h"
 #include "J_Position.h"
 #include "Arduino.h"
-#include "Kinematics.h"
+#include "LegKinematics.h"
 
 
 // leg class. maintains leg position in joint and cartesian spaces. calculates forward and inverse kinematics for a singular leg, moves leg to desired JV/PV
@@ -28,40 +32,44 @@ class Leg{
     private:
         Joint joints[3]; // 3 joints per leg: J0, J1, J2
         int id; // leg ID
-        float direction; // +/- 1.0, depends on CCW or CW movement of the leg
-        float alpha, pi_6 = M_PI/6.0, pi_3 = M_PI/3.0, walking_alpha; // mounting offset relative to home frame, PI/3 multiple 
+        float configuration; // CCW facing or CW facing
         float L0 = 77.5, L1 = 70, L2 = 100, L3 = 150; // link lengths
-        C_Position b_foot_p = C_Position(); // current foot position in the body frame
-        C_Position local_p = C_Position();
-        C_Position global_p = C_Position();
-        C_Position target_p = C_Position(); // keep track of local, global, and target (local) positions
-        C_Position prev_p = C_Position();
-        J_Position local_j = J_Position();
-        J_Position target_j = J_Position(); // joint vector of 3 servos at present
-        Kinematics kinematic = Kinematics(L1, L2, L3);
-        
-        void inverseKinematics(bool, float);
-        void moveToPV(); // move to position vector
+        // cartesian space values
+        Vector storage_j_L = Vector(0.0, -M_PI_3, -2.0); // initial storage position in the joint space
+        Vector storage_p_L = Vector(-29.33, 0.00, 1.78); // initial storage position in the leg frame
+        Vector foot_p_L; // target foot position in the leg frame (J0 = base)
+        Vector prevFoot_p_L; // prev foot position in the leg frame
+        Vector foot_speed_L; // foot speed in the leg (J0) frame
+        // joint space values
+        Vector foot_j_L; // target foot position in the joint space
+        Vector servo_j_L; // servo joint space vector for moving the leg
+        Vector prevFoot_j_L; // prev foot position in the joint space
+        LegKinematics lk = LegKinematics(); // calculation object
+        // Helper functions
         void moveTo(); // move the servos
-        void adjustServos(); // adjust angles to servo values
+        void setServoJV(); // adjust angles to servo values
+        void radToDeg(); // convert radiand to degrees
+        void servoOffsets();
     public:
+        // Constructors
         Leg();
-        Leg(int j1, int j2, int j3, int id);
-        void computeGlobal(); // conver local position to global
-        void setTarget(C_Position goal);
-        void moveToIK(C_Position tp, bool config, float side);
-        void moveToJV(); // move to joint vector
-        void moveToJV(J_Position *jv); // overloaded
-        void setDirection(float);
-        float getDirection();
-        int getID();
-        float getAlpha();
-        float getLink0();
-        void setWalkingAlpha(float a);
-        float getWalkingAlpha();
-        void forwardKinematics(float);
-        C_Position getTargetC(){return target_p;}
-        J_Position getTargetJ(){return target_j;}
+        Leg(int id, int j1, int j2, int j3, float configuration);
+        // Getters
+        Vector getPrevFootP(){return prevFoot_p_L;} // get position from previous move
+        Vector getPrevFootJ(){return prevFoot_j_L;}
+        int getID(){return id;}
+        // Setters
+        void setTargetFootP(Vector new_pVL){foot_p_L = new_pVL;} // set new, calculated goal position
+        void setTargetFootJ(Vector new_jVL){foot_j_L = new_jVL;}
+        void setPrevFootP(Vector prev_pVL){prevFoot_p_L = prev_pVL;}
+        void setPrevFootJ(Vector prev_jVL){prevFoot_j_L = prev_jVL;}
+        // Movement function macros
+        void moveFootToPV(Vector new_pVL, bool config);
+        void moveFootToJV(Vector new_jVL); // move to joint vector
+
+        
+ 
+
 
 };
 

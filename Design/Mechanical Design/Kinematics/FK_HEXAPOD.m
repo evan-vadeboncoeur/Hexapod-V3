@@ -63,7 +63,9 @@ FK_S = simplify(FK_S, 'IgnoreAnalyticConstraints', true)
 %FK_S = double(vpa(FK_S, 6));  % Convert symbolic to numerical
 % tolerance = 1e-10;  
 % FK_S(abs(FK_S) < tolerance) = 0;  % Zero out small values
- 
+
+% CCW CONFIG (alpha1 = -pi/2)
+
 [cos(t2 + t3)*cos(t1), - 1.0*sin(t2 + t3)*cos(t1), -1.0*sin(t1), 70.0*cos(t1) + cos(t1)*(150.0*cos(t2 + t3) + 100.0*cos(t2))]
 [cos(t2 + t3)*sin(t1), - 1.0*sin(t2 + t3)*sin(t1), cos(t1), 70.0*sin(t1) + sin(t1)*(150.0*cos(t2 + t3) + 100.0*cos(t2))]
 [-1.0*sin(t2 + t3), -1.0*cos(t2 + t3), 0,   - 150.0*sin(t2 + t3) - 100.0*sin(t2)]
@@ -84,3 +86,19 @@ R3_3 = 0.0;
 R1_4 = 70.0*cos(t1) + cos(t1)*(150.0*cos(t2 + t3) + 100.0*cos(t2)); % d_x
 R2_4 = 70.0*sin(t1) + sin(t1)*(150.0*cos(t2 + t3) + 100.0*cos(t2)); % d_y
 R3_4 = -150.0*sin(t2 + t3) - 100.0*sin(t2); %d_z
+
+
+% CW CONFIG (alpha1 = pi/2)
+R1_1 = cos(t2 + t3)*cos(t1);
+R1_2 =  -1.0*sin(t2 + t3)*cos(t1); 
+R1_3 = sin(t1); % config
+R_2_1 = cos(t2 + t3)*sin(t1);
+R2_2 = - 1.0*sin(t2 + t3)*sin(t1);      
+R2_3 = -1.0*cos(t1); % config
+R3_1 = sin(t2 + t3); % config
+R3_2 = cos(t2 + t3); % config
+R3_3 = 0.0;  
+X = 70.0*cos(t1) + cos(t1)*(150.0*cos(t2 + t3) + 100.0*cos(t2));
+Y = 70.0*sin(t1) + sin(t1)*(150.0*cos(t2 + t3) + 100.0*cos(t2));
+Z = 150.0*sin(t2 + t3) + 100.0*sin(t2); % config * 2
+ 

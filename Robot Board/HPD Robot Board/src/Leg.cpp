@@ -1,169 +1,119 @@
 #include "Leg.h"
 
-//#define MOVE_JV_DEBUG
+
 
 //default empty constructor
 Leg::Leg(){
 
 }
 
-// leg constructor. takes 3 servo pin IDs and attaches them, sets leg ID number (physical)
-Leg::Leg(int j1, int j2, int j3, int id) : joints{ // initializer lists directly creates the class members before the constructor body
+// leg constructor. takes 3 servo pin IDs and attaches them, sets leg ID number (physical), assigns CCW or CW configuration
+Leg::Leg(int id, int j1, int j2, int j3, float configuration) : joints{ // initializer lists directly creates the class members before the constructor body
         Joint(j1, PWM_MIN, PWM_MAX), // bypasses creating temporary objects to assign into the joint[] array
         Joint(j2, PWM_MIN, PWM_MAX),
         Joint(j3, PWM_MIN, PWM_MAX)
     },
-    id(id)
-    // joints[COXA] = Joint(j1);
-    // joints[FEMUR] = Joint(j2);
-    // joints[FOOT] = Joint(j3, PWM_MIN, PWM_MAX); // clamp J2 from 0-270
-    // this->id = id;
+    id(id),
+    configuration(configuration),
+    lk(L1, L2, L3, configuration)
 {
-    alpha = M_PI_6*(2*id-1); // 0 leg is -PI/2 from X_G about Z_G
+    #ifdef LEG_DEBUG
+    Serial.println("Leg ID & Configuration:");
+    Serial.print(id);
+    Serial.print('\t');
+    Serial.println(configuration);
+    #endif
+    // set current foot positions
+    setTargetFootP(storage_p_L);
+    setTargetFootJ(storage_j_L);
 }
 
-void Leg::setDirection(float d){
-    direction = d;
-}
-
-void Leg::setTarget(C_Position goal){
-    float y_adjust = goal.getY();
-    if(direction < 0) y_adjust = -y_adjust;
-    target_p.setPosition(goal.getX(), y_adjust, goal.getZ());
-    this->kinematic.setTarget(target_p.getX(), target_p.getY(), target_p.getZ());
-}
-
-// outsource to kinematic class to compute kinematics
-void Leg::forwardKinematics(float side){
-    C_Position out = kinematic.fk(side);
-    local_p = out;
-}
-
-void Leg::inverseKinematics(bool config, float side){
-    target_j = kinematic.ik(config, side); // set joint space vector to inverse kinematics
-}
-
-// after computing IK with target joint vector, move each servo joint
-void Leg::moveToJV(){
-    adjustServos();
+// takes a position vector in the leg's frame and calculates the joint vector needed to satisfy
+void Leg::moveFootToPV(Vector new_pVL, bool config){
+    // calculate workspace first..., change to bool for if we can move to this value
+    // set previous foot values to store if needed in body class
+    setPrevFootP(foot_p_L);
+    setPrevFootJ(foot_j_L);
+    // update current values to set values
+    setTargetFootP(new_pVL); // moving to this point in cartesian space
+    setTargetFootJ(lk.ik(new_pVL, config)); // calculate IK, update target movement joint vector
+    // use JV target to compute servo vectors
+    setServoJV();
+    // move to target
     moveTo();
 }
 
-void  Leg::moveToJV(J_Position *jv){ // overloaded
-    
-    target_j.setT1(jv->getT1());
-    target_j.setT2(jv->getT2());
-    target_j.setT3(jv->getT3());
-    delay(1);
-    #ifdef MOVE_JV_DEBUG
-    Serial.println("moveToJV JV (rad): ");
-    Serial.print("T1: ");
-    Serial.print('\t');
-    Serial.print(target_j.getT1());
-    Serial.print('\t');
-    Serial.print("T2: ");
-    Serial.print('\t');
-    Serial.print(target_j.getT2());
-    Serial.print('\t');
-    Serial.print("T3: ");
-    Serial.print('\t');
-    Serial.println(target_j.getT3());
-    #endif
-    adjustServos();
+void Leg::moveFootToJV(Vector new_jVL){
+    // set previous foot values to store if needed in body class
+    setPrevFootP(foot_p_L);
+    setPrevFootJ(foot_j_L);
+    // set target values using FK
+    setTargetFootJ(new_jVL);
+    setTargetFootP(lk.fk(foot_j_L)); // calculate ik to obtain respective cartesian vector of foot we are moving to
+    // Use JV target to compute servos
+    setServoJV();
+    // move to target
     moveTo();
+}
+
+void Leg::setServoJV(){
+    servo_j_L = foot_j_L; // copy into servo position object
+    radToDeg(); // convert joint control vector to degrees
+    servoOffsets(); // servo offset helper
     
 }
 
-// adjust raw FK angle value to work with servo effort direction/offset
-void Leg::adjustServos(){
-    #ifdef IK_DEBUG
-    Serial.println("Adjust Servos (rad): ");
+// convert joint vector to degrees
+void Leg::radToDeg(){
+    servo_j_L.setX1(servo_j_L.getX1()*RAD_TO_DEG);
+    servo_j_L.setX2(servo_j_L.getX2()*RAD_TO_DEG);
+    servo_j_L.setX3(servo_j_L.getX3()*RAD_TO_DEG);
+    #ifdef LEG_DEBUG
+    Serial.println("Servo angles [deg]: ");
     Serial.print("T1: ");
     Serial.print('\t');
-    Serial.print(target_j.getT1());
+    Serial.print(servo_j_L.getX1());
     Serial.print('\t');
     Serial.print("T2: ");
     Serial.print('\t');
-    Serial.print(target_j.getT2());
+    Serial.print(servo_j_L.getX2());
     Serial.print('\t');
     Serial.print("T3: ");
     Serial.print('\t');
-    Serial.println(target_j.getT3());
+    Serial.println(servo_j_L.getX3());
     #endif
-    float _t1, _t2, _t3;
-    _t1 = target_j.getT1()*RAD_TO_DEG + COXA_SERVO_OFFSET;
-    _t2 = target_j.getT2()*RAD_TO_DEG + FEMUR_SERVO_OFFSET;
-    _t3 = map(FOOT_SERVO_MAX - (target_j.getT3()*RAD_TO_DEG + FOOT_SERVO_OFFSET), FOOT_SERVO_MIN, FOOT_SERVO_MAX, PWM_MIN, PWM_MAX);
-    target_j.setT1(_t1);
-    target_j.setT2(_t2);
-    target_j.setT3(_t3);
-    #ifdef IK_DEBUG
-    Serial.println("Adjusted Servos (deg): ");
+}
+
+void Leg::servoOffsets(){
+    servo_j_L.setX1(servo_j_L.getX1() + COXA_SERVO_OFFSET);
+    servo_j_L.setX2(servo_j_L.getX2() + FEMUR_SERVO_OFFSET);
+    servo_j_L.setX3(map((servo_j_L.getX3() + FOOT_SERVO_OFFSET), FOOT_SERVO_MIN, FOOT_SERVO_MAX, PWM_MIN, PWM_MAX));
+    #ifdef LEG_DEBUG
+    Serial.println("Servo command [deg or us]: ");
     Serial.print("T1: ");
     Serial.print('\t');
-    Serial.print(target_j.getT1());
+    Serial.print(servo_j_L.getX1());
     Serial.print('\t');
     Serial.print("T2: ");
     Serial.print('\t');
-    Serial.print(target_j.getT2());
+    Serial.print(servo_j_L.getX2());
     Serial.print('\t');
     Serial.print("T3: ");
     Serial.print('\t');
-    Serial.println(target_j.getT3());
+    Serial.println(servo_j_L.getX3());
     #endif
 }
 
-void Leg::moveToIK(C_Position tp, bool config, float side){
-    setTarget(tp); // set target position
-    inverseKinematics(config, side); // calculate IK to do so
-    moveToJV(); // adjust servos and move to joint vector
-}
-
-// move servos after all other commands
+// move to already calculated servo vector
 void Leg::moveTo(){
-    #ifdef IK_DEBUG
-    Serial.println("Commanding movement to (deg): ");
-    Serial.print("T1: ");
-    Serial.print('\t');
-    Serial.print(target_j.getT1());
-    Serial.print('\t');
-    Serial.print("T2: ");
-    Serial.print('\t');
-    Serial.print(target_j.getT2());
-    Serial.print('\t');
-    Serial.print("T3: ");
-    Serial.print('\t');
-    Serial.println(target_j.getT3());
-    #endif
-    
-    joints[FEMUR].setAngle((int)target_j.getT2());
-    delay(LEG_DELAY);
-    joints[FOOT].setAngle((int)target_j.getT3());
-    delay(LEG_DELAY);
-    joints[COXA].setAngle((int)target_j.getT1()); // move hip last
-    delay(LEG_DELAY);
+    joints[FOOT].setAngle(servo_j_L.getX3());
+    delay(JOINT_DELAY);
+    joints[FEMUR].setAngle(servo_j_L.getX2());
+    delay(JOINT_DELAY);
+    joints[COXA].setAngle(servo_j_L.getX1());
+    delay(JOINT_DELAY);
 }
 
-float Leg::getDirection(){
-    return direction;
-}
 
-int Leg::getID(){
-    return id;
-}
 
-float Leg::getAlpha(){
-    return alpha;
-}
 
-float Leg::getLink0(){
-    return L0;
-}
-
-float Leg::getWalkingAlpha(){
-    return walking_alpha;
-}
-
-void Leg::setWalkingAlpha(float a){
-    walking_alpha=a;
-}

@@ -1,16 +1,23 @@
 #include "Vector.h"
 
-Vector::Vector(float xv, float yv, float zv){
-    x = xv;
-    y = yv;
-    z = zv;
-    m = sqrt(x*x + y*y + z*z);
+// simple vector class for up to three inputs
+// stores magnitude and coordinate data
+// used for joint vectors, and position vectors, speed vectors, and probably twist vector
+Vector::Vector(){
+    x1 = 0.0, x2=0.0, x3=0.0;
+}
+
+Vector::Vector(float xv1, float xv2, float xv3){
+    x1 = xv1;
+    x2 = xv2;
+    x3 = xv3;
+    m = sqrt(x1*x1 + x2*x2 + x3*x3);
     //t = atan2(y,x); // check for angle sense...
 }
 
-Vector::Vector(float xv, float yv){
-    x = xv;
-    y = yv;
-    z = 0.0;
-    m = sqrt(x*x + y*y + z*z);
+Vector::Vector(float xv1, float xv2){
+    x1 = xv1;
+    x2 = xv2;
+    x3 = 0.0;
+    m = sqrt(x1*x1 + x2*x2 + x3*x3);
 }

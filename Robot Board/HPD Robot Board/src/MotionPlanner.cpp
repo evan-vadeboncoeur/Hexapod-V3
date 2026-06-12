@@ -1,5 +1,6 @@
-#include "MotionPlanner.h"
 
+#include "MotionPlanner.h"
+#ifndef PLAN_T_DEBUG
 // CONSTRUCTORS
 
 MotionPlanner::MotionPlanner(){
@@ -331,3 +332,4 @@ void MotionPlanner::Body_V_Foot(){
 }
 
 // end v2.1 kinematics
+#endif
