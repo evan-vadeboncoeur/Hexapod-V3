@@ -24,6 +24,8 @@ Leg::Leg(int id, int j1, int j2, int j3, float configuration) : joints{ // initi
     // set current foot positions
     setTargetFootP(storage_p_L);
     setTargetFootJ(storage_j_L);
+    setPrevFootP(storage_p_L);
+    setPrevFootJ(storage_j_L);
 }
 
 // takes a position vector in the leg's frame and calculates the joint vector needed to satisfy

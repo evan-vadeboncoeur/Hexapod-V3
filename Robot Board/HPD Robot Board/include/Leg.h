@@ -33,10 +33,10 @@ class Leg{
         Joint joints[3]; // 3 joints per leg: J0, J1, J2
         int id; // leg ID
         float configuration; // CCW facing or CW facing
-        float L0 = 77.5, L1 = 70, L2 = 100, L3 = 150; // link lengths
+        float L0 = 77.5, L1 = 70.0, L2 = 100.0, L3 = 150.0; // link lengths
         // cartesian space values
         Vector storage_j_L = Vector(0.0, -M_PI_3, -2.0); // initial storage position in the joint space
-        Vector storage_p_L = Vector(-29.33, 0.00, 1.78); // initial storage position in the leg frame
+        
         Vector foot_p_L; // target foot position in the leg frame (J0 = base)
         Vector prevFoot_p_L; // prev foot position in the leg frame
         Vector foot_speed_L; // foot speed in the leg (J0) frame
@@ -54,12 +54,14 @@ class Leg{
         // Constructors
         Leg();
         Leg(int id, int j1, int j2, int j3, float configuration);
+        Vector storage_p_L = Vector(-29.33, 0.00, 1.78); // initial storage position in the leg frame
         // Getters
         Vector getPrevFootP(){return prevFoot_p_L;} // get position from previous move
         Vector getPrevFootJ(){return prevFoot_j_L;}
+        Vector getTargetFootP(){return foot_p_L;}
         int getID(){return id;}
         // Setters
-        void setTargetFootP(Vector new_pVL){foot_p_L = new_pVL;} // set new, calculated goal position
+        void setTargetFootP(Vector new_pVL){prevFoot_p_L = foot_p_L, foot_p_L = new_pVL;} // set new, calculated goal position
         void setTargetFootJ(Vector new_jVL){foot_j_L = new_jVL;}
         void setPrevFootP(Vector prev_pVL){prevFoot_p_L = prev_pVL;}
         void setPrevFootJ(Vector prev_jVL){prevFoot_j_L = prev_jVL;}

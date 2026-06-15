@@ -22,3 +22,7 @@ Vector::Vector(float xv1, float xv2){
     m = sqrt(x1*x1 + x2*x2 + x3*x3);
     t = atan2(x2,x1); // give angle between x and y components
 }
+
+Vector Vector::cross(Vector a, Vector b){
+    return Vector(a.getX2()*b.getX3() - a.getX3()*b.getX2(), -(a.getX1()*b.getX3() - a.getX3()-b.getX1()), a.getX1()*b.getX2() - a.getX2()*b.getX1());
+}

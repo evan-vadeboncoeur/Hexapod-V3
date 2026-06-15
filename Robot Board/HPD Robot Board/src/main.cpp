@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "Body.h"
+
 //#include "Hexapod.h"
 //#define LEG_SETUP_DEBUG
 
@@ -11,15 +12,18 @@ int j1 = LEG_0_J1;
 int j2 = LEG_0_J2;
 #endif
 
+float duty_f = 0.5;
+float cycle_time = 1.5;
 
-
-Leg *legs[NUM_LEGS];
+LegKinematics lk = LegKinematics(70.0, 100.0, 150.0, -1.0);
 
 Vector j_home = Vector(0.0, 0.0, 0.0);
 Vector j_pos_1 = Vector(M_PI_4, -M_PI_4, -M_PI_4);
 Vector storage1 = Vector(0.0, -M_PI_3, -2.0);
 Vector p_home = Vector(320.0, 0.0, 0.0);
 Vector p_pos_1 = Vector(99.5, 99.5, 1.41);
+Vector idle_1 = Vector(0, -0.69, 1.95);
+Vector idle_2 = Vector(193.0, 0.0, -77.0);
 //MotionPlanner plan = MotionPlanner();
 //CommunicationManager cm = CommunicationManager(CE_H, CSN_H);
 
@@ -34,9 +38,10 @@ void setup(){
   #endif
 
   #ifndef LEG_SETUP_DEBUG
-
-
-
+  //Body b = Body(duty_f, cycle_time);
+  //b.velocityCommand(Vector(10.0, 10.0));
+  delay(1000);
+  //exit(1);
   // legs[LEG_0] = &L0;
   // legs[LEG_1] = &L1;
   // legs[LEG_2] = &L2;
@@ -62,9 +67,10 @@ void loop() {
   #endif
   delay(2000);
   //L0.moveFootToJV(j_home);
-  delay(2000);
+  //lk.fk(idle_1);
+  lk.ik(idle_2, true);
   //L0.moveFootToPV(p_home, ELBOW_DOWN);
-  //lk.fk(storage1);
+
   //lk.ik(p_pos_1, ELBOW_DOWN);
 
   #ifdef LEG_SETUP_DEBUG

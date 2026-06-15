@@ -1,6 +1,11 @@
 #ifndef BODY_H
 #define BODY_H
 
+#define SETUP_BK_DEBUG
+#define VR_BK_DEBUG
+#define PN_BK_DEBUG
+//#define STANCE_BK_DEBUG
+
 #include "Leg.h"
 
 #define NUM_LEGS (6)
@@ -32,24 +37,32 @@
 class Body{
     public:
         Body();
-        Body(Leg l[NUM_LEGS]);
+        Body(float df, float t_c);
+        void velocityCommand(Vector tw);
     private:
         // body members
         Vector twist;
         Vector body_velocity;
-        float vx, vy, wt, bv, theta; // bv is magnitude of body velocity, theta is direction of velocity
-        float duty_factor, t_cycle; 
+        float vx, vy, wz, bv, theta; // bv is magnitude of body velocity, theta is direction of velocity
+        float duty_factor, t_cycle, t_stance; 
+        float chassis_radius = 77.5; // radius of circumscribed leg circle
         // leg members
         Leg legs[NUM_LEGS];
         Vector foot_p_R[NUM_LEGS]; // foot positions in body frame
         Vector foot_v_R[NUM_LEGS]; // foot velocities in the body frame
         Vector foot_dp_R[NUM_LEGS]; // foot displacement vectors in the body frame
+        Vector foot_pN_R[NUM_LEGS]; // new foot position in body frame
         Vector foot_p_L[NUM_LEGS]; // new foot positions in the leg frame 
         float alpha_i[NUM_LEGS]; // alpha offset for each leg, calculated at body instantiation
+        float alpha_ci[NUM_LEGS], alpha_si[NUM_LEGS]; // cos, sin x and y components computed at startup for each leg
         float d_i = 75.0; // constant for every leg, travel distance along x_i
         void computeAlphaI();
-        void unpackTwist();
-        void R_TF_L(float alph);
+        void unpackTwist(Vector tw);
+        void compute_vR();
+        void compute_dP();
+        void compute_pN();
+        void compute_pN_L();
+        Vector L_TF_B(Vector v);
         
 };
 

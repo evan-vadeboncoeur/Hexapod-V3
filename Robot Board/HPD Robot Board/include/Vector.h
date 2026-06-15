@@ -15,6 +15,7 @@ class Vector{
         float setX3(float x_3){x3 = x_3;}
         float getMagnitude(){return m;}
         float getTheta(){return t;}
+        Vector cross(Vector a, Vector b);
     private:
         float x1, x2, x3, m, t;
 };
