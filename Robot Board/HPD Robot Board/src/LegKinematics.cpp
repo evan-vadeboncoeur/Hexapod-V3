@@ -41,7 +41,7 @@ Vector LegKinematics::fk(Vector t_jV){
     // 3 x 1 positon vector of EE frame represented in global frame
     c_x = L1*cos(tht1) + cos(tht1)*(L3*cos(tht2 + tht3) + L2*cos(tht2));
     c_y = L1*sin(tht1) + sin(tht1)*(L3*cos(tht2 + tht3) + L2*cos(tht2));
-    c_z = configuration*sin(t2 + tht3) + configuration*sin(tht2);
+    c_z = CCW_CONFIG*configuration*L3*sin(tht2 + tht3) + CCW_CONFIG*configuration*L2*sin(tht2); // ccw to get opposite angle sense
 
     calculated_pV = Vector(c_x, c_y, c_z);
 
@@ -245,9 +245,13 @@ bool LegKinematics::ikCheck(){
     // Total Distance Printout
     Serial.print("Distance error: ");
     Serial.print('\t');
-    Serial.println(target_pV.getMagnitude() - calculated_pV.getMagnitude());
+    float dx = (target_pV.getX1() - calculated_pV.getX1());
+    float dy = target_pV.getX2() - calculated_pV.getX2();
+    float dz = target_pV.getX3() - calculated_pV.getX3();
+    float d_t = sqrt(dx*dx + dy*dy + dz*dz);
+    Serial.println(d_t);
     #endif
-    if(fabs(target_pV.getMagnitude() - calculated_pV.getMagnitude()) < threshold) return true; // check computed distance difference vs threshold
+    if(fabs(d_t < threshold)) return true; // check computed distance difference vs threshold
     return false;
 }
 

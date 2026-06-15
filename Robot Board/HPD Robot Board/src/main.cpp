@@ -22,7 +22,7 @@ Vector j_pos_1 = Vector(M_PI_4, -M_PI_4, -M_PI_4);
 Vector storage1 = Vector(0.0, -M_PI_3, -2.0);
 Vector p_home = Vector(320.0, 0.0, 0.0);
 Vector p_pos_1 = Vector(99.5, 99.5, 1.41);
-Vector idle_1 = Vector(0, -0.69, 1.95);
+Vector idle_1 = Vector(0, 0.69, -1.95);
 Vector idle_2 = Vector(193.0, 0.0, -77.0);
 //MotionPlanner plan = MotionPlanner();
 //CommunicationManager cm = CommunicationManager(CE_H, CSN_H);
@@ -38,8 +38,8 @@ void setup(){
   #endif
 
   #ifndef LEG_SETUP_DEBUG
-  //Body b = Body(duty_f, cycle_time);
-  //b.velocityCommand(Vector(10.0, 10.0));
+  Body b = Body(duty_f, cycle_time);
+  b.velocityCommand(Vector(0.0, 0.0, 1.0));
   delay(1000);
   //exit(1);
   // legs[LEG_0] = &L0;
@@ -68,7 +68,7 @@ void loop() {
   delay(2000);
   //L0.moveFootToJV(j_home);
   //lk.fk(idle_1);
-  lk.ik(idle_2, true);
+  //lk.ik(idle_2, true);
   //L0.moveFootToPV(p_home, ELBOW_DOWN);
 
   //lk.ik(p_pos_1, ELBOW_DOWN);

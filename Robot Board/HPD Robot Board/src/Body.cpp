@@ -19,7 +19,7 @@ Body::Body(float df, float t_c) // initialize each leg before contructing the re
     t_cycle = t_c;
     t_stance = t_cycle*duty_factor;
     computeAlphaI();
-    //L_TF_B(legs[LEG_0].hpme); // use storage position of Leg to compute initial leg positions
+    L_TF_B(legs[LEG_0].idle_p_L); // use storage position of Leg to compute initial leg positions
 }
 
 void Body::velocityCommand(Vector tw){
@@ -36,7 +36,7 @@ void Body::velocityCommand(Vector tw){
 }
 
 void Body::unpackTwist(Vector tw){
-    body_velocity = Vector(tw.getX1(), tw.getX1());
+    body_velocity = Vector(tw.getX1(), tw.getX2());
     bv = body_velocity.getMagnitude();
     theta = body_velocity.getTheta();
     vx = bv*cos(theta);
