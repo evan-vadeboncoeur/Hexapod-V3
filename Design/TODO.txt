@@ -1,10 +1,11 @@
 TODO Priority (ALL)
 -------------------
 1) "trajectory generation"
-    a) re-work Motion Planner
-    b) add code in motion planner class for template velocity, position generators
+    a) test complex twist command and visualize results
+    b) rework MotionPlanner class to have gait, twist, and macros for the body to setup the gait (calculate swing etc)
     c) calculate residual positions (interpolate) based on stance positions
     d) add into gait control and walk
+    e) add body height adjustment
 2) calculate workspace limitations and maximum swing angles / J1/2 interaction monitoring
     maximum done
     need to work on leg interaction
