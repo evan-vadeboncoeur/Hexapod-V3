@@ -26,7 +26,7 @@ void Body::velocityCommand(Vector tw){
     unpackTwist(tw);
     compute_vR();
     compute_dP();
-    compute_pN();
+    compute_stanceSwing();
     compute_pN_L();
     // now move on to motion planner to order legs??
     // compute_pN_L = computeStance for each leg
@@ -99,7 +99,7 @@ void Body::compute_dP(){
 }
 
 // calculate new position of foot in body frame
-void Body::compute_pN(){
+void Body::compute_stanceSwing(){
     float pN_x, pN_y, pN_z;
     pN_z = foot_p_R[0].getX3();
     #ifdef PN_BK_DEBUG

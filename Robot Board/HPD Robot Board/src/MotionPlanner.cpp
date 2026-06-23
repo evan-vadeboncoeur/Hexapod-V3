@@ -125,112 +125,7 @@ bool MotionPlanner::halfTripod(Leg** l, Leg** p){
     return true;
 }
 
-bool MotionPlanner::liftLeg(Leg** trip, C_Position pos){
-    Serial.println("Lift Leg 0: ");
-    trip[0]->moveToIK(pos, ELBOW_DOWN, LHS);
-    delay(MOTION_PLANNER_DELAY);
-    Serial.println("Lift Leg 1: ");
-    trip[1]->moveToIK(pos, ELBOW_DOWN, LHS);
-    delay(MOTION_PLANNER_DELAY);
-    Serial.println("Lift Leg 2: ");
-    trip[2]->moveToIK(pos, ELBOW_DOWN, LHS);
-    delay(MOTION_PLANNER_DELAY);
-    return true;
-}
 
-bool MotionPlanner::swingLeg(Leg** trip, C_Position s){
-    Serial.println("Swing Leg 0: ");
-    trip[0]->moveToIK(s, ELBOW_DOWN, LHS);
-    delay(MOTION_PLANNER_DELAY);
-    Serial.println("Swing Leg 1: ");
-    trip[1]->moveToIK(s, ELBOW_DOWN, LHS);
-    delay(MOTION_PLANNER_DELAY);
-    Serial.println("Swing Leg 2: ");
-    trip[2]->moveToIK(s, ELBOW_DOWN, LHS);
-    delay(MOTION_PLANNER_DELAY);
-    return true;
-}
-
-bool MotionPlanner::plantLeg(Leg** trip, C_Position p){
-    Serial.println("Plant Leg 0: ");
-    trip[0]->moveToIK(p, ELBOW_DOWN, LHS);
-    delay(MOTION_PLANNER_DELAY);
-    Serial.println("Plant Leg 1: ");
-    trip[1]->moveToIK(p, ELBOW_DOWN, LHS);
-    delay(MOTION_PLANNER_DELAY);
-    Serial.println("Plant Leg 2: ");
-    trip[2]->moveToIK(p, ELBOW_DOWN, LHS);
-    delay(MOTION_PLANNER_DELAY);
-    return true;
-}
-bool MotionPlanner::pushLeg(Leg** trip, C_Position p){
-    Serial.println("Push Leg 0: ");
-    trip[0]->moveToIK(p, ELBOW_DOWN, LHS);
-    delay(MOTION_PLANNER_DELAY);
-    Serial.println("Push Leg 1: ");
-    trip[1]->moveToIK(p, ELBOW_DOWN, LHS);
-    delay(MOTION_PLANNER_DELAY);
-    Serial.println("Push Leg 2: ");
-    trip[2]->moveToIK(p, ELBOW_DOWN, LHS);
-    delay(MOTION_PLANNER_DELAY);
-    return true;
-}
-
-// RBTF kinematics
-// 1) generate movement direction, steps, and linear advance
-// 2) generate global coordinates for each leg based on above (ie. start at L0 then extrapolate for L1-L5, lift, swing, plant, push)
-// 3) convert to local coordinates for each leg
-// 4) sequence motions for each leg
-// 5) figure out how to handle CCW, config etc. in Leg class
-// 6) maintain steps and direction until motion complete 
-
-// express robot body coordinates in leg coordinate frame by transforming from G to B (global to body)
-C_Position MotionPlanner::Body_TF_Leg(Leg* l, C_Position target){
-    float x_L, y_L, z_L; // coordinates in the leg's base frame
-    float x_B = target.getX(), y_B = target.getY(); // coordinates in the robot Body frame
-    float a = l->getAlpha(), Link0_L = l->getLink0();
-    x_L = x_B*cos(a) - Link0_L + y_B*sin(a);
-    y_L = y_B*cos(a) - x_B*sin(a);
-    z_L = target.getZ();
-    //                         1                  
-    C_Position output = C_Position(x_L, y_L, z_L); // body coordinates in leg frame
-    return output;
-} 
-
-// edit to reverse values / negatives/ transpose whatever
-Vector MotionPlanner::Foot_TF_Body(Leg* l, C_Position target){
-    float x_L, y_L, z_L; // coordinates in the leg's base frame
-    float x_B = target.getX(), y_B = target.getY(); // coordinates in the robot Body frame
-    float a = l->getAlpha(), Link0_L = l->getLink0();
-    x_L = x_B*cos(a) - Link0_L + y_B*sin(a);
-    y_L = y_B*cos(a) - x_B*sin(a);
-    z_L = target.getZ();
-    //                         1                  
-    Vector output = Vector(x_L, y_L, z_L); // body coordinates in leg frame
-    return output;
-}
-
-// takes a target position in the walking frame (dictated by direction) and a given leg (which stores mount angle and attachment orientation) and computes TF from walking to leg
-// frame is rotating alpha, and translated r along x_B
-C_Position MotionPlanner::Walking_TF_Leg(Leg* l, C_Position target){
-    float x_L, y_L, z_L; // coordinates in the leg's base frame
-    float x_B = target.getX(), y_B = target.getY(); // coordinates in the robot Body frame
-    float a = l->getAlpha(), Link0_L = l->getLink0();
-    x_L = x_B*cos(a) - Link0_L + y_B*sin(a);
-    y_L = y_B*cos(a) - x_B*sin(a);
-    z_L = target.getZ();
-    //                              1                  
-    C_Position output = C_Position(x_L, y_L, z_L); // body coordinates in leg frame
-    return output;
-}
-
-//new version, call at object instantiation and save alpha values
-float MotionPlanner::computeWalkingAlpha(int id){
-    float ret = M_PI_6*(2*(id-direction)-1); // simplified expression to calculate angular distance from walking direction to given leg
-    if(ret > M_PI) ret-= (2*M_PI); // make shortest angle to X_W axis (measured about Z_W)
-    if(ret < M_PI) ret+= (2*M_PI);
-    return ret;
-}
 
 // MOVEMENT MACROS
 bool MotionPlanner::powerOnSequence(){
@@ -302,34 +197,63 @@ bool MotionPlanner::moveIdle(){
 
 // end movement macros
 
-// v2.1 kinematics 
-void MotionPlanner::setTwist(Twist tw){
-    t.v_x = tw.v_x;
-    t.v_y = tw.v_y;
-    t.w_z = tw.w_z;
-}
-// load twist values into object members
-void MotionPlanner::unpackTwist(){
-    vx = t.v_x;
-    vy = t.v_y;
-    wz = t.w_z;
-    v_R = Vector(vx, vy);
-}
 
-// commandSetup()
-
-// calculate all the position vectors of the feet in the body frame
-void MotionPlanner::Body_r_Foot(){
-
-}
-
-// compute each foot velocity in the body frame of the robot needed to obtain twist vector
-// B_VFoot_F = -
-void MotionPlanner::Body_V_Foot(){
-    for(int i=0; i<(NUM_LEGS-1); i++){
-
-    }
-}
 
 // end v2.1 kinematics
 #endif
+
+/*** Old tripod gait sequence
+ * 
+ * bool MotionPlanner::liftLeg(Leg** trip, C_Position pos){
+    Serial.println("Lift Leg 0: ");
+    trip[0]->moveToIK(pos, ELBOW_DOWN, LHS);
+    delay(MOTION_PLANNER_DELAY);
+    Serial.println("Lift Leg 1: ");
+    trip[1]->moveToIK(pos, ELBOW_DOWN, LHS);
+    delay(MOTION_PLANNER_DELAY);
+    Serial.println("Lift Leg 2: ");
+    trip[2]->moveToIK(pos, ELBOW_DOWN, LHS);
+    delay(MOTION_PLANNER_DELAY);
+    return true;
+}
+
+bool MotionPlanner::swingLeg(Leg** trip, C_Position s){
+    Serial.println("Swing Leg 0: ");
+    trip[0]->moveToIK(s, ELBOW_DOWN, LHS);
+    delay(MOTION_PLANNER_DELAY);
+    Serial.println("Swing Leg 1: ");
+    trip[1]->moveToIK(s, ELBOW_DOWN, LHS);
+    delay(MOTION_PLANNER_DELAY);
+    Serial.println("Swing Leg 2: ");
+    trip[2]->moveToIK(s, ELBOW_DOWN, LHS);
+    delay(MOTION_PLANNER_DELAY);
+    return true;
+}
+
+bool MotionPlanner::plantLeg(Leg** trip, C_Position p){
+    Serial.println("Plant Leg 0: ");
+    trip[0]->moveToIK(p, ELBOW_DOWN, LHS);
+    delay(MOTION_PLANNER_DELAY);
+    Serial.println("Plant Leg 1: ");
+    trip[1]->moveToIK(p, ELBOW_DOWN, LHS);
+    delay(MOTION_PLANNER_DELAY);
+    Serial.println("Plant Leg 2: ");
+    trip[2]->moveToIK(p, ELBOW_DOWN, LHS);
+    delay(MOTION_PLANNER_DELAY);
+    return true;
+}
+bool MotionPlanner::pushLeg(Leg** trip, C_Position p){
+    Serial.println("Push Leg 0: ");
+    trip[0]->moveToIK(p, ELBOW_DOWN, LHS);
+    delay(MOTION_PLANNER_DELAY);
+    Serial.println("Push Leg 1: ");
+    trip[1]->moveToIK(p, ELBOW_DOWN, LHS);
+    delay(MOTION_PLANNER_DELAY);
+    Serial.println("Push Leg 2: ");
+    trip[2]->moveToIK(p, ELBOW_DOWN, LHS);
+    delay(MOTION_PLANNER_DELAY);
+    return true;
+}
+ * 
+ * 
+ */

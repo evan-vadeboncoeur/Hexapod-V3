@@ -60,7 +60,7 @@ class Body{
         void unpackTwist(Vector tw);
         void compute_vR();
         void compute_dP();
-        void compute_pN();
+        void compute_stanceSwing();
         void compute_pN_L();
         Vector L_TF_B(Vector v);
         

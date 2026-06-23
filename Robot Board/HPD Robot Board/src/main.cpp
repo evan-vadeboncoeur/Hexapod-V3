@@ -39,7 +39,7 @@ void setup(){
 
   #ifndef LEG_SETUP_DEBUG
   Body b = Body(duty_f, cycle_time);
-  b.velocityCommand(Vector(0.0, 0.0, 1.0));
+  b.velocityCommand(Vector(10.0, 0.0, 0.05));
   delay(1000);
   //exit(1);
   // legs[LEG_0] = &L0;
