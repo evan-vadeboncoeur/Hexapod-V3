@@ -1,16 +1,18 @@
 TODO Priority (ALL)
 -------------------
-1) "trajectory generation"
-    b) rework MotionPlanner class to have gait, twist, and macros for the body to setup the gait (calculate swing etc)
-    c) calculate residual positions (interpolate) based on stance positions
-    d) add into gait control and walk
-    e) add body height adjustment
-2) calculate workspace limitations and maximum swing angles / J1/2 interaction monitoring
+0) re-design chassis / J0 
+1) work on CAD for controller: print frame, hole locations
+2) "trajectory generation"
+    a) finish motion planner class to add nominal position / linear interpolation 
+        p_nom = p_lift, p_swing = p_nom + dP_i/2, p_stance = p_nom - dP_i/2
+        p_lift = (1 - s)*p_stance + s*p_swing, s = 0.5 (halfway through cycle) [x y]^T
+        p_lift_z = z_ground + h*sin(pi*s), z_ground = p_idle_z (see idle value), h = clearance height = 20mm, s = 0.5 (halfway pt of cycle)
+
+3) calculate workspace limitations and maximum swing angles / J1/2 interaction monitoring
     maximum done
     need to work on leg interaction
     J2 J3 collision monitoring
-3) print L2 legs with proper link lengths (100 mm!)
-4) work on CAD for controller: battery location
+
 
                                             Hexapod
                       motion planner          board manager           communication manager
