@@ -1,9 +1,9 @@
 TODO Priority (ALL)
 -------------------
 0) re-design chassis / J0 
+1) re-design link 1 (j0 and j1 rigid on same link - both rotate about chassis slot)
 1) test if usb-b & servos can be connected simulataneuosly (board switched off)
 1.5) test if voltage across mosfet when battery plugged in but motor and boards off (caps etc as well)
-2) print r.controller cover
 3) "trajectory generation"
     a) finish motion planner class to add nominal position / linear interpolation 
         p_nom = p_lift, p_swing = p_nom + dP_i/2, p_stance = p_nom - dP_i/2
