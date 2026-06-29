@@ -1,16 +1,17 @@
 TODO Priority (ALL)
 -------------------
 0) re-design chassis / J0 
-1) re-design link 1 (j0 and j1 rigid on same link - both rotate about chassis slot)
-1) test if usb-b & servos can be connected simulataneuosly (board switched off)
-1.5) test if voltage across mosfet when battery plugged in but motor and boards off (caps etc as well)
-3) "trajectory generation"
+1) re-design link 2: make brace off center after design of L3
+2) re-design link 3: use geometry and ideas from v2 but use template of link 1
+3) test if usb-b & servos can be connected simulataneuosly (board switched off)
+3.5) test if voltage across mosfet when battery plugged in but motor and boards off (caps etc as well)
+4) "trajectory generation"
     a) finish motion planner class to add nominal position / linear interpolation 
         p_nom = p_lift, p_swing = p_nom + dP_i/2, p_stance = p_nom - dP_i/2
         p_lift = (1 - s)*p_stance + s*p_swing, s = 0.5 (halfway through cycle) [x y]^T
         p_lift_z = z_ground + h*sin(pi*s), z_ground = p_idle_z (see idle value), h = clearance height = 20mm, s = 0.5 (halfway pt of cycle)
 
-4) calculate workspace limitations and maximum swing angles / J1/2 interaction monitoring
+5) calculate workspace limitations and maximum swing angles / J1/2 interaction monitoring
     maximum done
     need to work on leg interaction
     J2 J3 collision monitoring
