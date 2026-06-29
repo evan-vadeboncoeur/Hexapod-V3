@@ -8,6 +8,11 @@ GENERAL
 Use via stitching to connect ground and power pours to dissipate heat and provide more return path for the current to the source
 Use a GND plane on top at the end of routing to allow for even more GND, add stithing vias to ensure no weird islands
 
+Add thermal reliefs, 90 degree spokes to choke heat transfer so that heat is concentrated at the pad,
+heat then does not continue into the rest of the plane / pour
+
+Ensure solder has proper amount of flux for heat tf, oxidation cleaning, and regular melting point (350-400C)
+
 RELAY vs. MOSFET
 ------------------
 Relay needs a flyback diode (diode in reverse bias mode) that creates a grounding loop when dI/dt -> -infinity, therefore V_coil spikes and reverses polarity, damaging the relay

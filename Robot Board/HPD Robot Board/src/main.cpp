@@ -2,14 +2,14 @@
 #include "Body.h"
 
 //#include "Hexapod.h"
-//#define LEG_SETUP_DEBUG
+#define LEG_SETUP_DEBUG
 
 // might have to do joints & everything else BEFORE runtime, too, so that it's on the heap, not the stack?
 #ifdef LEG_SETUP_DEBUG
 Servo s0, s1, s2;
-int j0 = LEG_0_J0;
-int j1 = LEG_0_J1;
-int j2 = LEG_0_J2;
+int j0 = LEG_1_J0;
+int j1 = LEG_1_J1;
+int j2 = LEG_1_J2;
 #endif
 
 float duty_f = 0.5;
