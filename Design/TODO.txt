@@ -3,6 +3,8 @@ TODO Priority (ALL)
 0) re-design chassis / J0 
 1) re-design link 2: make brace off center after design of L3
 2) re-design link 3: use geometry and ideas from v2 but use template of link 1
+add calibration notches that align with x_i
+add configurations in leg assembly
 3) test if usb-b & servos can be connected simulataneuosly (board switched off)
 3.5) test if voltage across mosfet when battery plugged in but motor and boards off (caps etc as well)
 4) "trajectory generation"
