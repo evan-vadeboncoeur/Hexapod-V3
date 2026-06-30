@@ -2,6 +2,8 @@ TODO Priority (ALL)
 -------------------
 0) re-design chassis / J0 
 add configurations in leg assembly
+compensate for 10mm offset of end effector / add in code (d4)
+branch code to swap j0 effort direction
 3) test if usb-b & servos can be connected simulataneuosly (board switched off)
 3.5) test if voltage across mosfet when battery plugged in but motor and boards off (caps etc as well)
 4) "trajectory generation"
