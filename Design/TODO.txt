@@ -1,8 +1,9 @@
 TODO Priority (ALL)
 -------------------
-0) re-design chassis / J0 
+finish final leg attachment design
+swap battery and board sides because cant get to switches with battery on top (stupid)
 add configurations in leg assembly
-compensate for 10mm offset of end effector / add in code (d4)
+compensate for 10mm offset of end effector / add in code (d4) (probably should matter since J[0 0 0] is still home position, but there will likely be a y component in FK)
 branch code to swap j0 effort direction
 3) test if usb-b & servos can be connected simulataneuosly (board switched off)
 3.5) test if voltage across mosfet when battery plugged in but motor and boards off (caps etc as well)
