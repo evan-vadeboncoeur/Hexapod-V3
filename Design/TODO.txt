@@ -1,7 +1,8 @@
 TODO Priority (ALL)
 -------------------
-finish final leg attachment design
-swap battery and board sides because cant get to switches with battery on top (stupid)
+add ribs to middle servo top legs
+cutouts for batteries
+figure out servo routing
 add configurations in leg assembly
 compensate for 10mm offset of end effector / add in code (d4) (probably should matter since J[0 0 0] is still home position, but there will likely be a y component in FK)
 branch code to swap j0 effort direction
