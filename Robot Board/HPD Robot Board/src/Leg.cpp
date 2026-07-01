@@ -85,9 +85,9 @@ void Leg::radToDeg(){
 }
 
 void Leg::servoOffsets(){
-    servo_j_L.setX1(servo_j_L.getX1() + COXA_SERVO_OFFSET);
+    servo_j_L.setX1(HIP_SERVO_MAX - (servo_j_L.getX1() + COXA_SERVO_OFFSET)); // flip effort of J0, J3 (L0 and L2 are grounded, L1 and L3 float)
     servo_j_L.setX2(servo_j_L.getX2() + FEMUR_SERVO_OFFSET);
-    servo_j_L.setX3(map((servo_j_L.getX3() + FOOT_SERVO_OFFSET), FOOT_SERVO_MIN, FOOT_SERVO_MAX, PWM_MIN, PWM_MAX));
+    servo_j_L.setX3(map(FOOT_SERVO_MAX - (servo_j_L.getX3() + FOOT_SERVO_OFFSET), FOOT_SERVO_MIN, FOOT_SERVO_MAX, PWM_MIN, PWM_MAX));
     #ifdef LEG_DEBUG
     Serial.println("Servo command [deg or us]: ");
     Serial.print("T1: ");

@@ -45,7 +45,7 @@ class Body{
         Vector body_velocity;
         float vx, vy, wz, bv, theta; // bv is magnitude of body velocity, theta is direction of velocity
         float duty_factor, t_cycle, t_stance; 
-        float chassis_radius = 77.5; // radius of circumscribed leg circle
+        float chassis_radius = 92.5; // radius of circumscribed leg circle
         // leg members
         Leg legs[NUM_LEGS];
         Vector foot_p_R[NUM_LEGS]; // foot positions in body frame
@@ -55,7 +55,6 @@ class Body{
         Vector foot_p_L[NUM_LEGS]; // new foot positions in the leg frame 
         float alpha_i[NUM_LEGS]; // alpha offset for each leg, calculated at body instantiation
         float alpha_ci[NUM_LEGS], alpha_si[NUM_LEGS]; // cos, sin x and y components computed at startup for each leg
-        float d_i = 75.0; // constant for every leg, travel distance along x_i
         void computeAlphaI();
         void unpackTwist(Vector tw);
         void compute_vR();

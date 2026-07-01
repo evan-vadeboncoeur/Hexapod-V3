@@ -16,6 +16,7 @@
 #define FOOT_SERVO_OFFSET (135.0)
 #define FOOT_SERVO_MAX (270.0)
 #define FOOT_SERVO_MAX_INT (270)
+#define HIP_SERVO_MAX (180.0)
 #define FOOT_SERVO_MIN (0.0)
 #define LEG_DELAY (10)
 
@@ -33,10 +34,9 @@ class Leg{
         Joint joints[3]; // 3 joints per leg: J0, J1, J2
         int id; // leg ID
         float configuration; // CCW facing or CW facing
-        float L0 = 77.5, L1 = 70.0, L2 = 100.0, L3 = 150; // link lengths
+        float L0 = 92.5, L1 = 70.0, L2 = 90.0, L3 = 150.0; // link lengths
         // cartesian space values
         Vector storage_j_L = Vector(0.0, -M_PI_3, -2.0); // initial storage position in the joint space
-        
         Vector foot_p_L; // target foot position in the leg frame (J0 = base)
         Vector prevFoot_p_L; // prev foot position in the leg frame
         Vector foot_speed_L; // foot speed in the leg (J0) frame
