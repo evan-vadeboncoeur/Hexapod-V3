@@ -34,15 +34,15 @@ Vector LegKinematics::fk(Vector t_jV){
     R1_3 = configuration*sin(tht1);
     R2_1 = cos(tht2 + tht3)*sin(tht1);
     R2_2 = - 1.0*sin(tht2 + tht3)*sin(tht1);
-    R2_3 = cos(tht1);
+    R2_3 = -configuration*cos(tht1);
     R3_1 = configuration*(tht2 + tht3);
     R3_2 = configuration*cos(tht2 + tht3);
     R3_3 = 0.0;
     // 3 x 1 positon vector of EE frame represented in global frame
     c_x = L1*cos(tht1) + cos(tht1)*(L3*cos(tht2 + tht3) + L2*cos(tht2));
     c_y = L1*sin(tht1) + sin(tht1)*(L3*cos(tht2 + tht3) + L2*cos(tht2));
-    c_z = CCW_CONFIG*configuration*L3*sin(tht2 + tht3) + CCW_CONFIG*configuration*L2*sin(tht2); // ccw to get opposite angle sense
-
+    c_z = configuration*L3*sin(tht2 + tht3) + configuration*L2*sin(tht2); // ccw to get opposite angle sense
+    
     calculated_pV = Vector(c_x, c_y, c_z);
 
     #ifdef LEG_FK_DEBUG
@@ -83,19 +83,24 @@ Vector LegKinematics::ik(Vector t_pV, bool elbow){
     Serial.println();
     #endif
     // Calculate theta 1 using XY projection of leg
-    t1 = atan2(p_y, p_x);
+    t1 = atan2(p_y, fabs(p_x)); // assume t1 is < PI / X > 0
     // Calculate theta 2 using beta, gamma, L4_x (x-component of L4 in the yaw plane), L4
     r = sqrt(p_x*p_x + p_y*p_y);
-    L4_x = r - L1; // x component of L4 (J1 to P)
+    r_c = (r < L1) ? -1.0 : 1.0; // check if x < 0 or r is < L1 (L4_x component modifier)
+    L4_x = r - r_c*L1; // x component of L4 (J1 to P)
     L4 = sqrt(L4_x*L4_x + p_z*p_z);
     cb = (L2*L2 + L4*L4 - L3*L3) / (2*L2*L4); // x component of beta
     sb = sqrt(1 - cb*cb); // y component of beta (2 solutions for 2 configurations)
     beta1 = atan2(sb, cb); // angle between L2 and L4 (check for angle sense)
     beta2 = -beta1; // + beta = elbow down, - beta = elbow up
-    gamma = configuration*atan2(p_z, L4_x); // angle between X axis and L4, + gamma = position below x-axis, - gamma = position above x-axis
+    gamma = atan2(p_z, L4_x); // angle between X axis and L4, + gamma = position below x-axis, - gamma = position above x-axis
     #ifdef LEG_IK_DEBUG
     Serial.println("Gamma/Beta Angles [rads]");
-    Serial.print("L4_x");
+    Serial.print("L4: ");
+    Serial.print('\t');
+    Serial.print(L4);
+    Serial.print('\t');
+    Serial.print("L4_x: ");
     Serial.print('\t');
     Serial.print(L4_x);
     Serial.print('\t');
@@ -111,13 +116,13 @@ Vector LegKinematics::ik(Vector t_pV, bool elbow){
     Serial.print('\t');
     Serial.println(beta2, 6);
     #endif
-    t2_1 = (configuration*beta1 - gamma); // debug this part
-    t2_2 = (configuration*beta2 - gamma);
+    t2_1 = (beta1 + gamma) - M_PI; // debug this part: configuration, up/down etc
+    t2_2 = (beta2 + gamma) - M_PI;
     // Calculate t3
     ct3 = (L2*L2 + L3*L3 - L4*L4) / (2*L2*L3);
     st3 = sqrt(1 - ct3*ct3);
-    t3_1 = M_PI + configuration*atan2(st3, ct3); // debug this part, too
-    t3_2 = M_PI + configuration*atan2(-st3, ct3);
+    t3_1 = -configuration*atan2(st3, ct3) - M_PI; // debug this part, too
+    t3_2 = -configuration*atan2(-st3, ct3) - M_PI;
     // debug section
     #ifdef LEG_IK_DEBUG
     Serial.println("Mult. solutions output [rads]");
@@ -160,7 +165,7 @@ Vector LegKinematics::configurationHelper(bool elbow){
     t3_1 = normalizeAngles(t3_1);
     t3_2 = normalizeAngles(t3_2);
     // check angle signs and associate with configurations
-    if(configuration > 0){ // LHS Branch Logic
+    if(configuration < 1.0){ // LHS Branch Logic
         if(elbow){
             t2 = (t2_1 < 0) ? t2_1 : t2_2; // elbow down
             t3 = (t3_1 > 0) ? t3_1 : t3_2;

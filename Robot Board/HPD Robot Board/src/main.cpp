@@ -7,23 +7,25 @@
 // might have to do joints & everything else BEFORE runtime, too, so that it's on the heap, not the stack?
 #ifdef LEG_SETUP_DEBUG
 Servo s0, s1, s2;
-int j0 = LEG_1_J0;
-int j1 = LEG_1_J1;
-int j2 = LEG_1_J2;
+int j0 = LEG_0_J0;
+int j1 = LEG_0_J1;
+int j2 = LEG_0_J2;
 #endif
 
 float duty_f = 0.5;
 float cycle_time = 1.5;
 
-LegKinematics lk = LegKinematics(70.0, 100.0, 150.0, -1.0);
+#define LEG_KINEMATICS_DEBUG
+#ifdef LEG_KINEMATICS_DEBUG
+Leg leg_test = Leg(LEG_0, j0, j1, j2, CCW_CONFIG);
+Vector home_j = Vector(0.0, 0.0, 0.0);
+Vector storage_j = Vector(0.0, -1.216, -1.763);
+Vector idle_j = Vector(0.0, -0.977, 2.146);
+Vector home_p = Vector(310.0, 0.0, 0.0);
+Vector storage_p = Vector(-46.76, 0.0, 108.68); // CAD output
+Vector idle_p = Vector(178.755, 0.0, -63.631); // CAD output
+#endif
 
-Vector j_home = Vector(0.0, 0.0, 0.0);
-Vector j_pos_1 = Vector(M_PI_4, -M_PI_4, -M_PI_4);
-Vector storage1 = Vector(0.0, -M_PI_3, -2.0);
-Vector p_home = Vector(320.0, 0.0, 0.0);
-Vector p_pos_1 = Vector(99.5, 99.5, 1.41);
-Vector idle_1 = Vector(0, 0.69, -1.95);
-Vector idle_2 = Vector(193.0, 0.0, -77.0);
 //MotionPlanner plan = MotionPlanner();
 //CommunicationManager cm = CommunicationManager(CE_H, CSN_H);
 
@@ -53,9 +55,10 @@ void setup(){
   // plan = MotionPlanner(legs, 0);
   #endif
   #ifdef LEG_SETUP_DEBUG
-  s0.attach(j0, PWM_MIN, PWM_MAX);
-  s1.attach(j1, PWM_MIN, PWM_MAX);
-  s2.attach(j2, PWM_MIN, PWM_MAX);
+  // s0.attach(j0, PWM_MIN, PWM_MAX);
+  // s1.attach(j1, PWM_MIN, PWM_MAX);
+  // s2.attach(j2, PWM_MIN, PWM_MAX);
+
   #endif
 //Hexapod cheeto = Hexapod(plan);
 //plan.powerOnSequence();
@@ -66,20 +69,22 @@ void loop() {
   Serial.println("In loop");
   #endif
   delay(2000);
-  //L0.moveFootToJV(j_home);
-  //lk.fk(idle_1);
-  //lk.ik(idle_2, true);
-  //L0.moveFootToPV(p_home, ELBOW_DOWN);
-
-  //lk.ik(p_pos_1, ELBOW_DOWN);
-
+  #ifdef LEG_KINEMATICS_DEBUG
+  
+  //leg_test.moveFootToJV(home_j);
+  //leg_test.moveFootToJV(idle_j);
+  leg_test.moveFootToJV(storage_j);
+  //leg_test.moveFootToPV(home_p, ELBOW_DOWN);
+  leg_test.moveFootToPV(storage_p, ELBOW_DOWN);
+  //leg_test.moveFootToPV(idle_p, ELBOW_DOWN);
+  #endif
   #ifdef LEG_SETUP_DEBUG
-  s0.write(HPS_2018_CTR);
-  delay(2000);
-  s1.write(HPS_2018_CTR);
-  delay(2000);
-  s2.write(HPS_2027_CTR); // avg is middle, not 1000us
-  delay(2000);
+  // s0.write(HPS_2018_CTR);
+  // delay(2000);
+  // s1.write(HPS_2018_CTR);
+  // delay(2000);
+  // s2.write(HPS_2027_CTR); // avg is middle, not 1000us
+  // delay(2000);
   #endif
   #ifdef PLAN_DEBUG
   //plan.setupTripod(10, 1, 8);
@@ -97,7 +102,7 @@ void loop() {
   
   #endif
   delay(2000);
-  //exit(1);
+  exit(1);
   
 }
 
