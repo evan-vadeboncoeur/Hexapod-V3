@@ -1,10 +1,14 @@
 TODO Priority (ALL)
 -------------------
+fix leg kinematics
+   xyz in general cases seem to be good but r < L1 case needs to be solved
+    debug r < L1
+ED + EU for:
+point below x-axis, r >= L1
+point about x-axis, r >= L1
+point below x-axis, r < L1
+point about x-axis, r < L1
 figure out servo routing
-add configurations in leg assembly
-kinematic redo: check values against configs (above)
-    body
-    leg (values, +/- etc)
 3) test if usb-b & servos can be connected simulataneuosly (board switched off)
 3.5) test if voltage across mosfet when battery plugged in but motor and boards off (caps etc as well)
 4) "trajectory generation"

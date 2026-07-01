@@ -93,9 +93,13 @@ Vector LegKinematics::ik(Vector t_pV, bool elbow){
     sb = sqrt(1 - cb*cb); // y component of beta (2 solutions for 2 configurations)
     beta1 = atan2(sb, cb); // angle between L2 and L4 (check for angle sense)
     beta2 = -beta1; // + beta = elbow down, - beta = elbow up
-    gamma = atan2(p_z, L4_x); // angle between X axis and L4, + gamma = position below x-axis, - gamma = position above x-axis
+    gamma = atan2(r_c*configuration*p_z, L4_x); // angle between X axis and L4, + gamma = position below x-axis, - gamma = position above x-axis
     #ifdef LEG_IK_DEBUG
     Serial.println("Gamma/Beta Angles [rads]");
+    Serial.print("RC: ");
+    Serial.print('\t');
+    Serial.print(r_c);
+    Serial.print('\t');
     Serial.print("L4: ");
     Serial.print('\t');
     Serial.print(L4);
@@ -116,13 +120,15 @@ Vector LegKinematics::ik(Vector t_pV, bool elbow){
     Serial.print('\t');
     Serial.println(beta2, 6);
     #endif
-    t2_1 = (beta1 + gamma) - M_PI; // debug this part: configuration, up/down etc
-    t2_2 = (beta2 + gamma) - M_PI;
+    //t2_1 = (gamma - beta1); 
+    //t2_2 = (gamma - beta2);
+    t2_1 = M_PI - (beta1 - r_c*gamma);
+    t2_2 = M_PI - (beta2 - r_c*gamma);
     // Calculate t3
     ct3 = (L2*L2 + L3*L3 - L4*L4) / (2*L2*L3);
     st3 = sqrt(1 - ct3*ct3);
-    t3_1 = -configuration*atan2(st3, ct3) - M_PI; // debug this part, too
-    t3_2 = -configuration*atan2(-st3, ct3) - M_PI;
+    t3_1 = M_PI + configuration*atan2(st3, ct3); 
+    t3_2 = M_PI + configuration*atan2(-st3, ct3);
     // debug section
     #ifdef LEG_IK_DEBUG
     Serial.println("Mult. solutions output [rads]");

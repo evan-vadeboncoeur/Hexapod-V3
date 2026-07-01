@@ -72,11 +72,11 @@ void loop() {
   #ifdef LEG_KINEMATICS_DEBUG
   
   //leg_test.moveFootToJV(home_j);
-  //leg_test.moveFootToJV(idle_j);
-  leg_test.moveFootToJV(storage_j);
+  leg_test.moveFootToJV(idle_j);
+  //leg_test.moveFootToJV(storage_j);
   //leg_test.moveFootToPV(home_p, ELBOW_DOWN);
-  leg_test.moveFootToPV(storage_p, ELBOW_DOWN);
-  //leg_test.moveFootToPV(idle_p, ELBOW_DOWN);
+  //leg_test.moveFootToPV(storage_p, ELBOW_DOWN);
+  leg_test.moveFootToPV(idle_p, ELBOW_UP);
   #endif
   #ifdef LEG_SETUP_DEBUG
   // s0.write(HPS_2018_CTR);
