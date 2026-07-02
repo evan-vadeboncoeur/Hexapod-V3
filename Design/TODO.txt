@@ -8,6 +8,7 @@ point below x-axis, r >= L1
 point about x-axis, r >= L1
 point below x-axis, r < L1
 point about x-axis, r < L1
+continue this ^^^
 figure out servo routing
 3) test if usb-b & servos can be connected simulataneuosly (board switched off)
 3.5) test if voltage across mosfet when battery plugged in but motor and boards off (caps etc as well)

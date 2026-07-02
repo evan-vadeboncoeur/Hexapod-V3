@@ -120,10 +120,10 @@ Vector LegKinematics::ik(Vector t_pV, bool elbow){
     Serial.print('\t');
     Serial.println(beta2, 6);
     #endif
-    //t2_1 = (gamma - beta1); 
-    //t2_2 = (gamma - beta2);
-    t2_1 = M_PI - (beta1 - r_c*gamma);
-    t2_2 = M_PI - (beta2 - r_c*gamma);
+    t2_1 = (gamma - beta1); 
+    t2_2 = (gamma - beta2);
+    // t2_1 = M_PI - (beta1 - r_c*gamma);
+    // t2_2 = M_PI - (beta2 - r_c*gamma);
     // Calculate t3
     ct3 = (L2*L2 + L3*L3 - L4*L4) / (2*L2*L3);
     st3 = sqrt(1 - ct3*ct3);
