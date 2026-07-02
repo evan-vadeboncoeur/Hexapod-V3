@@ -23,7 +23,7 @@ Vector storage_j = Vector(0.0, -1.216, -1.763);
 Vector idle_j = Vector(0.0, -0.977, 2.146);
 Vector home_p = Vector(310.0, 0.0, 0.0);
 Vector storage_p = Vector(-46.76, 0.0, 108.68); // CAD output
-Vector idle_p = Vector(178.755, 0.0, 63.631); // CAD output
+Vector idle_p = Vector(178.755, 0.0, -63.631); // CAD output
 #endif
 
 //MotionPlanner plan = MotionPlanner();
@@ -72,11 +72,11 @@ void loop() {
   #ifdef LEG_KINEMATICS_DEBUG
   
   //leg_test.moveFootToJV(home_j);
-  leg_test.moveFootToJV(idle_j);
+  //leg_test.moveFootToJV(idle_j);
   //leg_test.moveFootToJV(storage_j);
-  //leg_test.moveFootToPV(home_p, ELBOW_DOWN);
+  //leg_test.moveFootToPV(home_p, ELBOW_UP);
   //leg_test.moveFootToPV(storage_p, ELBOW_UP);
-  leg_test.moveFootToPV(idle_p, ELBOW_DOWN);
+  //leg_test.moveFootToPV(idle_p, ELBOW_UP);
   #endif
   #ifdef LEG_SETUP_DEBUG
   // s0.write(HPS_2018_CTR);

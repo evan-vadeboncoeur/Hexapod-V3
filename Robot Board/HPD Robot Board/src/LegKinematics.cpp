@@ -87,6 +87,7 @@ Vector LegKinematics::ik(Vector t_pV, bool elbow){
     // Calculate theta 2 using beta, gamma, L4_x (x-component of L4 in the yaw plane), L4
     r = sqrt(p_x*p_x + p_y*p_y);
     r_c = (r < L1) ? -1.0 : 1.0; // check if x < 0 or r is < L1 (L4_x component modifier)
+    r_c2 = (r < L1) ? 1.0 : 0.0; // fpr t2 calculation (M_PI)
     L4_x = r - r_c*L1; // x component of L4 (J1 to P)
     L4 = sqrt(L4_x*L4_x + p_z*p_z);
     cb = (L2*L2 + L4*L4 - L3*L3) / (2*L2*L4); // x component of beta
@@ -120,15 +121,18 @@ Vector LegKinematics::ik(Vector t_pV, bool elbow){
     Serial.print('\t');
     Serial.println(beta2, 6);
     #endif
-    t2_1 = (gamma - beta1); 
-    t2_2 = (gamma - beta2);
-    // t2_1 = M_PI - (beta1 - r_c*gamma);
-    // t2_2 = M_PI - (beta2 - r_c*gamma);
+    t2_1 = M_PI*r_c2 + configuration*(beta1 - gamma); // conditional orientation (config.) & r/L1 (r_c2)
+    t2_2 = M_PI*r_c2 + configuration*(beta2 - gamma);
     // Calculate t3
     ct3 = (L2*L2 + L3*L3 - L4*L4) / (2*L2*L3);
     st3 = sqrt(1 - ct3*ct3);
     t3_1 = M_PI + configuration*atan2(st3, ct3); 
     t3_2 = M_PI + configuration*atan2(-st3, ct3);
+    // normalize all angles to ensure proper sign conventions 
+    t2_1 = normalizeAngles(t2_1);
+    t2_2 = normalizeAngles(t2_2);
+    t3_1 = normalizeAngles(t3_1);
+    t3_2 = normalizeAngles(t3_2);
     // debug section
     #ifdef LEG_IK_DEBUG
     Serial.println("Mult. solutions output [rads]");
@@ -165,26 +169,33 @@ float LegKinematics::normalizeAngles(float ang){
 
 // returns the desired configuration of the leg (true = down, false = up)
 Vector LegKinematics::configurationHelper(bool elbow){
-    // normalize all angles to ensure proper sign conventions 
-    t2_1 = normalizeAngles(t2_1);
-    t2_2 = normalizeAngles(t2_2);
-    t3_1 = normalizeAngles(t3_1);
-    t3_2 = normalizeAngles(t3_2);
     // check angle signs and associate with configurations
     if(configuration < 1.0){ // LHS Branch Logic
-        if(elbow){
-            t2 = (t2_1 < 0) ? t2_1 : t2_2; // elbow down
+        if(elbow && (r_c > 0.0)){
+            t2 = (t2_1 < 0) ? t2_1 : t2_2; // elbow down, not approaching base sing
             t3 = (t3_1 > 0) ? t3_1 : t3_2;
-        } else {
-            t2 = (t2_1 > 0) ? t2_1 : t2_2; // elbow up
+        } else if(!elbow && (r_c > 0.0)) {
+            t2 = (t2_1 > 0) ? t2_1 : t2_2; // elbow up, not approaching base sing
+            t3 = (t3_1 < 0) ? t3_1 : t3_2;
+        } else if(elbow && (r_c < 0.0)){ // ed, approaching base sing
+            t2 = (t2_1 > 0) ? t2_1 : t2_2; 
+            t3 = (t3_1 > 0) ? t3_1 : t3_2;
+        } else { // eu, approaching base sing
+            t2 = (t2_1 < 0) ? t2_1 : t2_2;
             t3 = (t3_1 < 0) ? t3_1 : t3_2;
         }
     } else { // RHS Branch Logic
-        if(elbow){
+        if(elbow && (r_c > 0.0)){
             t2 = (t2_1 > 0) ? t2_1 : t2_2; // elbow down
             t3 = (t3_1 < 0) ? t3_1 : t3_2;
-        } else {
+        } else if(!elbow && (r_c > 0.0)) {
             t2 = (t2_1 < 0) ? t2_1 : t2_2; // elbow up
+            t3 = (t3_1 > 0) ? t3_1 : t3_2;
+        } else if(elbow && (r_c < 0.0)){
+            t2 = (t2_1 < 0) ? t2_1 : t2_2; 
+            t3 = (t3_1 < 0) ? t3_1 : t3_2;
+        } else { // eu, approaching base sing
+            t2 = (t2_1 > 0) ? t2_1 : t2_2;
             t3 = (t3_1 > 0) ? t3_1 : t3_2;
         }
     }
