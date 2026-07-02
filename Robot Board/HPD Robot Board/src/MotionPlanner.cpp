@@ -1,19 +1,19 @@
 
 #include "MotionPlanner.h"
-#ifndef PLAN_T_DEBUG
 // CONSTRUCTORS
 
 MotionPlanner::MotionPlanner(){
 
 }
 
-MotionPlanner::MotionPlanner(Leg** l, int g){
-    legs = l; // pointer to array of legs
-    setGait(g);
-    setupTripod(0, 1, 20);
-    delay(5);
-}
-
+MotionPlanner::MotionPlanner(Leg** l, int g)
+//     : b{body()}; // gait cycle hardcoded values)}
+// {
+//     legs = l; // pointer to array of legs
+//     setGait(g);
+//     delay(5);
+// }
+// /*
 // SETTERS 
 
 // enum gait type
@@ -200,7 +200,7 @@ bool MotionPlanner::moveIdle(){
 
 
 // end v2.1 kinematics
-#endif
+*/
 
 /*** Old tripod gait sequence
  * 

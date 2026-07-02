@@ -34,6 +34,10 @@
 #define LEG_5_J1 (35)
 #define LEG_5_J2 (36)
 
+#define STEP_HEIGHT (12.0)
+#define DUTY_FACTOR (0.5)
+#define T_CYCLE (1.5)
+
 // knows current and previous positions, change in positions, of legs. 
 // knows body velocity and angular velocity
 // receives velocity info and updates positions based on that

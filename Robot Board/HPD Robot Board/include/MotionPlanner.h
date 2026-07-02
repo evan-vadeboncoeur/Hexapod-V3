@@ -21,22 +21,11 @@ class MotionPlanner{
         Leg** legs; // 6 legs
         Leg* tp_L[3]; // 3 legs/tripod
         Leg* tp_R[3];
-        float s; // linear advance
-        int target_steps, direction, total_steps=0; 
-        
-        // v2.1 kinematics ----
+        Body b;
         Twist t; // twist command (v_x, v_y, w_z)
         float vx, vy, wz;
-        float t_cyle = 1.5, duty_factor = 0.5; // gait cycle hardcoded values
-      
-        // v2.1 end ----
-        // position definitions
-        J_Position home = J_Position(0.0, 0.0, 0.0); // rads
-        J_Position storage = J_Position(0.0, -M_PI_3, -2.0);
-        J_Position idle = J_Position(0, -0.69, 1.95);
-        J_Position lift = J_Position();
-        J_Position swing = J_Position();
-        J_Position plant = J_Position();
+        float t_cyle = 1.5, duty_factor = 0.5, step_h = 12.0; // gait cycle hardcoded values
+
         bool halfTripod(Leg** l, Leg** p);
         bool liftLeg(Leg** trip, C_Position l);
         bool swingLeg(Leg** trip, C_Position s);
