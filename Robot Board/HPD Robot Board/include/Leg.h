@@ -36,7 +36,6 @@ class Leg{
         float configuration; // CCW facing or CW facing
         float L0 = 92.5, L1 = 70.0, L2 = 90.0, L3 = 150.0; // link lengths
         // cartesian space values
-        Vector storage_j_L = Vector(0.0, -M_PI_3, -2.0); // initial storage position in the joint space
         Vector foot_p_L; // target foot position in the leg frame (J0 = base)
         Vector prevFoot_p_L; // prev foot position in the leg frame
         Vector foot_speed_L; // foot speed in the leg (J0) frame
@@ -54,8 +53,12 @@ class Leg{
         // Constructors
         Leg();
         Leg(int id, int j1, int j2, int j3, float configuration);
-        Vector storage_p_L = Vector(-29.33, 0.00, 1.78); // initial storage position in the leg frame
-        Vector idle_p_L = Vector(193.0, 0.0, -77.0);
+        Vector storage_p_L = Vector(0.0, -M_PI_3, -2.0); // initial storage position in the joint space
+        Vector idle_p_L = Vector(178.755, 0.0, -63.631);
+        Vector home_p_L = Vector(310.0, 0.0, 0.0);
+        Vector storage_j_L = Vector(0.0, -1.216, -1.763);
+        Vector home_j_L = Vector(0.0, 0.0, 0.0);
+        Vector idle_j_L = Vector(0.0, -0.977, 2.146);
         // Getters
         Vector getPrevFootP(){return prevFoot_p_L;} // get position from previous move
         Vector getPrevFootJ(){return prevFoot_j_L;}

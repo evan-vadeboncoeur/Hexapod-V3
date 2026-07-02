@@ -2,8 +2,8 @@
 #include "Body.h"
 
 //#include "Hexapod.h"
-#define LEG_SETUP_DEBUG
-
+//#define LEG_SETUP_DEBUG
+#define BODY_DEBUG
 // might have to do joints & everything else BEFORE runtime, too, so that it's on the heap, not the stack?
 #ifdef LEG_SETUP_DEBUG
 Servo s0, s1, s2;
@@ -14,8 +14,9 @@ int j2 = LEG_0_J2;
 
 float duty_f = 0.5;
 float cycle_time = 1.5;
+float step_h = 12.0;
 
-#define LEG_KINEMATICS_DEBUG
+//#define LEG_KINEMATICS_DEBUG
 #ifdef LEG_KINEMATICS_DEBUG
 Leg leg_test = Leg(LEG_0, j0, j1, j2, CCW_CONFIG);
 Vector home_j = Vector(0.0, 0.0, 0.0);
@@ -40,8 +41,8 @@ void setup(){
   #endif
 
   #ifndef LEG_SETUP_DEBUG
-  Body b = Body(duty_f, cycle_time);
-  b.velocityCommand(Vector(10.0, 0.0, 0.05));
+  Body b = Body(duty_f, cycle_time, step_h);
+  b.velocityCommand(Vector(0.0, 20.0, 0.0));
   delay(1000);
   //exit(1);
   // legs[LEG_0] = &L0;
@@ -74,9 +75,9 @@ void loop() {
   //leg_test.moveFootToJV(home_j);
   //leg_test.moveFootToJV(idle_j);
   //leg_test.moveFootToJV(storage_j);
-  //leg_test.moveFootToPV(home_p, ELBOW_UP);
+  //leg_test.moveFootToPV(home_p, ELBOW_DOWN);
   //leg_test.moveFootToPV(storage_p, ELBOW_UP);
-  //leg_test.moveFootToPV(idle_p, ELBOW_UP);
+  leg_test.moveFootToPV(idle_p, ELBOW_DOWN);
   #endif
   #ifdef LEG_SETUP_DEBUG
   // s0.write(HPS_2018_CTR);
@@ -86,16 +87,8 @@ void loop() {
   // s2.write(HPS_2027_CTR); // avg is middle, not 1000us
   // delay(2000);
   #endif
-  #ifdef PLAN_DEBUG
-  //plan.setupTripod(10, 1, 8);
-  //plan.tripodGait(4, 1, 8);
-  // plan.moveStorage();
-  // delay(3000);
-  // plan.moveHome();
-  // delay(3000);
-  // plan.moveStance();
-  //L0.moveToJV(home);  
-  //plan.powerOffSequence();
+  #ifdef BODY_DEBUG
+  
   #endif
   #ifdef COMM_H_DEBUG
   cm.receiveMessage();

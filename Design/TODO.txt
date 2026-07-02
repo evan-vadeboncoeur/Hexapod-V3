@@ -1,23 +1,11 @@
 TODO Priority (ALL)
 -------------------
-fix leg kinematics
-   xyz in general cases seem to be good but r < L1 case needs to be solved
-    debug r < L1
-ED + EU for:
-point below x-axis, r >= L1
-point about x-axis, r >= L1
-point below x-axis, r < L1
-point about x-axis, r < L1
-continue this ^^^
-figure out servo routing
+build leg and test servo joint outputs!
+figure out servo wire management
+start tripod scheduler
+    find distinction between MP and B classes (transforms, etc.)
 3) test if usb-b & servos can be connected simulataneuosly (board switched off)
 3.5) test if voltage across mosfet when battery plugged in but motor and boards off (caps etc as well)
-4) "trajectory generation"
-    a) finish motion planner class to add nominal position / linear interpolation 
-        p_nom = p_lift, p_swing = p_nom + dP_i/2, p_stance = p_nom - dP_i/2
-        p_lift = (1 - s)*p_stance + s*p_swing, s = 0.5 (halfway through cycle) [x y]^T
-        p_lift_z = z_ground + h*sin(pi*s), z_ground = p_idle_z (see idle value), h = clearance height = 20mm, s = 0.5 (halfway pt of cycle)
-
 5) calculate workspace limitations and maximum swing angles / J1/2 interaction monitoring
     maximum done
     need to work on leg interaction
