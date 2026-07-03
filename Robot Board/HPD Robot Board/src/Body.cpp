@@ -12,7 +12,17 @@ Body::Body(float df, float t_c, float sh) // initialize each leg before contruct
         Leg(LEG_3, LEG_3_J0, LEG_3_J1, LEG_3_J2, CCW_CONFIG),
         Leg(LEG_4, LEG_4_J0, LEG_4_J1, LEG_4_J2, CCW_CONFIG),
         Leg(LEG_5, LEG_5_J0, LEG_5_J1, LEG_5_J2, CCW_CONFIG)
-    } 
+    }    ,
+    tp_even{ // initialize tripods for ease of gait scheduling
+        &(legs[LEG_0]),
+        &(legs[LEG_2]),
+        &(legs[LEG_4])
+    },
+    tp_odd{
+        &(legs[LEG_1]),
+        &(legs[LEG_3]),
+        &(legs[LEG_5])
+    }
 {
     step_height = sh;
     duty_factor = df;
@@ -28,12 +38,6 @@ void Body::velocityCommand(Vector tw){
     compute_vR(); // compute individual foot velocities to satisfy command
     compute_dP(); // compute displacement vectors for each foot
     compute_SLS(); // compute stance and swing vectors for each foot
-    //compute_pN_L(); // probably dont need this - handle in motion planner class !!!
-    // now move on to motion planner to order legs??
-    // compute_pN_L = computeStance for each leg
-    // move on to computeLift
-    // computeSwing (stance magnitude)
-    // computePlant ...
 }
 
 void Body::unpackTwist(Vector tw){
@@ -48,15 +52,15 @@ void Body::unpackTwist(Vector tw){
 // compute rotation angles for RBTF between body and leg frame
 // compute x and y tf components
 void Body::computeAlphaI(){
+    Serial.println("AlphaI Setup: ");
+    Serial.print("Leg: ");
+    Serial.print('\t');
+    Serial.println("Angle: ");
     for(int i=0; i<(NUM_LEGS); i++){
         alpha_i[i] = M_PI_3*i + M_PI_6;
         alpha_ci[i] = cos(alpha_i[i]); // reduce sin/cos computations @ runtime
         alpha_si[i] = sin(alpha_i[i]);
         #ifdef SETUP_BK_DEBUG
-        Serial.println("AlphaI Setup: ");
-        Serial.print("Leg: ");
-        Serial.print('\t');
-        Serial.println("Angle: ");
         Serial.print(i);
         Serial.print('\t');
         Serial.println(alpha_i[i]);
@@ -77,8 +81,6 @@ void Body::compute_vR(){
     Serial.println("v_y: ");
     #endif
     for(int i=0; i<(NUM_LEGS); i++){
-        // v_x = -(vx + (-wz*foot_p_R[i].getX2()));
-        // v_y = -(vy + (wz*foot_p_R[i].getX1()));
         v_x = -(vx + (-wz*foot_idle_R[i].getX2()));
         v_y = -(vy + (wz*foot_idle_R[i].getX1()));
         t_w = Vector(v_x, v_y);
@@ -245,17 +247,27 @@ Vector Body::L_TF_B(Vector v){
         t_y_b = t_y_f*alpha_ci[i] + t_x_f*alpha_si[i] + chassis_radius*alpha_si[i] ;
         t_z_b = t_z_f;
         t_v = Vector(t_x_b, t_y_b, t_z_b);
-        foot_p_R[i] = t_v;
         foot_idle_R[i] = t_v;
         legs[i].setTargetFootP(t_v);
         #ifdef SETUP_BK_DEBUG
         Serial.print(i);
         Serial.print('\t');
-        Serial.print(foot_p_R[i].getX1());
+        Serial.print(foot_idle_R[i].getX1());
         Serial.print('\t');
-        Serial.print(foot_p_R[i].getX2());
+        Serial.print(foot_idle_R[i].getX2());
         Serial.print('\t');
-        Serial.println(foot_p_R[i].getX3());
+        Serial.println(foot_idle_R[i].getX3());
         #endif
     }
+}
+// consumes a leg, position, and motion type, moves leg to that vector
+void Body::moveLeg(Leg* l, Vector v, bool type, bool elbow){
+    if(type){ // position move
+        l->moveFootToPV(v, elbow);
+    } else l->moveFootToJV(v); // joint move
+}
+
+Leg* Body::getLegTripod(int ln, int tp){
+    if(tp == TP_EVEN) return (tp_even[ln]);
+    else return (tp_odd[ln]);
 }

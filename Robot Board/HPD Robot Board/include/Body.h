@@ -34,6 +34,12 @@
 #define LEG_5_J1 (35)
 #define LEG_5_J2 (36)
 
+#define TP_EVEN (0)
+#define TP_ODD (1)
+
+#define CART_MOVE (true)
+#define JOINT_MOVE (false)
+
 #define STEP_HEIGHT (12.0)
 #define DUTY_FACTOR (0.5)
 #define T_CYCLE (1.5)
@@ -45,9 +51,15 @@
 
 class Body{
     public:
+        // Constructors
         Body();
         Body(float df, float t_c, float sh);
+        // Motion Planner / Hexapod Accessible Functions
         void velocityCommand(Vector tw);
+        void moveLeg(Leg* l, Vector v, bool type, bool elbow); // bool: joint or cartesian
+        // Getters
+        Leg* getLeg(int ln){return (&(legs[ln]));} // return pointer to desired leg
+        Leg* getLegTripod(int ln, int tp); // return pointer to leg in specific tripod
     private:
         // body members
         Vector twist;
@@ -59,6 +71,8 @@ class Body{
         float step_height; // step height parameter
         // leg members
         Leg legs[NUM_LEGS];
+        Leg* tp_even[NUM_LEGS/2];
+        Leg* tp_odd[NUM_LEGS/2];
         Vector foot_idle_R[NUM_LEGS]; // idle foot positions in body frame
         Vector foot_swing_R[NUM_LEGS]; // swing foot positions in body frame
         Vector foot_stance_R[NUM_LEGS]; // stance foot positions in body frame
@@ -78,6 +92,7 @@ class Body{
         void compute_pN_L();
         Vector B_TF_L(Vector bc, int id);
         Vector L_TF_B(Vector v);
+        
         
 };
 
