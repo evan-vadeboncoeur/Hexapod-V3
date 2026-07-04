@@ -16,17 +16,17 @@ float duty_f = 0.5;
 float cycle_time = 1.5;
 float step_h = 12.0;
 
-struct WaitForSerial {
-  WaitForSerial() {
-    Serial.begin(9600);
-    while (!Serial); // wait for serial to be ready
-    Serial.println();
-  }
-};
-//WaitForSerial WFS; // in global scope before other globals
+// struct WaitForSerial {
+//   WaitForSerial() {
+//     Serial.begin(9600);
+//     while (!Serial); // wait for serial to be ready
+//     Serial.println();
+//   }
+// };
+// WaitForSerial WFS; // in global scope before other globals
+
 //#define LEG_KINEMATICS_DEBUG
 #ifdef LEG_KINEMATICS_DEBUG
-
 Leg leg_test = Leg(LEG_0, j0, j1, j2, CCW_CONFIG);
 Vector home_j = Vector(0.0, 0.0, 0.0);
 Vector storage_j = Vector(0.0, -1.216, -1.763);
@@ -38,6 +38,8 @@ Vector idle_p = Vector(178.755, 0.0, -63.631); // CAD output
 
 //CommunicationManager cm = CommunicationManager(CE_H, CSN_H);
 
+//MotionPlanner* mp;
+MotionPlanner* mp = nullptr;
 
 void setup(){
   Serial.begin(9600); // open before creating legs (at least in testing phases)
@@ -47,7 +49,11 @@ void setup(){
   Serial.println("In setup");
   #endif
   #ifndef LEG_SETUP_DEBUG
-  MotionPlanner mp = MotionPlanner(g, duty_f, cycle_time, step_h);
+  //mp = new MotionPlanner(g, duty_f, cycle_time, step_h);
+  static MotionPlanner planner(g, duty_f, cycle_time, step_h); // statically stored for life of program
+  mp = &planner;
+  mp->powerOnSequence();
+  //mp.powerOffSequence();
   //Body b = Body(duty_f, cycle_time, step_h);
   //b.velocityCommand(Vector(0.0, 20.0, 0.0));
   delay(1000);
@@ -59,16 +65,14 @@ void setup(){
   s2.attach(j2, PWM_MIN, PWM_MAX);
   #endif
   
- mp.powerOnSequence();
- mp.powerOffSequence();
+ 
 }
 
 void loop() {
-  
   #ifdef GLOBAL_DEBUG
   Serial.println("In loop");
   #endif
-  delay(2000);
+  delay(500);
   #ifdef LEG_KINEMATICS_DEBUG
   
   //leg_test.moveFootToJV(home_j);
@@ -93,6 +97,8 @@ void loop() {
   cm.receiveMessage();
   
   #endif
+  Serial.println("In Main Loop.");
+  mp->tripodGait(3);
   delay(2000);
   exit(1);
   

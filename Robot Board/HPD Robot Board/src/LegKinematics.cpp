@@ -223,6 +223,10 @@ Vector LegKinematics::configurationHelper(bool elbow){
 // make sure we're within the required distance
 bool LegKinematics::ikCheck(){    
     fk(calculated_jV);
+    float dx = (target_pV.getX1() - calculated_pV.getX1());
+    float dy = target_pV.getX2() - calculated_pV.getX2();
+    float dz = target_pV.getX3() - calculated_pV.getX3();
+    float d_t = sqrt(dx*dx + dy*dy + dz*dz);
     #ifdef LEG_IK_DEBUG
     Serial.println("IK-FK Comparison");
     // X error printout
@@ -267,10 +271,6 @@ bool LegKinematics::ikCheck(){
     // Total Distance Printout
     Serial.print("Distance error: ");
     Serial.print('\t');
-    float dx = (target_pV.getX1() - calculated_pV.getX1());
-    float dy = target_pV.getX2() - calculated_pV.getX2();
-    float dz = target_pV.getX3() - calculated_pV.getX3();
-    float d_t = sqrt(dx*dx + dy*dy + dz*dz);
     Serial.println(d_t);
     #endif
     if(fabs(d_t < threshold)) return true; // check computed distance difference vs threshold

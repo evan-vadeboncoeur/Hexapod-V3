@@ -1,15 +1,9 @@
 TODO Priority (ALL)
 -------------------
-build leg and test servo joint outputs!
-figure out servo wire management
-start tripod scheduler
+work on tripod scheduler
     find distinction between MP and B classes (transforms, etc.)
-3) test if usb-b & servos can be connected simulataneuosly (board switched off)
-3.5) test if voltage across mosfet when battery plugged in but motor and boards off (caps etc as well)
-5) calculate workspace limitations and maximum swing angles / J1/2 interaction monitoring
-    maximum done
-    need to work on leg interaction
-    J2 J3 collision monitoring
+) calculate workspace limitations and maximum swing angles / J1/2 interaction monitoring
+    need to work on leg interaction (J2 J3 collision monitoring)
 
 
                                             Hexapod

@@ -1,6 +1,7 @@
 ECE TODO
 ----------
 1) dipswitch resistors - not needed on array board, can configure as pull-downs (ensure each DS has matching PU resistor)
+2) switch after power, before cap...
 
 GENERAL
 --------

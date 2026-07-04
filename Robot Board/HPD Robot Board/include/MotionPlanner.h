@@ -8,6 +8,9 @@
 #include "Body.h"
 #include <math.h>
 
+#define NWALK (false)
+#define WALK (true)
+
 #define FWD (1.0)
 #define RVRS (-1.0)
 #define TP_1 (1)
@@ -24,26 +27,26 @@ class MotionPlanner{
         Body b;
         Twist t; // twist command (v_x, v_y, w_z)
         float vx, vy, wz;
-        float t_cycle, duty_factor, step_h; // gait cycle (hardcoded?) values
-
-        bool halfTripod(Leg** l, Leg** p);
-        bool liftLeg(Leg** trip, C_Position l);
-        bool swingLeg(Leg** trip, C_Position s);
-        bool plantLeg(Leg** trip, C_Position p);
-        bool pushLeg(Leg** trip, C_Position p);
-        long unsigned int move_time=0, prev_move=0;
+        float t_cycle, duty_factor, step_h, cycle_count; // gait cycle (hardcoded?) values
+        bool walk_flag = NWALK;
+        bool halfTripod(Leg** sw, Leg** st);
+        bool push(Leg** l_st, Leg** l_sw);
+        bool lift(Leg** l_l);
+        long unsigned int half_c=0, half_c_prev=0, full_c=0, full_c_prev=0;
     public:
         enum Gait {TRIPOD, RIPPLE, WAVE, QUADRUPED} gait=TRIPOD;
         MotionPlanner();
-        MotionPlanner(int g, int df, int tc, int sh);
+        MotionPlanner(int g, int df, int tc, int sh);\
+        void movement(int g, Vector tw);
+        void setBodyVelocity(Vector tw);
         // Setters
-        void setLocomotion(); // receives command from Hexapod after Hexapod receives transmission from controller. sets gait, direction, etc.
-        void setGait(int);
+        void setGait(int, bool);
         void setDutyFactor(int df){duty_factor = df;}
         void setCycleTime(int tc){t_cycle = tc;}
         void setStepHeight(int sh){step_h = sh;}
         // Gaits
-        bool tripodGait(int, int, int);
+        bool tripodGait();
+        bool tripodGait(int cc);
         void setupTripod(int, int, int);
         void setDistanceIncrement(int);
         void sortTripod();
@@ -59,10 +62,6 @@ class MotionPlanner{
         // v2.1 kinematics
         void setTwist(Twist tw);
         void unpackTwist();
-        void Body_r_Foot(); // calculate the postion vector of the feet in the body frame (RBTF)
-        void Body_V_Foot(); // compute the foot velocities in the body frame
-        void Foot_V_Foot(); // compute the foot velocities in the individual foot frame (use ) 
-
 };
 
 #endif

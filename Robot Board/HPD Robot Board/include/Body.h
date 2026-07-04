@@ -60,6 +60,10 @@ class Body{
         // Getters
         Leg* getLeg(int ln){return (&(legs[ln]));} // return pointer to desired leg
         Leg* getLegTripod(int ln, int tp); // return pointer to leg in specific tripod
+        Leg** getTripod(int tp);
+        Vector getLift(int id){return foot_lift_R[id];}
+        Vector getSwing(int id){return foot_swing_R[id];}
+        Vector getStance(int id){return foot_stance_R[id];}
     private:
         // body members
         Vector twist;

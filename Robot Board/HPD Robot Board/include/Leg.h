@@ -1,6 +1,6 @@
 #ifndef LEG_H
 #define LEG_H
-#define LEG_DEBUG
+//#define LEG_DEBUG
 
 #define M_PI_3 (1.04719755)
 #define M_PI_6 (0.523598776)

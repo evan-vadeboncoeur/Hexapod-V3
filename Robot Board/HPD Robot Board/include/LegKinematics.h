@@ -1,7 +1,7 @@
 #ifndef LEG_KINEMATIC_H
 #define LEG_KINEMATIC_H
-#define LEG_IK_DEBUG
-#define LEG_FK_DEBUG
+//#define LEG_IK_DEBUG
+//#define LEG_FK_DEBUG
 
 #define CCW_CONFIG (-1.0) // invert atan2 angle to take CCW out of page, not into page (RHS)
 #define LHS (1.0)
