@@ -17,6 +17,7 @@
 #define TP_2 (2)
 
 #define MOTION_PLANNER_DELAY (50)
+#define HALF_TRIPOD_DELAY (300)
 
 // motion planner class that recieves a command (gait, direction, # steps...). Controls order of leg movements
 class MotionPlanner{
@@ -36,7 +37,7 @@ class MotionPlanner{
     public:
         enum Gait {TRIPOD, RIPPLE, WAVE, QUADRUPED} gait=TRIPOD;
         MotionPlanner();
-        MotionPlanner(int g, int df, int tc, int sh);\
+        MotionPlanner(int g, float df, float tc, float sh);\
         void movement(int g, Vector tw);
         void setBodyVelocity(Vector tw);
         // Setters

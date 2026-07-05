@@ -4,6 +4,7 @@
 //#define LEG_FK_DEBUG
 
 #define CCW_CONFIG (-1.0) // invert atan2 angle to take CCW out of page, not into page (RHS)
+#define CW_CONFIG (1)
 #define LHS (1.0)
 #define RHS (-1.0)
 #define ELBOW_UP (false)

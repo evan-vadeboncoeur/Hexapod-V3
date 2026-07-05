@@ -1,7 +1,21 @@
 TODO Priority (ALL)
 -------------------
-work on tripod scheduler
-    find distinction between MP and B classes (transforms, etc.)
+Tripod Gait
+    1) build all 6 legs
+        print all links
+        all heat inserts
+        zero legs as best as possible
+    2) test half gait odd first
+    3) add in one more leg, test
+    4) build full robot, test
+Shut-down macro
+    1) idle -> might hit ground, change order of joints?
+
+Interrupt commands
+    1) new velocity command (push joy stick, probably)
+    2) shutdown / startup macros - other joystick?
+    3) battery commands (monitor periodically with timers)
+    
 ) calculate workspace limitations and maximum swing angles / J1/2 interaction monitoring
     need to work on leg interaction (J2 J3 collision monitoring)
 

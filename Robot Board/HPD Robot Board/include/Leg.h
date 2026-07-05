@@ -5,9 +5,6 @@
 #define M_PI_3 (1.04719755)
 #define M_PI_6 (0.523598776)
 
-//#define CCW_CONFIG (-1)
-#define CW_CONFIG (1)
-
 #define COXA (0)
 #define FEMUR (1)
 #define FOOT (2)
@@ -16,6 +13,7 @@
 #define FOOT_SERVO_OFFSET (135.0)
 #define FOOT_SERVO_MAX (270.0)
 #define FOOT_SERVO_MAX_INT (270)
+#define FOOT_SERVO_DEADBAND (545)
 #define HIP_SERVO_MAX (180.0)
 #define FOOT_SERVO_MIN (0.0)
 #define LEG_DELAY (10)

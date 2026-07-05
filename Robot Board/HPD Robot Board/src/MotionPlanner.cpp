@@ -1,11 +1,9 @@
-
 #include "MotionPlanner.h"
 // CONSTRUCTORS
-
 MotionPlanner::MotionPlanner(){
 }
 
-MotionPlanner::MotionPlanner(int g, int df, int tc, int sh)
+MotionPlanner::MotionPlanner(int g, float df, float tc, float sh)
     : b{Body(df, tc, sh)} // initialize body first (set alpha, idle, gait cycle values), set tripods too in body constructor
 {
     delay(5);
@@ -27,7 +25,7 @@ void MotionPlanner::setGait(int g, bool walk){
     switch(g){
         case TRIPOD: 
             gait = TRIPOD;
-            if(walk) tripodGait(5); // test version
+            if(walk) tripodGait(3); // test version
             break;
         case RIPPLE: 
             gait = RIPPLE;
@@ -47,7 +45,9 @@ void MotionPlanner::setGait(int g, bool walk){
 // teleop, indefinite version
 bool MotionPlanner::tripodGait(){
     while(walk_flag){ // finish cycle until walk_flag shuts off
-
+        halfTripod(b.getTripod(TP_EVEN), b.getTripod(TP_ODD));
+        delay(100);
+        halfTripod(b.getTripod(TP_ODD), b.getTripod(TP_EVEN));
     } return true; // tripod gait finished
 }
 
@@ -58,23 +58,24 @@ bool MotionPlanner::tripodGait(int cc){
     int num_cycle = 0;
     while(num_cycle < cc){
         #ifdef PLAN_DEBUG
-        Serial.println("--------------------HALF GAIT EVEN--------------------");
+        Serial.println("--------------------HALF GAIT ODD--------------------");
         #endif
         half_c_prev = full_c_prev = millis();
         halfTripod(b.getTripod(TP_EVEN), b.getTripod(TP_ODD));
         half_c = (millis() - half_c_prev);
+        delay(100);
         #ifdef PLAN_DEBUG
-        Serial.print("Half gait even time: ");
+        Serial.print("0.5 even elapsed time: ");
         Serial.print('\t');
         Serial.println(((float)(half_c)/1000.0));
-        Serial.println("--------------------HALF GAIT ODD--------------------");
+        Serial.println("--------------------HALF GAIT EVEN--------------------");
         #endif
         half_c_prev = millis();
         halfTripod(b.getTripod(TP_ODD), b.getTripod(TP_EVEN));
         half_c = (millis() - half_c_prev);
         full_c = (millis() - full_c_prev);
         #ifdef PLAN_DEBUG
-        Serial.print("Half gait odd time: ");
+        Serial.print("0.5 odd elapsed time: ");
         Serial.print('\t');
         Serial.print(((float)(half_c)/1000.0));
         Serial.print('\t');
@@ -88,8 +89,9 @@ bool MotionPlanner::tripodGait(int cc){
 
 bool MotionPlanner::halfTripod(Leg** sw, Leg** st){
     lift(sw);
-    delay(10);
+    delay(HALF_TRIPOD_DELAY);
     push(st, sw);
+    delay(HALF_TRIPOD_DELAY);
     return true;
 }
 
@@ -97,45 +99,86 @@ bool MotionPlanner::halfTripod(Leg** sw, Leg** st){
 bool MotionPlanner::lift(Leg** l_l){
     Leg* cl;
     int id;
+    Vector vm;
     #ifdef PLAN_DEBUG
     Serial.println("---------LIFT----------");
+    Serial.print("Leg: ");
+    Serial.print('\t');
+    Serial.print("X: ");
+    Serial.print('\t');
+    Serial.print("Y: ");
+    Serial.print('\t');
+    Serial.println("Z: ");
     #endif
     for(int i=0; i<(NUM_LEGS/2); i++){    
         cl = *(l_l+i); // leg in tripod
         id = cl->getID(); // id for position index in body trajectory 
+        vm = b.B_TF_L((b.getLift(id)), id);
         #ifdef PLAN_DEBUG
-        Serial.print("Lift Leg: ");
+        Serial.print(id);
         Serial.print('\t');
-        Serial.println(id);
+        Serial.print(vm.getX1());
+        Serial.print('\t');
+        Serial.print(vm.getX2());
+        Serial.print('\t');
+        Serial.println(vm.getX3());
         #endif
-        b.moveLeg(cl, b.getLift(id), CART_MOVE, ELBOW_DOWN); // cmd move
+        b.moveLeg(cl, vm, CART_MOVE, ELBOW_DOWN); // cmd move
     }
+    delay(50);
     return true;
 }
 
 bool MotionPlanner::push(Leg** l_st, Leg** l_sw){
     Leg* st;
     Leg* sw;
+    Vector v_st, v_sw;
     int st_id, sw_id;
     #ifdef PLAN_DEBUG
     Serial.println("---------STANCE----------");
+    Serial.print("StID: ");
+    Serial.print('\t');
+    Serial.print("St x :");
+    Serial.print('\t');
+    Serial.print("St y :");
+    Serial.print('\t');
+    Serial.print("St z :");
+    Serial.print('\t');
+    Serial.print("SwID: ");
+    Serial.print('\t');
+    Serial.print("Sw x :");
+    Serial.print('\t');
+    Serial.print("Sw y :");
+    Serial.print('\t');
+    Serial.println("Sw z :");
     #endif
     for(int i=0; i<(NUM_LEGS/2); i++){    
         st = *(l_st+i), sw = *(l_sw + i); // swing and stance leg
         st_id = st->getID(), sw_id = sw->getID(); // ids
+        v_st = b.B_TF_L((b.getStance(st_id)), st_id);
+        v_sw = b.B_TF_L((b.getSwing(sw_id)), sw_id);
         #ifdef PLAN_DEBUG
-        Serial.print("Stance Leg: ");
-        Serial.print('\t');
         Serial.print(st_id);
         Serial.print('\t');
-        Serial.print("Swing Leg: ");
+        Serial.print(v_st.getX1());
         Serial.print('\t');
-        Serial.println(sw_id);
+        Serial.print(v_st.getX2());
+        Serial.print('\t');
+        Serial.print(v_st.getX3());
+        Serial.print('\t');
+        Serial.print(sw_id);
+        Serial.print('\t');
+        Serial.print(v_sw.getX1());
+        Serial.print('\t');
+        Serial.print(v_sw.getX2());
+        Serial.print('\t');
+        Serial.println(v_sw.getX3());
         #endif
-        b.moveLeg(sw, b.getSwing(sw_id), CART_MOVE, ELBOW_DOWN); // cmd move
+        b.moveLeg(sw, v_sw, CART_MOVE, ELBOW_DOWN); // cmd move
         delay(10);
-        b.moveLeg(st, b.getStance(st_id), CART_MOVE, ELBOW_DOWN);
+        b.moveLeg(st, v_st, CART_MOVE, ELBOW_DOWN);
     }
+    delay(50);
     return true;
 }
 
@@ -249,59 +292,3 @@ bool MotionPlanner::powerOffSequence(){
     moveStorage();
     return true;
 }
-
-/*** Old tripod gait sequence
- * 
- * bool MotionPlanner::liftLeg(Leg** trip, C_Position pos){
-    Serial.println("Lift Leg 0: ");
-    trip[0]->moveToIK(pos, ELBOW_DOWN, LHS);
-    delay(MOTION_PLANNER_DELAY);
-    Serial.println("Lift Leg 1: ");
-    trip[1]->moveToIK(pos, ELBOW_DOWN, LHS);
-    delay(MOTION_PLANNER_DELAY);
-    Serial.println("Lift Leg 2: ");
-    trip[2]->moveToIK(pos, ELBOW_DOWN, LHS);
-    delay(MOTION_PLANNER_DELAY);
-    return true;
-}
-
-bool MotionPlanner::swingLeg(Leg** trip, C_Position s){
-    Serial.println("Swing Leg 0: ");
-    trip[0]->moveToIK(s, ELBOW_DOWN, LHS);
-    delay(MOTION_PLANNER_DELAY);
-    Serial.println("Swing Leg 1: ");
-    trip[1]->moveToIK(s, ELBOW_DOWN, LHS);
-    delay(MOTION_PLANNER_DELAY);
-    Serial.println("Swing Leg 2: ");
-    trip[2]->moveToIK(s, ELBOW_DOWN, LHS);
-    delay(MOTION_PLANNER_DELAY);
-    return true;
-}
-
-bool MotionPlanner::plantLeg(Leg** trip, C_Position p){
-    Serial.println("Plant Leg 0: ");
-    trip[0]->moveToIK(p, ELBOW_DOWN, LHS);
-    delay(MOTION_PLANNER_DELAY);
-    Serial.println("Plant Leg 1: ");
-    trip[1]->moveToIK(p, ELBOW_DOWN, LHS);
-    delay(MOTION_PLANNER_DELAY);
-    Serial.println("Plant Leg 2: ");
-    trip[2]->moveToIK(p, ELBOW_DOWN, LHS);
-    delay(MOTION_PLANNER_DELAY);
-    return true;
-}
-bool MotionPlanner::pushLeg(Leg** trip, C_Position p){
-    Serial.println("Push Leg 0: ");
-    trip[0]->moveToIK(p, ELBOW_DOWN, LHS);
-    delay(MOTION_PLANNER_DELAY);
-    Serial.println("Push Leg 1: ");
-    trip[1]->moveToIK(p, ELBOW_DOWN, LHS);
-    delay(MOTION_PLANNER_DELAY);
-    Serial.println("Push Leg 2: ");
-    trip[2]->moveToIK(p, ELBOW_DOWN, LHS);
-    delay(MOTION_PLANNER_DELAY);
-    return true;
-}
- * 
- * 
- */

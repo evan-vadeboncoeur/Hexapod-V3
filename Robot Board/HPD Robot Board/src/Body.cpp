@@ -7,9 +7,9 @@ Body::Body(){
 Body::Body(float df, float t_c, float sh) // initialize each leg before contructing the rest of the object
     : legs{
         Leg(LEG_0, LEG_0_J0, LEG_0_J1, LEG_0_J2, CCW_CONFIG),
-        Leg(LEG_3, LEG_3_J0, LEG_3_J1, LEG_3_J2, CCW_CONFIG), // switch back when done w/ R&D
+        Leg(LEG_1, LEG_1_J0, LEG_1_J1, LEG_1_J2, CCW_CONFIG), // switch back when done w/ R&D 
         Leg(LEG_2, LEG_2_J0, LEG_2_J1, LEG_2_J2, CCW_CONFIG),
-        Leg(LEG_1, LEG_1_J0, LEG_1_J1, LEG_1_J2, CCW_CONFIG),
+        Leg(LEG_3, LEG_3_J0, LEG_3_J1, LEG_3_J2, CCW_CONFIG),
         Leg(LEG_4, LEG_4_J0, LEG_4_J1, LEG_4_J2, CCW_CONFIG),
         Leg(LEG_5, LEG_5_J0, LEG_5_J1, LEG_5_J2, CCW_CONFIG)
     }    ,
@@ -28,6 +28,9 @@ Body::Body(float df, float t_c, float sh) // initialize each leg before contruct
     duty_factor = df;
     t_cycle = t_c;
     t_stance = t_cycle*duty_factor;
+    Serial.println(t_stance);
+    Serial.println(duty_factor);
+    Serial.println(t_cycle);
     computeAlphaI(); // offset angles for each leg - calculate based on chassis circle and angle mounting
     L_TF_B(legs[LEG_0].idle_p_L); // use idle position of Leg to compute initial leg positions (legs will go from storage -> home -> idle but pos. not tracked til idle)
     z_g = foot_idle_R[LEG_0].getX3(); // load in ground height
@@ -85,21 +88,38 @@ void Body::compute_vR(){
         v_y = -(vy + (wz*foot_idle_R[i].getX1()));
         t_w = Vector(v_x, v_y);
         foot_v_R[i] = t_w;
+        #ifdef VR_BK_DEBUG
         Serial.print(i);
         Serial.print('\t');
         Serial.print(foot_v_R[i].getX1());
         Serial.print('\t');
         Serial.println(foot_v_R[i].getX2());
+        #endif
     }     
 }
 
 // compute position displacement of each foot in the body frame based on the timestep/duty factor and previous position
 void Body::compute_dP(){
     float dP_x, dP_y;
+    #ifdef DP_BK_DEBUG
+    Serial.println("DP computed: ");
+    Serial.print("Leg: ");
+    Serial.print('\t');
+    Serial.print("dp_x: ");
+    Serial.print('\t');
+    Serial.println("dp_y: ");
+    #endif
     for(int i=0; i<(NUM_LEGS); i++){
         dP_x = foot_v_R[i].getX1() * t_stance;
         dP_y = foot_v_R[i].getX2() * t_stance;
         foot_dp_R[i] = Vector(dP_x, dP_y);
+        #ifdef DP_BK_DEBUG
+        Serial.print(i);
+        Serial.print('\t');
+        Serial.print(dP_x);
+        Serial.print('\t');
+        Serial.println(dP_y);
+        #endif
     }
 }
 
@@ -114,7 +134,8 @@ void Body::compute_SLS(){
     //p_lift_z = z_ground + h*sin(pi*s), z_ground = p_idle_z (see idle value), h = clearance height = 20mm, s = 0.5 (halfway pt of cycle)
     // compute lift of leg, apply in for loop
     l_z = z_g + step_height*sin(M_PI*linear_interpolation); // only need to compute once
-    st_z = sw_z = z_g; // only set once, added for clarity
+    st_z = z_g; // only set once, added for clarity
+    sw_z = z_g;
 
     #ifdef SLS_DEBUG
     Serial.println("SLS computed: ");
@@ -141,12 +162,12 @@ void Body::compute_SLS(){
     // compute stance and swing of each leg
     for(int i=0; i<(NUM_LEGS); i++){
         // stance
-        st_x = foot_idle_R[i].getX1() - foot_dp_R[i].getX1()/2.0;
-        st_y = foot_idle_R[i].getX2() - foot_dp_R[i].getX2()/2.0;
+        st_x = foot_idle_R[i].getX1() + foot_dp_R[i].getX1()/2.0; // + is away from body direction
+        st_y = foot_idle_R[i].getX2() + foot_dp_R[i].getX2()/2.0;
         foot_stance_R[i] = Vector(st_x, st_y, st_z);
         // swing
-        sw_x = foot_idle_R[i].getX1() + foot_dp_R[i].getX1()/2.0;
-        sw_y = foot_idle_R[i].getX2() + foot_dp_R[i].getX2()/2.0;
+        sw_x = foot_idle_R[i].getX1() - foot_dp_R[i].getX1()/2.0;
+        sw_y = foot_idle_R[i].getX2() - foot_dp_R[i].getX2()/2.0;
         foot_swing_R[i] = Vector(sw_x, sw_y, sw_z);
         // lift
         l_x = foot_idle_R[i].getX1(); // xy differ for each leg, z is constant
@@ -183,9 +204,11 @@ Vector Body::B_TF_L(Vector bc, int id){
     bx = bc.getX1();
     by = bc.getX2();
     bz = bc.getX3();
+    
     lx = bx*alpha_ci[id]+ by*alpha_si[id] - chassis_radius; 
     ly = by*alpha_ci[id] - bx*alpha_si[id];
     lz = bz;
+    
     return Vector(lx, ly, lz);
 }
 

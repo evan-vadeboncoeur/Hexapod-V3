@@ -14,7 +14,8 @@ int j2 = LEG_1_J2;
 int g = 0;
 float duty_f = 0.5;
 float cycle_time = 1.5;
-float step_h = 12.0;
+float step_h = 45.0;
+float vel = 130.0;
 
 // struct WaitForSerial {
 //   WaitForSerial() {
@@ -38,8 +39,10 @@ Vector idle_p = Vector(178.755, 0.0, -63.631); // CAD output
 
 //CommunicationManager cm = CommunicationManager(CE_H, CSN_H);
 
-//MotionPlanner* mp;
+#ifndef LEG_SETUP_DEBUG
 MotionPlanner* mp = nullptr;
+Vector twist = Vector(vel, 0.0, 0.0);
+#endif
 
 void setup(){
   Serial.begin(9600); // open before creating legs (at least in testing phases)
@@ -72,7 +75,6 @@ void loop() {
   #ifdef GLOBAL_DEBUG
   Serial.println("In loop");
   #endif
-  delay(500);
   #ifdef LEG_KINEMATICS_DEBUG
   
   //leg_test.moveFootToJV(home_j);
@@ -83,11 +85,12 @@ void loop() {
   //leg_test.moveFootToPV(idle_p, ELBOW_DOWN);
   #endif
   #ifdef LEG_SETUP_DEBUG
-  s0.write(HPS_2018_CTR);
-  delay(2000);
-  s1.write(HPS_2018_CTR);
-  delay(2000);
-  s2.write(HPS_2027_CTR); // avg is middle, not 1000us
+  //s0.write(HPS_2018_CTR);
+  //delay(2000);
+  //s1.write(HPS_2018_CTR);
+  //delay(2000);
+  //s2.write(HPS_2027_CTR); // avg is middle, not 1000us
+  s2.write(545);
   delay(2000);
   #endif
   #ifdef BODY_DEBUG
@@ -97,8 +100,10 @@ void loop() {
   cm.receiveMessage();
   
   #endif
-  Serial.println("In Main Loop.");
-  mp->tripodGait(3);
+ 
+  mp->movement(0, twist);
+  delay(2000);
+  mp->powerOffSequence();
   delay(2000);
   exit(1);
   

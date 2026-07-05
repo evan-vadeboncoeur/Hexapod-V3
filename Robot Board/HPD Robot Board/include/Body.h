@@ -4,6 +4,7 @@
 #define SETUP_BK_DEBUG
 #define VR_BK_DEBUG
 #define SLS_DEBUG
+#define DP_BK_DEBUG
 //#define STANCE_BK_DEBUG
 
 #include "Leg.h"
@@ -64,6 +65,7 @@ class Body{
         Vector getLift(int id){return foot_lift_R[id];}
         Vector getSwing(int id){return foot_swing_R[id];}
         Vector getStance(int id){return foot_stance_R[id];}
+        Vector B_TF_L(Vector bc, int id);
     private:
         // body members
         Vector twist;
@@ -94,7 +96,7 @@ class Body{
         void compute_dP();
         void compute_SLS();
         void compute_pN_L();
-        Vector B_TF_L(Vector bc, int id);
+        
         Vector L_TF_B(Vector v);
         
         
