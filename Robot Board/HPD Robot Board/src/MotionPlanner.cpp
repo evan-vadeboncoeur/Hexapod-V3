@@ -21,6 +21,7 @@ void MotionPlanner::movement(int g, Vector tw){
 void MotionPlanner::setBodyVelocity(Vector tw){
     b.velocityCommand(tw); // set target twist value, foot velocities, position changes, etc.
 }
+
 void MotionPlanner::setGait(int g, bool walk){
     switch(g){
         case TRIPOD: 

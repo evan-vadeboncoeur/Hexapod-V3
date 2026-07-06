@@ -1,1 +1,23 @@
 https://hackaday.io/project/21904-hexapod-modelling-path-planning-and-control/log/62326-3-fundamentals-of-hexapod-robot
+
+motion planner pipeline:
+    1) gait selection, sort into tripods
+    2) velocity target
+    3) foot velocities in body frame
+    4) compute foot delta for cycle (dP_i)
+    5) compute p_swing = p_idle + dP_i/2, p_stance = p_idle - dP_i/2 (linear advance dP_i per leg movement/half cycle/stance phase)
+    6) compute p_lift = p(s) = (1 - s)*p_rear + s*p_front ??? and z_lift = z_ground + h*
+    7) gait scheduler...
+
+
+                                                Hexapod
+                      motion planner          board manager           communication manager
+    mvmt macros  body   gait      command       analog sticks                cmd interpretation
+        legs               leg tripods               button inputs                transmission/reception of packets
+            leg kinematics
+              ...          
+        body frame       phases (swing, stance)    dipswitch arrays
+        leg positions                              battery management
+        leg velocities                             indicator LEDS
+        leg prev posns
+        twist vector comd

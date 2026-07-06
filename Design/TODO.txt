@@ -9,77 +9,50 @@ Tripod Gait
     3) add in one more leg, test
     4) build full robot, test
 Shut-down macro
-    1) idle -> might hit ground, change order of joints?
-
-Interrupt commands
-    1) new velocity command (push joy stick, probably)
-    2) shutdown / startup macros - other joystick?
-    3) battery commands (monitor periodically with timers)
-    
-) calculate workspace limitations and maximum swing angles / J1/2 interaction monitoring
+    1) idle -> might hit ground, change order of joints?    
+Calculate workspace limitations and maximum swing angles / J1/2 interaction monitoring
     need to work on leg interaction (J2 J3 collision monitoring)
 
-
-                                            Hexapod
-                      motion planner          board manager           communication manager
-    mvmt macros  body   gait      command       analog sticks                cmd interpretation
-        legs               leg tripods               button inputs                transmission/reception of packets
-            leg kinematics
-              ...          
-        body frame       phases (swing, stance)    dipswitch arrays
-        leg positions                              battery management
-        leg velocities                             indicator LEDS
-        leg prev posns
-        twist vector comd
-
-
-motion planner pipeline:
-    1) gait selection, sort into tripods
-    2) velocity target
-    3) foot velocities in body frame
-    4) compute foot delta for cycle (dP_i)
-    5) compute p_swing = p_idle + dP_i/2, p_stance = p_idle - dP_i/2 (linear advance dP_i per leg movement/half cycle/stance phase)
-    6) compute p_lift = p(s) = (1 - s)*p_rear + s*p_front ??? and z_lift = z_ground + h*
-    7) gait scheduler...
-
 PCB/ECE TODO
-----------
+-------------
+1) de-solder joy-sticks
+2) solder full ctl board
+    a) servo headers first (determine optimal exposed pin height)
+    b) resistors second
+    c) caps (inner) third
+    d) LEDs fourth
+    e) switches fifth
+    f) MOSFET sixth
+    g) XT60 seventh
+    h) headers last (arduino, nrf, additional IO)
+3) solder full comm board
+    a) determine which resistors are necessary to solder (pull up/down for array pins = not needed)
+    b) solder resistors
+    c) esp32 headers
+    d) LEDs
+    e) dipswitch
+    f) switch and input terminal
+    g) joysticks
+    h) NRF and caps
 
 CAD TODO
 ---------------------
-1) clean up slots for switches / LEDs
-2) add battery slot for 18650
-    order 18650, charger, and lead kit
-    measure lead kit
-3) make a stronger and larger chassis to accomodate battery pack size, L2 print
+L0
+- weight removal in top/bottom box (wall cuts)
+- cantilever on top joints is (probably) unwise -> add strut on top chassis for long links
+
+L3
+- rubber foot at base that is drilled/tapped
 
 Code TODO
 ----------
-0) redo motion planner so that initialization functions use the body class / coordinates (TF body to leg, figure out leg position macros in body frame)
-    motion planner
-        6 legs
-        2 tripod (L, R)
-        twist command input
-        body velocity
-        leg (1-6 foot velocities in body frame)
-        leg (1-6 current points in body frame)
-        leg (1-6 position change vectors in body frame)
-        T_CYCLE
-        T_STANCE
-        duty_factor
+1) build communication packet
+    new command flag (speed change enough [not at first, though / finish gait cycle], gait change, direction change) - bool
+    gait (0-4) - char
+    power on macro flag - bool
+    power off macro flag - bool
+    twist command - Vector (float*3) (linear and angular velocities)
 
-1) motion planner class
-    0) input command: adc x, adc y -> r, theta -> r = magnitude of speed, theta = direction : construct twist vector
-        figure out sign conventions / when to use sine / cos !!! maybe get rid of - angles
-    a) accepts gait, twist vector (v_x_B, v_y_B, w_z_B = w_Z_G)
-    b) computes foot velocity in base frame needed for each foot to make the twist vector true (w_z_B = 0 -> pure translation)
-    c) computes position change based on time step (T_STANCE/T_CYCLE) * speed vector
-    d) computes final position based on current leg position (start at plant macro), leg will be moving backward in the body frame (relative to body - in reality, it stays grounded in the body and global frame)
-    e) compute final position in each leg frame for the stance vector
-    f) use interpolation for swing to plant position (curve radius that moves leg along curve to point equidistant in the motion frame)
-        center position will have a (J1/J2 lift)
-    g) consider leg's contribution to motion???
-2) controller function to map x,y adc to r, theta, speed
-2) dynamic duty cycle change for varying gait speeds
+
 
 

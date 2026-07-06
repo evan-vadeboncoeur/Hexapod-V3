@@ -11,20 +11,13 @@ int j0 = LEG_1_J0;
 int j1 = LEG_1_J1;
 int j2 = LEG_1_J2;
 #endif
+
+// move these into robot class for instantiation
 int g = 0;
 float duty_f = 0.5;
 float cycle_time = 1.5;
 float step_h = 45.0;
 float vel = 130.0;
-
-// struct WaitForSerial {
-//   WaitForSerial() {
-//     Serial.begin(9600);
-//     while (!Serial); // wait for serial to be ready
-//     Serial.println();
-//   }
-// };
-// WaitForSerial WFS; // in global scope before other globals
 
 //#define LEG_KINEMATICS_DEBUG
 #ifdef LEG_KINEMATICS_DEBUG
@@ -76,7 +69,6 @@ void loop() {
   Serial.println("In loop");
   #endif
   #ifdef LEG_KINEMATICS_DEBUG
-  
   //leg_test.moveFootToJV(home_j);
   //leg_test.moveFootToJV(idle_j);
   //leg_test.moveFootToJV(storage_j);
@@ -85,12 +77,13 @@ void loop() {
   //leg_test.moveFootToPV(idle_p, ELBOW_DOWN);
   #endif
   #ifdef LEG_SETUP_DEBUG
-  //s0.write(HPS_2018_CTR);
-  //delay(2000);
-  //s1.write(HPS_2018_CTR);
-  //delay(2000);
-  //s2.write(HPS_2027_CTR); // avg is middle, not 1000us
-  s2.write(545);
+  s0.write(HPS_2018_CTR);
+  delay(1000);
+  s1.write(HPS_2018_CTR);
+  delay(1000);
+  s2.write(HPS_2027_CTR); // avg is middle, not 1000us
+  delay(1000);
+  //s2.write(545); // test deadband
   delay(2000);
   #endif
   #ifdef BODY_DEBUG
