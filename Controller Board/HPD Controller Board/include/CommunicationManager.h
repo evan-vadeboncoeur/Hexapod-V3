@@ -17,12 +17,13 @@
 #include "nRF24L01.h"
 #include "RF24.h"
 #include "Packet.h"
+#include "Vector.h"
 
 class CommunicationManager{
     public:
         CommunicationManager(int ce, int cs);
         void sendMessage(Packet *p);
-        Packet buildPacket(Twist t, char g, bool lb, bool rb);
+        Packet buildPacket(Vector t, char g, bool lb, bool rb);
         void sendMessage(char msg[]);
         void initCM();
     private:

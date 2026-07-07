@@ -2,6 +2,9 @@
 #define BRD_R_H
 #define BRD_R_DEBUG
 
+#include <Arduino.h>
+#include <HardwareSerial.h>
+
 #define LX_P (39) // fill in place holders after reading the schematic
 #define LY_P (34)
 #define LB_P (16) // need to change to pin 16 (from 2)
@@ -12,17 +15,12 @@
 #define GP_2 (25)
 #define GP_3 (26)
 #define GP_4 (27)
-#define BATT_IN_P (15) // does indeed work, is not boot-strapped
+#define BATT_IN_P (15) // does indeed work, is not "boot-strapped"
 #define LOW_BATT_P (35)
 #define NRFR_P (32)
 
-#include <Arduino.h>
-#include <HardwareSerial.h>
-// pin definitions here...
-
 // class for managing the power of the board (low power LED, board on, analog read voltage), inputs, etc.
 // copy for Hexapod reciever and adjust as neccesary. add conditional compiles
-
 class BoardManager{
     public:
         BoardManager();

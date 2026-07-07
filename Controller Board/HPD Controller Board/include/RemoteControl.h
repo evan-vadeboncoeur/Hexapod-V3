@@ -13,12 +13,14 @@
 #define ADC_MIN (0)
 #define ADC_MAX (4095) // 12-bit
 #define ADC_MID (ADC_MAX/2)
-#define V_MIN (5) // mm/s, maginute, not maximum
-#define V_MAX (80)
+#define R_MAX (724) //(root2 * ADC_MID)
+#define V_MIN (10) // mm/s, maginute, not maximum
+#define V_MAX (140)
 #define CMD_DELAY (1000)
 
 #include "CommunicationManager.h"
 #include "BoardManager.h"
+#include "Vector.h"
 // class for the entire remote controller (analog to hexapod class)
 
 class RemoteControl{
@@ -26,7 +28,7 @@ class RemoteControl{
         CommunicationManager cmr = CommunicationManager(CE_T, CSN_T);
         BoardManager bmr = BoardManager();
         Packet cmd;
-        Twist t;
+        Vector t;
         
         void readSensors();
         void transmitMessage();
@@ -37,7 +39,7 @@ class RemoteControl{
         void commandUpdate();
         void initComm();
         void transmitMessage(char msg[]);
-        Twist buildTwist();
+        Vector buildTwist();
 };
 
 #endif

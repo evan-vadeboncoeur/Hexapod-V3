@@ -30,7 +30,7 @@ void CommunicationManager::initCM(){
 }
 
 // construct a packet struct (data values already read - probably isolate to power class)
-Packet CommunicationManager::buildPacket(Twist t, char g, bool lb, bool rb){
+Packet CommunicationManager::buildPacket(Vector t, char g, bool lb, bool rb){
     Packet p;
     p.t = t;
     p.g = g;
