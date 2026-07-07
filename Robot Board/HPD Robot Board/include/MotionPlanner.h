@@ -1,6 +1,6 @@
 #ifndef MTN_PLNR_H
 #define MTN_PLNR_H
-#define PLAN_DEBUG
+//#define PLAN_DEBUG
 #define PLAN_T_DEBUG
 
 #include "Twist.h"
@@ -18,6 +18,7 @@
 
 #define MOTION_PLANNER_DELAY (50)
 #define HALF_TRIPOD_DELAY (300)
+#define MACRO_DELAY (1000)
 
 // motion planner class that recieves a command (gait, direction, # steps...). Controls order of leg movements
 class MotionPlanner{
