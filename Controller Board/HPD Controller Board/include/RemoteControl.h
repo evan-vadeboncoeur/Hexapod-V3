@@ -29,7 +29,7 @@ class RemoteControl{
         BoardManager bmr = BoardManager();
         Packet cmd;
         Vector t;
-        
+        void stateManager();
         void readSensors();
         void transmitMessage();
         float v_ref = 3.3; // reference voltage on the ESP32

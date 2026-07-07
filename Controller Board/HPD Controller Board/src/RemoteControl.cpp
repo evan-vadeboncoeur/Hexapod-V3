@@ -8,6 +8,15 @@ void RemoteControl::initComm(){
     cmr.initCM();
 }
 
+void RemoteControl::stateManager(){
+    readSensors(); // update sensor values
+    // if gait_n != gait_o 
+    // or if velocity command delta_direction > threshold
+    // or if speed command delta_magnitude > threshold
+    // build packet 
+    // transmit packet
+}
+
 void RemoteControl::commandUpdate(){
     readSensors(); // updates sensor values in BM class
     buildTwist(); // calculate twist command

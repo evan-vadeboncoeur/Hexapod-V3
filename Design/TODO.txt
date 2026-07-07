@@ -54,6 +54,9 @@ Code TODO
     power off macro flag - bool
     twist command - Vector (float*3) (linear and angular velocities)
 
+2) remote state code for rc .cpp
+    find distinction between rc and bm class (should be raw data in bm...? or raw data + track if enough change?)
+
 
 
 
