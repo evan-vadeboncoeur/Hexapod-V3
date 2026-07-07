@@ -66,6 +66,8 @@ class Body{
         Vector getSwing(int id){return foot_swing_R[id];}
         Vector getStance(int id){return foot_stance_R[id];}
         Vector B_TF_L(Vector bc, int id);
+        Vector computeIK(Leg* l, Vector v, bool elbow);
+        bool moveTripod(Leg** tp, Vector jv[3]);
     private:
         // body members
         Vector twist;

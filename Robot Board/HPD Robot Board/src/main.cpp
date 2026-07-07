@@ -96,7 +96,7 @@ void loop() {
  
   mp->movement(0, twist);
   delay(2000);
-  mp->powerOffSequence();
+  //mp->powerOffSequence();
   delay(2000);
   exit(1);
   

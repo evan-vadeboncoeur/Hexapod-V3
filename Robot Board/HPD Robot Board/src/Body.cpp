@@ -290,6 +290,16 @@ void Body::moveLeg(Leg* l, Vector v, bool type, bool elbow){
     } else l->moveFootToJV(v); // joint move
 }
 
+Vector Body::computeIK(Leg* l, Vector v, bool elbow){
+    return (l->computeIK(v, elbow));
+}
+
+bool Body::moveTripod(Leg** tp, Vector jv[3]){
+    (*(tp+0))->moveFootToJV(jv[0]);
+    (*(tp+1))->moveFootToJV(jv[1]);
+    (*(tp+2))->moveFootToJV(jv[2]);
+}
+
 Leg* Body::getLegTripod(int ln, int tp){
     if(tp == TP_EVEN) return (tp_even[ln]);
     else return (tp_odd[ln]);

@@ -49,7 +49,7 @@ void Leg::moveFootToJV(Vector new_jVL){
     setPrevFootJ(foot_j_L);
     // set target values using FK
     setTargetFootJ(new_jVL);
-    setTargetFootP(lk.fk(foot_j_L)); // calculate ik to obtain respective cartesian vector of foot we are moving to
+    //setTargetFootP(lk.fk(foot_j_L)); // calculate ik to obtain respective cartesian vector of foot we are moving to
     // Use JV target to compute servos
     setServoJV();
     // move to target
@@ -115,6 +115,9 @@ void Leg::moveTo(){
     delay(JOINT_DELAY);
 }
 
+Vector Leg::computeIK(Vector v, bool elbow){
+    return lk.ik(v, elbow);
+}
 
 
 

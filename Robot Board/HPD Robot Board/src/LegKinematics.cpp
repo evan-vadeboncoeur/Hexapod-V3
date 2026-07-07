@@ -157,6 +157,7 @@ Vector LegKinematics::ik(Vector t_pV, bool elbow){
     Serial.println(t3_2, 6);
     #endif
     calculated_jV = configurationHelper(elbow);  // Solve for desired configuration and return
+    //Vector output = calculated_jV;
     if(!ikCheck()) return;
     return calculated_jV;
 }
