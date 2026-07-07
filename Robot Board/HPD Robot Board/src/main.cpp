@@ -16,8 +16,8 @@ int j2 = LEG_4_J2;
 int g = 0;
 float duty_f = 0.5;
 float cycle_time = 1.5;
-float step_h = 45.0;
-float vel = 130.0;
+float step_h = 55.0;
+float vel = 140.0;
 
 //#define LEG_KINEMATICS_DEBUG
 #ifdef LEG_KINEMATICS_DEBUG
@@ -96,7 +96,7 @@ void loop() {
  
   mp->movement(0, twist);
   delay(2000);
-  //mp->powerOffSequence();
+  mp->powerOffSequence();
   delay(2000);
   exit(1);
   

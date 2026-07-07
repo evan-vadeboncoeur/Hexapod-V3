@@ -1,7 +1,7 @@
 #ifndef MTN_PLNR_H
 #define MTN_PLNR_H
-#define PLAN_DEBUG
-#define PLAN_T_DEBUG
+//#define PLAN_DEBUG
+//#define PLAN_T_DEBUG
 
 #include "Twist.h"
 #include "Vector.h"
@@ -15,10 +15,11 @@
 #define RVRS (-1.0)
 #define TP_1 (1)
 #define TP_2 (2)
+#define TEST_STEPS (10)
 
 #define MOTION_PLANNER_DELAY (50)
-#define HALF_TRIPOD_DELAY (300)
-#define MACRO_DELAY (1000)
+#define HALF_TRIPOD_DELAY (100)
+#define MACRO_DELAY (500)
 
 // motion planner class that recieves a command (gait, direction, # steps...). Controls order of leg movements
 class MotionPlanner{

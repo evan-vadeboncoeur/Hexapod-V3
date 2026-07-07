@@ -108,11 +108,11 @@ void Leg::servoOffsets(){
 // move to already calculated servo vector
 void Leg::moveTo(){
     joints[FOOT].setAngle(servo_j_L.getX3());
-    delay(JOINT_DELAY);
+    //delay(JOINT_DELAY);
     joints[FEMUR].setAngle(servo_j_L.getX2());
-    delay(JOINT_DELAY);
+    //delay(JOINT_DELAY);
     joints[COXA].setAngle(servo_j_L.getX1());
-    delay(JOINT_DELAY);
+    //delay(JOINT_DELAY);
 }
 
 Vector Leg::computeIK(Vector v, bool elbow){

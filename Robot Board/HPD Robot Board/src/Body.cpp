@@ -298,6 +298,7 @@ bool Body::moveTripod(Leg** tp, Vector jv[3]){
     (*(tp+0))->moveFootToJV(jv[0]);
     (*(tp+1))->moveFootToJV(jv[1]);
     (*(tp+2))->moveFootToJV(jv[2]);
+    return true;
 }
 
 Leg* Body::getLegTripod(int ln, int tp){

@@ -5,11 +5,7 @@ Tripod Gait
         print all links
         all heat inserts
         zero legs as best as possible
-    2) test half gait odd first
-    3) add in one more leg, test
-    4) build full robot, test
-Shut-down macro
-    1) idle -> might hit ground, change order of joints?    
+    2) build full robot, test full gait  
 Calculate workspace limitations and maximum swing angles / J1/2 interaction monitoring
     need to work on leg interaction (J2 J3 collision monitoring)
 

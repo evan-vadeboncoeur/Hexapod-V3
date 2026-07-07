@@ -26,7 +26,7 @@ void MotionPlanner::setGait(int g, bool walk){
     switch(g){
         case TRIPOD: 
             gait = TRIPOD;
-            if(walk) tripodGait(3); // test version
+            if(walk) tripodGait(TEST_STEPS); // test version
             break;
         case RIPPLE: 
             gait = RIPPLE;
@@ -64,7 +64,8 @@ bool MotionPlanner::tripodGait(int cc){
 
         delay(HALF_TRIPOD_DELAY);
         half_c_prev = full_c_prev = millis();
-        halfTripod(b.getTripod(TP_EVEN), b.getTripod(TP_ODD));
+        //halfTripod(b.getTripod(TP_EVEN), b.getTripod(TP_ODD));
+        halfTripod(b.getTripod(TP_ODD), b.getTripod(TP_EVEN));
         half_c = (millis() - half_c_prev);
         delay(HALF_TRIPOD_DELAY);
 
@@ -76,7 +77,8 @@ bool MotionPlanner::tripodGait(int cc){
         #endif
 
         half_c_prev = millis();
-        halfTripod(b.getTripod(TP_ODD), b.getTripod(TP_EVEN));
+       // halfTripod(b.getTripod(TP_ODD), b.getTripod(TP_EVEN));
+        halfTripod(b.getTripod(TP_EVEN), b.getTripod(TP_ODD));
         half_c = (millis() - half_c_prev);
         full_c = (millis() - full_c_prev);
 
@@ -99,7 +101,6 @@ bool MotionPlanner::halfTripod(Leg** sw, Leg** st){
     lift(sw);
     delay(HALF_TRIPOD_DELAY);
     push(st, sw);
-    delay(HALF_TRIPOD_DELAY);
     return true;
 }
 
@@ -274,9 +275,11 @@ bool MotionPlanner::push(Leg** l_st, Leg** l_sw){
     
    
     // move at same time
-    b.moveTripod(l_st, J_stance);
+    
     //delay(HALF_TRIPOD_DELAY); // consider adding delay here
+    
     b.moveTripod(l_sw, J_swing);
+    b.moveTripod(l_st, J_stance);
     
 
     delay(50);
