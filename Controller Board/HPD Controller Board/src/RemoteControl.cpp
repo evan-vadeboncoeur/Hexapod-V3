@@ -65,8 +65,8 @@ Vector RemoteControl::buildTwist(){
     x -= ADC_MID, y -= ADC_MID; // shift to midpoint of ranges to allow for signed values
     r = sqrt(x*x + y*y); // magnitude of the command, will designate speed
     r = map (r, 0, R_MAX, V_MIN, V_MAX); // map adc value to velocity min/max range (abs value of velocity, theta determines component signs)
-    theta_tw = atan2(y,x); // will return the same as typical RHR XY coordinate system, works for this viewpoint of frame
-    int sign = signbit(theta_tw); // figure out this part!!!
+    theta_tw = (float)(atan2(y,x)); // will return the same as typical RHR XY coordinate system, works for this viewpoint of frame
+    int sign = (theta_tw < 0.0) ? -1.0 : 1.0;
     theta_tw = abs(theta_tw);
     theta_tw = floor(theta_tw / M_PI_3)*M_PI_3; // make increment of PI/3
     theta_tw *= sign; // shift back to negative, if necessary
