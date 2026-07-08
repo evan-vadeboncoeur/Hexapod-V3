@@ -17,6 +17,7 @@
 #define V_MIN (10) // mm/s, maginute, not maximum
 #define V_MAX (140)
 #define CMD_DELAY (1000)
+#define R_DELTA (100.0)
 
 #include "CommunicationManager.h"
 #include "BoardManager.h"
@@ -29,14 +30,21 @@ class RemoteControl{
         BoardManager bmr = BoardManager();
         Packet cmd;
         Vector t;
-        void stateManager();
+        
         void readSensors();
         void transmitMessage();
+        void handlePrevInputs();
+        bool newCommand();
         float v_ref = 3.3; // reference voltage on the ESP32
+        int lx, ly, rx, ry;
+        bool lb, rb, lb_p, rb_p;
+        char g, g_p;
+        bool s_one, s_two, s_three, s_four;
+        float theta_tw, theta_tw_p, vx, vx_p, vy, vy_p, v, v_p, wz, wz_p, r, r_p;
         
     public:
         RemoteControl();
-        void commandUpdate();
+        void stateManager();
         void initComm();
         void transmitMessage(char msg[]);
         Vector buildTwist();

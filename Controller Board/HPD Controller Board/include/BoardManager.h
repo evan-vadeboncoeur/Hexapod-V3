@@ -33,7 +33,8 @@ class BoardManager{
         char getGait();
         void readInputs();
     private:
-        int lx, ly, rx, ry, lb, rb;
+        int lx, ly, rx, ry;
+        bool lb, rb;
         char g;
         bool s_one, s_two, s_three, s_four;
         float batt, v_ref = 3.3, full_scale = 1024, low_batt = 2.5;

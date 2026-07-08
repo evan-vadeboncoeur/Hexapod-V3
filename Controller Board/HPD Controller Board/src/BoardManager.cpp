@@ -83,6 +83,7 @@ void BoardManager::readBattery(){
 
 void BoardManager::lowBattery(){
     if(batt <= low_batt) digitalWrite(LOW_BATT_P, HIGH);
+    else digitalWrite(LOW_BATT_P, LOW);
 }
 
 void BoardManager::nrfConnected(){

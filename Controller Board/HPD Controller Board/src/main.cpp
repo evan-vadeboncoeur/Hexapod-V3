@@ -18,6 +18,6 @@ void loop() {
     rc.transmitMessage(msg);
     Serial.println(msg);
     #endif
-    rc.commandUpdate(); // add code that tracks previous twist values and compares -> if 0, keep doing same thing, or maybe not idk
+    rc.stateManager();
     delay(CMD_DELAY);
 }
