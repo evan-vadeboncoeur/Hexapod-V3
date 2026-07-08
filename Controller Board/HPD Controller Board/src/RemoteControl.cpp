@@ -12,11 +12,8 @@ void RemoteControl::initComm() // figure out if initializer list is needed for t
 
 void RemoteControl::stateManager(){
     readSensors(); // update sensor values
-    buildTwist();
-    // if gait_n != gait_o 
-    // or if velocity command delta_direction > threshold
-    // or if speed command delta_magnitude > threshold
-    // build and transmit packet
+    buildTwist(); // build twist value based on current joystick positioning
+    // if there is a new command, build and transmit new message
     if(newCommand()) transmitMessage();
     handlePrevInputs(); // set previous values for comparison
 }
