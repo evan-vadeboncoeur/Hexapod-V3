@@ -3,9 +3,8 @@
 
 #define SETUP_BK_DEBUG
 #define VR_BK_DEBUG
-//#define SLS_DEBUG
+#define SLS_DEBUG
 //#define DP_BK_DEBUG
-//#define STANCE_BK_DEBUG
 
 #include "Leg.h"
 
@@ -97,11 +96,8 @@ class Body{
         void compute_vR();
         void compute_dP();
         void compute_SLS();
-        void compute_pN_L();
-        
         Vector L_TF_B(Vector v);
-        
-        
+        void bodyInitialSetup(Vector v);
 };
 
 #endif

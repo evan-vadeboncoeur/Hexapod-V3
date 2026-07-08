@@ -28,12 +28,7 @@ Body::Body(float df, float t_c, float sh) // initialize each leg before contruct
     duty_factor = df;
     t_cycle = t_c;
     t_stance = t_cycle*duty_factor;
-    Serial.println(t_stance);
-    Serial.println(duty_factor);
-    Serial.println(t_cycle);
-    computeAlphaI(); // offset angles for each leg - calculate based on chassis circle and angle mounting
-    L_TF_B(legs[LEG_0].idle_p_L); // use idle position of Leg to compute initial leg positions (legs will go from storage -> home -> idle but pos. not tracked til idle)
-    z_g = foot_idle_R[LEG_0].getX3(); // load in ground height
+    bodyInitialSetup(legs[LEG_0].idle_p_L);
 }
 
 void Body::velocityCommand(Vector tw){
@@ -43,6 +38,19 @@ void Body::velocityCommand(Vector tw){
     compute_SLS(); // compute stance and swing vectors for each foot
 }
 
+void Body::bodyInitialSetup(Vector v){
+    #ifdef SETUP_BK_DEBUG
+    Serial.println("**********************BODY SETUP***********************");
+    Serial.println("--------------------Alpha Angles--------------------");
+    #endif
+    computeAlphaI();
+    #ifdef SETUP_BK_DEBUG
+    Serial.println("--------------------Leg->Foot TF--------------------");
+    #endif
+    L_TF_B(v);
+    z_g = foot_idle_R[LEG_0].getX3(); // load in ground height
+}
+
 void Body::unpackTwist(Vector tw){
     body_velocity = Vector(tw.getX1(), tw.getX2());
     bv = body_velocity.getMagnitude();
@@ -50,15 +58,33 @@ void Body::unpackTwist(Vector tw){
     vx = bv*cos(theta);
     vy = bv*sin(theta);
     wz = tw.getX3();
+    #ifdef SETUP_BK_DEBUG
+    Serial.println("Body Velocity Command: ");
+    Serial.print("Vx: ");
+    Serial.print('\t');
+    Serial.print("Vy: ");
+    Serial.print('\t');
+    Serial.print("Vm: ");
+    Serial.print('\t');
+    Serial.println("Wz: ");
+    Serial.print(vx);
+    Serial.print('\t');
+    Serial.print(vy);
+    Serial.print('\t');
+    Serial.print(bv);
+    Serial.print('\t');
+    Serial.println(wz);
+    #endif
 }
 
 // compute rotation angles for RBTF between body and leg frame
 // compute x and y tf components
 void Body::computeAlphaI(){
-    Serial.println("AlphaI Setup: ");
+    #ifdef SETUP_BK_DEBUG
     Serial.print("Leg: ");
     Serial.print('\t');
     Serial.println("Angle: ");
+    #endif
     for(int i=0; i<(NUM_LEGS); i++){
         alpha_i[i] = M_PI_3*i + M_PI_6;
         alpha_ci[i] = cos(alpha_i[i]); // reduce sin/cos computations @ runtime
@@ -212,42 +238,6 @@ Vector Body::B_TF_L(Vector bc, int id){
     return Vector(lx, ly, lz);
 }
 
-// compute new position in the leg frame (LEGACY)
-void Body::compute_pN_L(){
-    Vector t_v;
-    float t_x_b, t_y_b, t_x_f, t_y_f, t_z_f;
-    #ifdef STANCE_BK_DEBUG
-    Serial.println("STANCE POSITION for Twist CMD: ");
-    Serial.print("Leg: ");
-    Serial.print('\t');
-    Serial.print("X_R: ");
-    Serial.print('\t');
-    Serial.print("Y_R: ");
-    Serial.print('\t');
-    Serial.println("Z_R: ");
-    #endif
-    for(int i=0; i<(NUM_LEGS); i++){
-        t_v = foot_p_R[i];
-        t_x_b = t_v.getX1();
-        t_y_b = t_v.getX2();
-        t_z_f = t_v.getX3();
-        t_x_f = t_x_b*alpha_ci[i]+ t_y_b*alpha_si[i] - chassis_radius; 
-        t_y_f = t_y_b*alpha_ci[i] - t_x_b*alpha_si[i];
-        t_v = Vector(t_x_f, t_y_f, t_z_f);
-        foot_p_L[i] = t_v;
-        legs[i].setTargetFootP(t_v);
-        #ifdef STANCE_BK_DEBUG
-        Serial.print(i);
-        Serial.print('\t');
-        Serial.print(foot_p_L[i].getX1());
-        Serial.print('\t');
-        Serial.print(foot_p_L[i].getX2());
-        Serial.print('\t');
-        Serial.println(foot_p_L[i].getX3());
-        #endif
-    }
-}
-
 // TF function to help setup idle pose for robot -> store in foot_idle_R[] array
 Vector Body::L_TF_B(Vector v){
     Vector t_v;
@@ -256,7 +246,6 @@ Vector Body::L_TF_B(Vector v){
     t_y_f = v.getX2();
     t_z_f = v.getX3();
     #ifdef SETUP_BK_DEBUG
-    Serial.println("Body Kinematic Setup: ");
     Serial.print("Leg: ");
     Serial.print('\t');
     Serial.print("X_R: ");

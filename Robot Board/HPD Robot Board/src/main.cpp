@@ -34,7 +34,7 @@ Vector idle_p = Vector(178.755, 0.0, -63.631); // CAD output
 
 #ifndef LEG_SETUP_DEBUG
 MotionPlanner* mp = nullptr;
-Vector twist = Vector(vel, 0.0, 0.0);
+Vector twist = Vector(10.0, 10.0, 0.1);
 #endif
 
 void setup(){
@@ -94,7 +94,7 @@ void loop() {
   
   #endif
  
-  //mp->movement(0, twist);
+  mp->movement(0, twist);
   //delay(2000);
   //mp->powerOffSequence();
   //delay(2000);
