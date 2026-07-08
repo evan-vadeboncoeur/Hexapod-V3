@@ -2,7 +2,7 @@
 #include "MotionPlanner.h"
 
 //#include "Hexapod.h"
-//#define LEG_SETUP_DEBUG
+#define LEG_SETUP_DEBUG
 #define BODY_DEBUG
 // might have to do joints & everything else BEFORE runtime, too, so that it's on the heap, not the stack?
 #ifdef LEG_SETUP_DEBUG
@@ -94,10 +94,10 @@ void loop() {
   
   #endif
  
-  mp->movement(0, twist);
-  delay(2000);
-  mp->powerOffSequence();
-  delay(2000);
+  //mp->movement(0, twist);
+  //delay(2000);
+  //mp->powerOffSequence();
+  //delay(2000);
   exit(1);
   
 }
