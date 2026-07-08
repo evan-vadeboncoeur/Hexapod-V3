@@ -2,7 +2,7 @@
 #include "MotionPlanner.h"
 
 //#include "Hexapod.h"
-#define LEG_SETUP_DEBUG
+//#define LEG_SETUP_DEBUG
 #define BODY_DEBUG
 // might have to do joints & everything else BEFORE runtime, too, so that it's on the heap, not the stack?
 #ifdef LEG_SETUP_DEBUG
