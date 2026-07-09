@@ -66,10 +66,10 @@ void MotionPlanner::walk(){
 // teleop, indefinite version
 bool MotionPlanner::tripodGait(){ // some way to check messages here... for now hardcode but future would be interrupts
     //while(walk_flag){ // finish cycle until walk_flag shuts off
-        delay(HALF_TRIPOD_DELAY);
-        halfTripod(b.getTripod(TP_EVEN), b.getTripod(TP_ODD));
-        delay(HALF_TRIPOD_DELAY);
-        halfTripod(b.getTripod(TP_ODD), b.getTripod(TP_EVEN));
+    delay(HALF_TRIPOD_DELAY);
+    halfTripod(b.getTripod(TP_EVEN), b.getTripod(TP_ODD));
+    delay(HALF_TRIPOD_DELAY);
+    halfTripod(b.getTripod(TP_ODD), b.getTripod(TP_EVEN));
     //} 
     return true; // tripod gait finished
 }

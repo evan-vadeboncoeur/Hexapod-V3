@@ -1,7 +1,7 @@
 # Code base for Hexapod, v3.
 
 6 legs, 18DOF hexapod robot.
-18x HiWonder HPS2018/2027 20kg*cm servo motors controlled by Arduino Mega and UNO-based RC controller.
+18x HiWonder HPS2018/2027 20kg*cm servo motors controlled by Arduino Mega and ESP32-based RC controller.
 
 Implementing as many gaits as I can.
 

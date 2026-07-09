@@ -18,7 +18,7 @@ void CommunicationManager::commBegin(){
     radio.startListening(); 
 }
 
-// transmit the packet to the reciever (packet already constructed)
+// recieve new packet -> let robot know
 bool CommunicationManager::receivePacket(){
     if(radio.available()){
         radio.read(&p, sizeof(p));
