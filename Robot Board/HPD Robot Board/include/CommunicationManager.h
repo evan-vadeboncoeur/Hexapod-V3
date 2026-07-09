@@ -1,6 +1,6 @@
 #ifndef COMM_H_H
 #define COMM_H_H
-#define COMM_H_DEBUG
+//#define COMM_H_DEBUG
 
 
 #define CE_H (48)
@@ -28,14 +28,15 @@
 
 class CommunicationManager{
     public:
-    CommunicationManager();
+        CommunicationManager();
         CommunicationManager(uint8_t ce, uint8_t cs);
-        void receivePacket();
+        bool receivePacket();
         void receiveMessage();
         void commBegin();
         Packet buildPacket(char g, int lx, int ly, bool lb, int rx, int ry, bool rb);
         Packet p;
         char msg[10];
+        Packet getPacket(){return p;}
     private:
         RF24 radio; // filled out in initializer list of constructor
         const uint64_t address = 0xDEADBEEF01; 

@@ -1,26 +1,25 @@
 #include "BoardManager.h"
 
-BoardManager::BoardManager(int i_pin, int o_pin){
-    in_pin = i_pin;
-    out_pin = o_pin;
-    pinMode(i_pin, INPUT);
-    pinMode(o_pin, OUTPUT);
+BoardManager::BoardManager(){
+    // input setup
+    // analog pin setup
+    pinMode(BATT_IN_P, INPUT);
+    // output setup
+    pinMode(LOW_BATT_P, OUTPUT);
+    pinMode(NRFR_P, OUTPUT);
 }
 
-float BoardManager::readBattery(){
-    float v2 = (analogRead(in_pin) / resolution) * ref; // voltage from 0-5V
-    v_out = v2 *((r2 + r2)/r1); // convert back to 8.4V
-    battery = (v_out / max_battery)*100;
-    return v_out;
+// battery management
+void BoardManager::readBattery(){
+    adc_battery = analogRead(BATT_IN_P);
+    // R1 = 5100 ohms, R2 = 10000 ohms, V_full_charge = 4.2V, V_nom = 3.7V
+    // V_full_charge computes to V_fc_in = 3.2V (padding for analog input channels)
+    v_in = (float)adc_battery/full_scale * v_ref;
+    v_battery = v_in * (float)((R1 + R2) / R1);
+    lowBattery();
 }
 
-void BoardManager::processBattery(){
-    readBattery();
-    if(v_out >= clamp){
-        analogWrite(out_pin, LED_ON);
-        low_battery = true;
-    } else{
-        analogWrite(out_pin, LED_OFF);
-        low_battery = false;
-    }
+void BoardManager::lowBattery(){
+    if(v_battery <= low_battery) digitalWrite(LOW_BATT_P, HIGH);
+    else digitalWrite(LOW_BATT_P, LOW);
 }

@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "MotionPlanner.h"
+#include "Hexapod.h"
 
-//#include "Hexapod.h"
 //#define LEG_SETUP_DEBUG
 #define BODY_DEBUG
 // might have to do joints & everything else BEFORE runtime, too, so that it's on the heap, not the stack?
@@ -12,7 +12,7 @@ int j1 = LEG_4_J1;
 int j2 = LEG_4_J2;
 #endif
 
-// move these into robot class for instantiation
+// Hexpaod Variables
 int g = 0;
 float duty_f = 0.5;
 float cycle_time = 1.5;
@@ -33,6 +33,7 @@ Vector idle_p = Vector(178.755, 0.0, -63.631); // CAD output
 //CommunicationManager cm = CommunicationManager(CE_H, CSN_H);
 
 #ifndef LEG_SETUP_DEBUG
+Hexapod* hp = nullptr;
 MotionPlanner* mp = nullptr;
 Vector twist = Vector(10.0, 10.0, 0.1);
 #endif
@@ -46,9 +47,12 @@ void setup(){
   #endif
   #ifndef LEG_SETUP_DEBUG
   //mp = new MotionPlanner(g, duty_f, cycle_time, step_h);
-  static MotionPlanner planner(g, duty_f, cycle_time, step_h); // statically stored for life of program
-  mp = &planner;
-  mp->powerOnSequence();
+  //static MotionPlanner planner(g, duty_f, cycle_time, step_h); // statically stored for life of program
+  static Hexapod hexa(g, duty_f, cycle_time, step_h);
+  hp = &hexa;
+  hp->startupHexapod();
+  //mp = &planner;
+  //mp->powerOnSequence();
   //mp.powerOffSequence();
   //Body b = Body(duty_f, cycle_time, step_h);
   //b.velocityCommand(Vector(0.0, 20.0, 0.0));
@@ -94,7 +98,7 @@ void loop() {
   
   #endif
  
-  mp->movement(0, twist);
+  //mp->movement(0, twist);
   //delay(2000);
   //mp->powerOffSequence();
   //delay(2000);

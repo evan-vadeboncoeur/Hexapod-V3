@@ -4,6 +4,13 @@
 #define LED_ON (500)
 #define LED_OFF (0)
 
+#define BATT_IN_P (A5) // does indeed work, is not "boot-strapped"
+#define LOW_BATT_P (A7)
+#define NRFR_P (A8)
+
+#define R1 (7800)
+#define R2 (10000)
+
 #include "Arduino.h"
 
 
@@ -13,17 +20,16 @@
 
 class BoardManager{
     private:
-        int in_pin, out_pin;    
-        float battery;
-        float resolution = 1023.0, ref = 5.0, clamp = 4.7, max_battery = 8.4;
-        float r1 = 7800.0, r2 = 10000.0;
+        int in_pin, out_pin; 
+        int adc_battery;   
+        float v_battery, v_in;
+        float full_scale = 1023.0, v_ref = 5.0, clamp = 4.7, max_battery = 8.4, low_battery = 6.2;
         float v_out;
-        bool low_battery=false;
-        float readBattery();
-        void processBattery();
+        void readBattery();
+        void lowBattery();
     public:
         BoardManager();
-        BoardManager(int, int);
+        
 
 
 };

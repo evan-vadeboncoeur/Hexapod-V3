@@ -4,13 +4,10 @@
 // struct for un/packing data packets for the NRF24L01
 
 struct Packet{
+    Vector t; // twist command
     char g; // gait
-    int lx;
-    int ly;
     bool lb; // left button
-    int rx;
-    int ry;
-    bool rb;
+    bool rb; // right button
         
 };
 
