@@ -97,7 +97,7 @@ void loop() {
   cm.receiveMessage();
   
   #endif
- 
+  hp->stateManager();
   //mp->movement(0, twist);
   //delay(2000);
   //mp->powerOffSequence();

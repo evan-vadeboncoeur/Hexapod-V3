@@ -18,6 +18,8 @@
 #define BATT_IN_P (15) // does indeed work, is not "boot-strapped"
 #define LOW_BATT_P (35)
 #define NRFR_P (32)
+#define R1 (3125)
+#define R2 (10000)
 
 // class for managing the power of the board (low power LED, board on, analog read voltage), inputs, etc.
 // copy for Hexapod reciever and adjust as neccesary. add conditional compiles
@@ -37,7 +39,8 @@ class BoardManager{
         bool lb, rb;
         char g;
         bool s_one, s_two, s_three, s_four;
-        float batt, v_ref = 3.3, full_scale = 1024, low_batt = 2.5;
+        int adc_battery;
+        float v_in, v_battery, v_ref = 3.3, full_scale = 4095.0, low_battery = 2.75, v_full = 4.2;
         void readLeftJS();
         void readRightJS();
         void readBattery();

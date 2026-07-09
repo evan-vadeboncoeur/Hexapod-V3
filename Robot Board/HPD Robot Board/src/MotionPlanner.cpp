@@ -13,7 +13,7 @@ MotionPlanner::MotionPlanner(int g, float df, float tc, float sh)
 }
 
 // GAIT SETUP
-void MotionPlanner::movement(int g, Vector tw){
+void MotionPlanner::movementSetup(int g, Vector tw){
     setBodyVelocity(tw); // compute trajectories
     setGait(g, WALK); // calls desired gait, start walking
 }
@@ -26,7 +26,7 @@ void MotionPlanner::setGait(int g, bool walk){
     switch(g){
         case TRIPOD: 
             gait = TRIPOD;
-            if(walk) tripodGait(TEST_STEPS); // test version
+            //if(walk) tripodGait(TEST_STEPS); // test version
             break;
         case RIPPLE: 
             gait = RIPPLE;
@@ -42,14 +42,36 @@ void MotionPlanner::setGait(int g, bool walk){
     }
 }
 
+void MotionPlanner::walk(){
+    switch(gait){
+    case TRIPOD: 
+        tripodGait();
+
+        break;
+    case RIPPLE: 
+
+    case WAVE: 
+
+        break;
+    case QUADRUPED: 
+
+        break;
+    default:
+        
+        break;
+    }
+}
+
 // GAITS
 // teleop, indefinite version
-bool MotionPlanner::tripodGait(){
-    while(walk_flag){ // finish cycle until walk_flag shuts off
+bool MotionPlanner::tripodGait(){ // some way to check messages here... for now hardcode but future would be interrupts
+    //while(walk_flag){ // finish cycle until walk_flag shuts off
+        delay(HALF_TRIPOD_DELAY);
         halfTripod(b.getTripod(TP_EVEN), b.getTripod(TP_ODD));
-        delay(100);
+        delay(HALF_TRIPOD_DELAY);
         halfTripod(b.getTripod(TP_ODD), b.getTripod(TP_EVEN));
-    } return true; // tripod gait finished
+    //} 
+    return true; // tripod gait finished
 }
 
 bool MotionPlanner::tripodGait(int cc){

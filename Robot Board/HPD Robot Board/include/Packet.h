@@ -1,6 +1,7 @@
 #ifndef PACKET_H
 #define PACKET_H
 
+#include "Vector.h"
 // struct for un/packing data packets for the NRF24L01
 
 struct Packet{

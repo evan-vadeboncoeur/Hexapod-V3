@@ -49,16 +49,3 @@ void CommunicationManager::receiveMessage(){
     else Serial.println("Message not available");
     #endif
 }
-
-// construct a packet struct (data values already read - probably isolate to power class)
-Packet CommunicationManager::buildPacket(char g, int lx, int ly, bool lb, int rx, int ry, bool rb){
-    Packet p;
-    p.g = g;
-    p.lx = lx;
-    p.ly = ly;
-    p.lb = lb;
-    p.rx = rx;
-    p.ry = ry;
-    p.rb = rb;
-    return p;
-}

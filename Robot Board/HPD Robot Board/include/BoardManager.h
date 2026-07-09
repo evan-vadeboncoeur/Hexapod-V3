@@ -29,6 +29,7 @@ class BoardManager{
         void lowBattery();
     public:
         BoardManager();
+        void checkBatteries();
         
 
 

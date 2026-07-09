@@ -23,3 +23,7 @@ void BoardManager::lowBattery(){
     if(v_battery <= low_battery) digitalWrite(LOW_BATT_P, HIGH);
     else digitalWrite(LOW_BATT_P, LOW);
 }
+
+void BoardManager::checkBatteries(){
+    readBattery();
+}

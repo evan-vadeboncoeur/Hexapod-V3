@@ -19,18 +19,19 @@ class Hexapod{
         Vector twist = Vector(0.0, 0.0, 0.0);
         Vector p_g; // global coordinate, if needed...
         enum State{WAITING, WALKING, TURNING}state=WAITING;
-        void stateManager(); // basically the hexapod's while loop
         void processPacket();
         void gaitSetup();
+        void gaitShutdown();
+        void checkBattery();
+        void walk();
+        void turn();
 
     public:
         Hexapod(int g, float df, float tc, float sh); // constructor 1 (all objects instantiated)
         void opMode(); // set operation mode: teleop (0), computer/robot (1)
-        void gaitSet(); // set gait (2 dipswitch array for 4 combinations of gait)
-        void checkPower(); // checks robot battery power / operates LEDs
-        void walkFor(int steps, int direction);
         void startupHexapod();
         void shutdownHexapod();
+        void stateManager(); // basically the hexapod's while loop
 };
 
 #endif

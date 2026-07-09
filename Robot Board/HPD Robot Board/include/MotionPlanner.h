@@ -40,7 +40,7 @@ class MotionPlanner{
         enum Gait {TRIPOD, RIPPLE, WAVE, QUADRUPED} gait=TRIPOD;
         MotionPlanner();
         MotionPlanner(int g, float df, float tc, float sh);\
-        void movement(int g, Vector tw);
+        void movementSetup(int g, Vector tw);
         void setBodyVelocity(Vector tw);
         // Setters
         void setGait(int, bool);
@@ -65,6 +65,8 @@ class MotionPlanner{
         // v2.1 kinematics
         void setTwist(Twist tw);
         void unpackTwist();
+        // 
+        void walk();
 };
 
 #endif

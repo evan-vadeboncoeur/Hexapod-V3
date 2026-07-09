@@ -24,7 +24,7 @@ bool RemoteControl::newCommand(){
     // right macro
     // angle change
     // significant magnitude change
-    if((g_p != g) || (rb && (!rb_p)) || (lb && (!lb_p)) || (abs(theta_tw - theta_tw_p) > 0.0) || (abs(r - r_p) > R_DELTA)) return true; // theta: any amount change is grounds for new command since in this version we are discretely using multiples of PI/3
+    if((g_p != g) || (rb && (!rb_p)) || (lb && (!lb_p)) || (abs(theta_tw - theta_tw_p) > T_DELTA) || (abs(r - r_p) > R_DELTA) || r < R_ZERO) return true; // theta: any amount change is grounds for new command since in this version we are discretely using multiples of PI/3
     else return false;
 }
 
@@ -66,10 +66,7 @@ Vector RemoteControl::buildTwist(){
     r = sqrt(x*x + y*y); // magnitude of the command, will designate speed
     r = map (r, 0, R_MAX, V_MIN, V_MAX); // map adc value to velocity min/max range (abs value of velocity, theta determines component signs)
     theta_tw = (float)(atan2(y,x)); // will return the same as typical RHR XY coordinate system, works for this viewpoint of frame
-    int sign = (theta_tw < 0.0) ? -1.0 : 1.0;
-    theta_tw = abs(theta_tw);
-    theta_tw = floor(theta_tw / M_PI_3)*M_PI_3; // make increment of PI/3
-    theta_tw *= sign; // shift back to negative, if necessary
+    theta_tw = M_PI_3*roundf(theta_tw/M_PI_3); // "Quantization"
     
     // convert back to velocity components
     vx = r*cos(theta_tw); 

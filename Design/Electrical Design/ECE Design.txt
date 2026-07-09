@@ -170,6 +170,8 @@ V_s = V_2 * (R1 + R2) / R2 (voltage from 0-8.4V)
 
 Percent = V_s / V_total
 
+Low Battery is typically between 6-6.2V, anything less than 6V is dangerous
+
 NRF Module
 -----------
 NRF has 7 pins total:
@@ -277,11 +279,14 @@ battery
 anything >5V will suffice, since the ESP32 only requires 3v3 to operate, but in this case, will be powered from the 5V0 pin.
 before plugging into the 5V0 supply pin, the current will go from input terminal -> SPDT switch -> LM2596 regulator set to 5V
 
-probably just go with 2S lipo 8.4V max, 7.4V nominal and go from there:
+using 18650 cell:
+Diameter = 18mm
+Length = 65.0mm
 
-V_max = 8.4V
-V_nominal = 7.4V
-V_low = 6V
+Full charge = 4.2V
+V_nom = 3.7V
+V_low = 2.75V
+
 
 voltage divider for adc input
 ------------------------------

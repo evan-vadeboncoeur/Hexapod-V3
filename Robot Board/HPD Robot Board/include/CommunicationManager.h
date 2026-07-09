@@ -33,7 +33,6 @@ class CommunicationManager{
         bool receivePacket();
         void receiveMessage();
         void commBegin();
-        Packet buildPacket(char g, int lx, int ly, bool lb, int rx, int ry, bool rb);
         Packet p;
         char msg[10];
         Packet getPacket(){return p;}
