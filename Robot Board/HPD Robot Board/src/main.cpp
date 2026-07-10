@@ -2,6 +2,8 @@
 #include "MotionPlanner.h"
 #include "Hexapod.h"
 
+
+#define GLOBAL_DEBUG
 //#define LEG_SETUP_DEBUG
 #define BODY_DEBUG
 // might have to do joints & everything else BEFORE runtime, too, so that it's on the heap, not the stack?
@@ -41,7 +43,6 @@ Vector twist = Vector(10.0, 10.0, 0.1);
 void setup(){
   Serial.begin(9600); // open before creating legs (at least in testing phases)
   delay(1000);
-  Serial.println("In setup");
   #ifdef GLOBAL_DEBUG
   Serial.println("In setup");
   #endif
@@ -94,7 +95,7 @@ void loop() {
   
   #endif
   #ifdef COMM_H_DEBUG
-  cm.receiveMessage();
+  //cm.receiveMessage();
   
   #endif
   hp->stateManager();

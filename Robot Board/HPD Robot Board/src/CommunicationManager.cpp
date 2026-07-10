@@ -12,7 +12,16 @@ CommunicationManager::CommunicationManager() : radio(CE_H, CSN_H) {
 }
 
 void CommunicationManager::commBegin(){
-    radio.begin();
+    #ifdef COMM_H_DEBUG
+    Serial.println("--------------------COMM INITIALIZATION--------------------");
+    #endif
+    if(!radio.begin()){
+        #ifndef COMM_H_DEBUG
+        Serial.println("FATAL: No NRF (Local) Connected. Check wiring. Program Terminating.");
+        delay(3000);
+        exit(1);
+        #endif
+    }
     radio.openReadingPipe(pipe, address); // TX/RX must agree on address
     radio.setPALevel(RF24_PA_MIN);
     radio.startListening(); 
@@ -21,15 +30,35 @@ void CommunicationManager::commBegin(){
 // recieve new packet -> let robot know
 bool CommunicationManager::receivePacket(){
     if(radio.available()){
+        #ifndef COMM_H_DEBUG
         radio.read(&p, sizeof(p));
+        #endif
         #ifdef COMM_H_DEBUG
+        //
+
+        Serial.println("-----Test Packet Recieved-----");
         Serial.print("Gait: ");
         Serial.print('\t');
+        Serial.print("P Off: ");
+        Serial.print('\t');
+        Serial.print("PowOn: ");
+        Serial.print('\t');
+        Serial.print("Tw Vx: ");
+        Serial.print('\t');
+        Serial.print("Tw Vy: ");
+        Serial.print('\t');
+        Serial.println("Tw Wz: ");
         Serial.print(p.g);
         Serial.print('\t');
-        Serial.print("LX: ");
+        Serial.print(p.lb);
         Serial.print('\t');
-        Serial.print(p.lx);
+        Serial.print(p.rb);
+        Serial.print('\t');
+        Serial.print(p.t.getX1());
+        Serial.print('\t');
+        Serial.print(p.t.getX2());
+        Serial.print('\t');
+        Serial.println(p.t.getX3());
         #endif
         return true;
     }

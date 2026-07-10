@@ -9,6 +9,9 @@ Hexapod::Hexapod(int g, float df, float tc, float sh)
 }
 
 void Hexapod::startupHexapod(){
+    #ifdef HEXAPOD_DEBUG
+    Serial.println("**********************Startup Hexapod***********************");
+    #endif
     radio.commBegin();
     plan.powerOnSequence();
     power_on = false;
@@ -16,7 +19,9 @@ void Hexapod::startupHexapod(){
 }
 
 void Hexapod::shutdownHexapod(){
-    // ---?
+    #ifdef HEXAPOD_DEBUG
+    Serial.println("**********************Startup Hexapod***********************");
+    #endif
     plan.powerOffSequence();
     state = WAITING;
 }
@@ -49,7 +54,11 @@ void Hexapod::turn(){
 // 3) way to go to/from walking-> 0 speed -> walking
 
 void Hexapod::processPacket(){
+    #ifdef HEXAPOD_DEBUG
+    Serial.println("--------------------NEW COMMAND--------------------");
+    #endif
     // get new packet
+    
     command = radio.getPacket();
     // fill out new packet
     gait_old = gait;
@@ -57,6 +66,32 @@ void Hexapod::processPacket(){
     power_off = command.rb;
     power_on = command.lb; 
     twist = command.t;
+    #ifdef HEXAPOD_DEBUG
+    Serial.print("Gait: ");
+    Serial.print('\t');
+    Serial.print("PowOff: ");
+    Serial.print('\t');
+    Serial.print("PowOn: ");
+    Serial.print('\t');
+    Serial.print("Tw Vx: ");
+    Serial.print('\t');
+    Serial.print("Tw Vy: ");
+    Serial.print('\t');
+    Serial.println("Tw Wz: ");
+    Serial.print(gait);
+    Serial.print('\t');
+    //int p_off = ((power_off) ? 1 : 0);
+    //int p_on = ((power_on) ? 1 : 0);
+    Serial.print(power_off);
+    Serial.print('\t');
+    Serial.print(power_on);
+    Serial.print('\t');
+    Serial.print(twist.getX1());
+    Serial.print('\t');
+    Serial.print(twist.getX2());
+    Serial.print('\t');
+    Serial.println(twist.getX3());
+    #endif
     // check all types of non-gait update commands
     if((!power_off) && (!power_on)){ // fix this... needs to be a new twist (should be from RC class, but need to verify)
         if(twist.getMagnitude() > 0.0){ // non-zero twist command
@@ -77,19 +112,31 @@ void Hexapod::processPacket(){
 //          if twist is 0, initializing waiting and move to idle
 
 void Hexapod::stateManager(){
+    #ifdef HEXAPOD_DEBUG
+    Serial.println("**********************State Manager***********************");
+    #endif
     while(!power_off){
         if(radio.receivePacket()) processPacket();// this would be on some type of interrupt as well
             
         switch(state){
             case WAITING:
+                #ifdef HEXAPOD_DEBUG
+                Serial.println("--------------------WAITING--------------------");
+                #endif
                 if(power_on) startupHexapod();
             break;
             
             case WALKING: // may need {} for setting values in switch statement
+                #ifdef HEXAPOD_DEBUG
+                Serial.println("--------------------WALKING--------------------");
+                #endif
                 walk();
             break;
             
             case TURNING:
+                #ifdef HEXAPOD_DEBUG
+                Serial.println("--------------------TURNING--------------------");
+                #endif
                 state = WAITING;
             break;
         }

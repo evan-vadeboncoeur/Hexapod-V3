@@ -1,6 +1,6 @@
 #ifndef COMM_H_H
 #define COMM_H_H
-//#define COMM_H_DEBUG
+#define COMM_H_DEBUG
 
 
 #define CE_H (48)
@@ -35,6 +35,7 @@ class CommunicationManager{
         void commBegin();
         Packet p;
         char msg[10];
+        int comm_ind = 0;
         Packet getPacket(){return p;}
     private:
         RF24 radio; // filled out in initializer list of constructor
