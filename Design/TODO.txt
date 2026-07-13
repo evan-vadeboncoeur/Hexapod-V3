@@ -1,22 +1,8 @@
 TODO Priority (ALL)
 -------------------
 Tripod Gait
-    1) build all 6 legs (2/6 done)
-        print all components
-            Chassis 8/8 
-                Bottom Chassis 1/1
-                Chassis Battery Holder 1/1
-                L0 Top Mount Covers 6/6
-            Legs 28/30
-                Link 1 4/6
-                Link 2 6/6
-                Link 2 Follower 6/6
-                Link 2 Brace 6/6
-                Link 3 6/6
-        all heat inserts
-        zero legs as best as possible
+    1) build all 6 legs (4/6 done)
     2) build full robot, test full gait 
-    3) build full robot PCB
     4) build controller board
     5) test hexapod class
     6) Calculate workspace limitations and maximum swing angles / J1/2 interaction monitoring
@@ -26,14 +12,10 @@ Tripod Gait
 PCB/ECE TODO
 -------------
 1) solder full ctl board
-    a) servo headers first (determine optimal exposed pin height)
-    b) resistors second - make sure proper / close to proper resistors are used - solder mask is incorrect for analog in on both board
-    c) caps (inner) third
-    d) LEDs fourth
-    e) switches fifth
-    f) MOSFET sixth
-    g) XT60 seventh
-    h) headers last (arduino, nrf, additional IO)
+    add final components
+        nrf
+        big caps
+        aux IO
 3) solder full comm board
     a) determine which resistors are necessary to solder (pull up/down for array pins = not needed)
     b) solder resistors - see resistors above

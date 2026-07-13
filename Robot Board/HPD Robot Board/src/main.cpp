@@ -9,9 +9,9 @@
 // might have to do joints & everything else BEFORE runtime, too, so that it's on the heap, not the stack?
 #ifdef LEG_SETUP_DEBUG
 Servo s0, s1, s2;
-int j0 = LEG_4_J0;
-int j1 = LEG_4_J1;
-int j2 = LEG_4_J2;
+int j0 = LEG_3_J0;
+int j1 = LEG_3_J1;
+int j2 = LEG_3_J2;
 #endif
 
 // Hexpaod Variables
@@ -37,23 +37,24 @@ Vector idle_p = Vector(178.755, 0.0, -63.631); // CAD output
 #ifndef LEG_SETUP_DEBUG
 Hexapod* hp = nullptr;
 MotionPlanner* mp = nullptr;
-Vector twist = Vector(10.0, 10.0, 0.1);
+Vector twist = Vector(140.0, 0.0, 0.0);
 #endif
 
 void setup(){
+  #ifdef GLOBAL_DEBUG
   Serial.begin(9600); // open before creating legs (at least in testing phases)
   delay(1000);
-  #ifdef GLOBAL_DEBUG
   Serial.println("In setup");
   #endif
   #ifndef LEG_SETUP_DEBUG
   //mp = new MotionPlanner(g, duty_f, cycle_time, step_h);
-  //static MotionPlanner planner(g, duty_f, cycle_time, step_h); // statically stored for life of program
-  static Hexapod hexa(g, duty_f, cycle_time, step_h);
-  hp = &hexa;
-  hp->startupHexapod();
-  //mp = &planner;
-  //mp->powerOnSequence();
+  static MotionPlanner planner(g, duty_f, cycle_time, step_h); // statically stored for life of program
+  mp = &planner;
+  mp->powerOnSequence();
+  //static Hexapod hexa(g, duty_f, cycle_time, step_h);
+  //hp = &hexa;
+  //hp->startupHexapod();
+  
   //mp.powerOffSequence();
   //Body b = Body(duty_f, cycle_time, step_h);
   //b.velocityCommand(Vector(0.0, 20.0, 0.0));
@@ -98,11 +99,11 @@ void loop() {
   //cm.receiveMessage();
   
   #endif
-  hp->stateManager();
-  //mp->movement(0, twist);
-  //delay(2000);
-  //mp->powerOffSequence();
-  //delay(2000);
+  //hp->stateManager();
+  mp->movementSetup(0, twist);
+  delay(2000);
+  mp->powerOffSequence();
+  delay(2000);
   exit(1);
   
 }
