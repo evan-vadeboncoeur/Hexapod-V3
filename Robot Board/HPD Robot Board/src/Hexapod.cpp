@@ -15,6 +15,7 @@ void Hexapod::startupHexapod(){
     radio.commBegin();
     plan.powerOnSequence();
     power_on = false;
+    powered_on = true;
     state = WAITING;
 }
 
@@ -40,7 +41,7 @@ void Hexapod::walk(){
 }
 
 void Hexapod::turn(){
-
+    plan.turn();
 }
 
 // NEED:
@@ -93,23 +94,19 @@ void Hexapod::processPacket(){
     Serial.println(twist.getX3());
     #endif
     // check all types of non-gait update commands
-    if((!power_off) && (!power_on)){ // fix this... needs to be a new twist (should be from RC class, but need to verify)
-        if(twist.getMagnitude() > 0.0){ // non-zero twist command
+    if((!power_off) && (!power_on) && (powered_on)){ // no macro, no turning
+        if(twist.getMagnitude() > 0.0){ // non-zero twist command update
             state = WALKING;
             gaitSetup();
         } else{ // new command is 0 velocity, bring the robot to idle, but dont shutdown
             gaitShutdown(); 
         }
     }
-    checkBattery(); // this would  be on a timer interrupt delay
+    else if((power_off) && (!power_on)) state = POWER_OFF; // only p off macro
+    else if((!power_off) && (power_on)) state = POWER_ON; // only p on macro
+    else if((power_off) && (power_on) && (powered_on)) state = TURNING; // both = turning mode (CCW) (MAY BE DIFFICULT GETTING BOTH AT SAME TIME)
+    
 }
-
-// while not given command to shutdown
-// check for new packet
-//  if new packet, process packet
-//      if there is a new gait, and we arent turning off or shuttong on, check magnitude of twist
-//          if twist > 0, init walking and walk
-//          if twist is 0, initializing waiting and move to idle
 
 void Hexapod::stateManager(){
     #ifdef HEXAPOD_DEBUG
@@ -117,33 +114,45 @@ void Hexapod::stateManager(){
     #endif
     while(!power_off){
         if(radio.receivePacket()) processPacket();// this would be on some type of interrupt as well
-            
+        // Hexapod state machine 
         switch(state){
-            case WAITING:
+            case WAITING: // do nothing... maybe add in a blink for "NRF LED"
                 #ifdef HEXAPOD_DEBUG
                 Serial.println("--------------------WAITING--------------------");
                 #endif
-                if(power_on) startupHexapod();
             break;
             
-            case WALKING: // may need {} for setting values in switch statement
+            case WALKING: // 1 walk cycle at current speed
                 #ifdef HEXAPOD_DEBUG
                 Serial.println("--------------------WALKING--------------------");
                 #endif
-                walk();
+                walk(); 
             break;
             
-            case TURNING:
+            case TURNING: // 1 turn cycle at current speed
                 #ifdef HEXAPOD_DEBUG
                 Serial.println("--------------------TURNING--------------------");
                 #endif
-                state = WAITING;
+                turn(); // one turn cycle at current speed
+            break;
+
+            case POWER_ON: // power on macro
+                #ifdef HEXAPOD_DEBUG
+                Serial.println("--------------------POWERING ON--------------------");
+                #endif    
+                startupHexapod();
+            break;
+
+            case POWER_OFF: // power off macro
+                #ifdef HEXAPOD_DEBUG
+                Serial.println("--------------------POWERING OFF--------------------");
+                #endif    
+                shutdownHexapod();
             break;
         }
-    
-        delay(HEXAPOD_LOOP_DELAY);
+        checkBattery(); // this would  be on a timer interrupt delay
+        delay(HEXAPOD_LOOP_DELAY); // make smaller
     }
-    shutdownHexapod();
 }
 
 void Hexapod::checkBattery(){

@@ -15,10 +15,10 @@ class Hexapod{
         BoardManager board;
         Packet command;
         int gait, gait_old;
-        bool power_off = false, power_on=false;
+        bool power_off = false, power_on=false, powered_on = false;
         Vector twist = Vector(0.0, 0.0, 0.0);
         Vector p_g; // global coordinate, if needed...
-        enum State{WAITING, WALKING, TURNING}state=WAITING;
+        enum State{WAITING, WALKING, TURNING, POWER_ON, POWER_OFF}state=WAITING;
         void processPacket();
         void gaitSetup();
         void gaitShutdown();
