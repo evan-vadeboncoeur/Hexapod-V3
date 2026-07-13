@@ -96,7 +96,7 @@ class Body{
         void compute_vR();
         void compute_dP();
         void compute_SLS();
-        Vector L_TF_B(Vector v);
+        void L_TF_B(Vector v);
         void bodyInitialSetup(Vector v);
 };
 
