@@ -46,12 +46,11 @@ void MotionPlanner::walk(){
     switch(gait){
     case TRIPOD: 
         tripodGait();
-
         break;
     case RIPPLE: 
-
+        rippleGait();
     case WAVE: 
-
+        waveGait();
         break;
     case QUADRUPED: 
 
@@ -67,26 +66,56 @@ void MotionPlanner::turn(){
     tripodGait();
 }
 
-// GAITS
+// GAITS ----------------------------------------------------------------------------------
 // teleop, indefinite version
-bool MotionPlanner::tripodGait(){ // some way to check messages here... for now hardcode but future would be interrupts
-    //while(walk_flag){ // finish cycle until walk_flag shuts off
+bool MotionPlanner::tripodGait(){
     #ifdef PLAN_DEBUG
     Serial.println("**********************TRIPOD GAIT***********************");
     #endif
     delay(HALF_TRIPOD_DELAY);
+
     #ifdef PLAN_DEBUG
-    Serial.println("--------------------HALF GAIT ODD--------------------");
-    #endif
-    halfTripod(b.getTripod(TP_EVEN), b.getTripod(TP_ODD));
-    delay(HALF_TRIPOD_DELAY);
-    #ifdef PLAN_DEBUG
-    Serial.println("--------------------HALF GAIT EVEN--------------------");
+    Serial.println("--------------------STANCE EVEN--------------------");
     #endif
     halfTripod(b.getTripod(TP_ODD), b.getTripod(TP_EVEN));
+    delay(HALF_TRIPOD_DELAY);
+
+    #ifdef PLAN_DEBUG
+    Serial.println("--------------------STANCE ODD--------------------");
+    #endif
+    halfTripod(b.getTripod(TP_EVEN), b.getTripod(TP_ODD));
+    
+    
     //} 
     return true; // tripod gait finished
 }
+// overload that maintains which tripod is where (could use a cycle counter with first foot position for faster calculation...)
+// bool MotionPlanner::tripodGait(){
+//     #ifdef PLAN_DEBUG
+//     Serial.println("**********************TRIPOD GAIT***********************");
+//     #endif
+    
+//     Leg** stance_tripod = (even_forward || idle) ? b.getTripod(TP_EVEN) : b.getTripod(TP_ODD); // even in swing or idle. else odd is forward
+//     Leg** swing_tripod = (even_forward || idle) ? b.getTripod(TP_ODD) : b.getTripod(TP_EVEN);
+//     idle = false;
+//     delay(HALF_TRIPOD_DELAY);
+
+//     #ifdef PLAN_DEBUG
+//     Serial.println("--------------------STANCE 1--------------------");
+//     #endif
+//     halfTripod(swing_tripod, stance_tripod);
+//     delay(HALF_TRIPOD_DELAY);
+
+//     #ifdef PLAN_DEBUG
+//     Serial.println("--------------------STANCE 2--------------------");
+//     #endif
+//     halfTripod(stance_tripod, swing_tripod);
+    
+    
+//     //} 
+//     return true; // tripod gait finished
+// }
+    
 
 bool MotionPlanner::tripodGait(int cc){
     #ifdef PLAN_DEBUG
@@ -137,6 +166,7 @@ bool MotionPlanner::halfTripod(Leg** sw, Leg** st){
     lift(sw);
     delay(HALF_TRIPOD_DELAY);
     push(st, sw);
+    even_forward = ((*(sw))->getID() == 0) ? true : false;
     return true;
 }
 
@@ -322,7 +352,22 @@ bool MotionPlanner::push(Leg** l_st, Leg** l_sw){
     return true;
 }
 
-// MOVEMENT MACROS
+bool MotionPlanner::waveGait(){
+    
+    
+    
+    return true;
+}
+
+bool MotionPlanner::rippleGait(){
+    // tripods front to back, alternate tripods:
+    // Legs CCW about hexagon circle, X-axis aligned between legs 0 and 5. Legs: 0, 1, 2, 3, 4, 5
+    // 0, 4, 2 -> 5, 1, 3
+    // at each foot: 
+    return true;
+}
+
+// MOVEMENT MACROS -------------------------------------------------------------------------------------
 bool MotionPlanner::powerOnSequence(){
     #ifdef PLAN_DEBUG
     Serial.println("**********************Powering On***********************");

@@ -52,11 +52,15 @@ class Leg{
         Leg();
         Leg(int id, int j1, int j2, int j3, float configuration);
         Vector storage_p_L = Vector(0.0, -M_PI_3, -2.0); // initial storage position in the joint space
-        Vector idle_p_L = Vector(178.755, 0.0, -63.631);
+        //Vector idle_p_L = Vector(178.755, 0.0, -63.631);
+        Vector idle_p_L = Vector(185.29, 0.00, -89.66); // v2
+        
         Vector home_p_L = Vector(310.0, 0.0, 0.0);
         Vector storage_j_L = Vector(0.0, -1.216, -1.763);
         Vector home_j_L = Vector(0.0, 0.0, 0.0);
-        Vector idle_j_L = Vector(0.0, -0.977, 2.146);
+        //Vector idle_j_L = Vector(0.0, -0.977, 2.146);
+        Vector idle_j_L = Vector(0.0, -0.643, 1.9211971); // v2
+        
         // Getters
         Vector getPrevFootP(){return prevFoot_p_L;} // get position from previous move
         Vector getPrevFootJ(){return prevFoot_j_L;}

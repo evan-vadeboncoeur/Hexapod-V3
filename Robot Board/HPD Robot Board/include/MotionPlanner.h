@@ -32,7 +32,7 @@ class MotionPlanner{
         Vector omega = Vector(0.0, 0.0, 0.25); // constanct ccw rotation vector 
         float vx, vy, wz;
         float t_cycle, duty_factor, step_h, cycle_count; // gait cycle (hardcoded?) values
-        bool walk_flag = NWALK;
+        bool walk_flag = NWALK, even_forward = false, idle = true;
         bool halfTripod(Leg** sw, Leg** st);
         bool push(Leg** l_st, Leg** l_sw);
         bool lift(Leg** l_l);
@@ -51,9 +51,6 @@ class MotionPlanner{
         // Gaits
         bool tripodGait();
         bool tripodGait(int cc);
-        void setupTripod(int, int, int);
-        void setDistanceIncrement(int);
-        void sortTripod();
         bool waveGait();
         bool rippleGait();
         bool quadrapedGait();
@@ -63,10 +60,7 @@ class MotionPlanner{
         bool moveHome(); // legs @ 0 pos (0, 0, 0)
         bool moveStorage(); // folded up position, power down
         bool moveIdle(); // wait for gait (setup pose)
-        // v2.1 kinematics
-        void setTwist(Twist tw);
-        void unpackTwist();
-        // 
+        // Hexapod class functions
         void walk();
         void turn();
 };

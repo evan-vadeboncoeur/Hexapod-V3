@@ -29,6 +29,8 @@ Vector idle_j = Vector(0.0, -0.977, 2.146);
 Vector home_p = Vector(310.0, 0.0, 0.0);
 Vector storage_p = Vector(-46.76, 0.0, 108.68); // CAD output
 Vector idle_p = Vector(178.755, 0.0, -63.631); // CAD output
+Vector idle_j2 = Vector(0.0, -0.643, 1.9211971);
+Vector idle_p2 = Vector(185.29, 0.00, -89.66);
 #endif
 
 //CommunicationManager cm = CommunicationManager(CE_H, CSN_H);
@@ -36,7 +38,7 @@ Vector idle_p = Vector(178.755, 0.0, -63.631); // CAD output
 #ifndef LEG_SETUP_DEBUG
 Hexapod* hp = nullptr;
 MotionPlanner* mp = nullptr;
-Vector twist = Vector(110.0, -110.0, 0.0);
+Vector twist = Vector(110.0, 0.0, 0.0);
 //Vector twist = Vector(0.0, 0.0, 0.3);
 #endif
 
@@ -81,6 +83,8 @@ void loop() {
   //leg_test.moveFootToPV(home_p, ELBOW_DOWN);
   //leg_test.moveFootToPV(storage_p, ELBOW_UP);
   //leg_test.moveFootToPV(idle_p, ELBOW_DOWN);
+  leg_test.moveFootToJV(idle_j2);
+  leg_test.moveFootToPV(idle_p2, ELBOW_DOWN);
   #endif
   #ifdef LEG_SETUP_DEBUG
   s0.write(HPS_2018_CTR);
