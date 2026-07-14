@@ -62,6 +62,11 @@ void MotionPlanner::walk(){
     }
 }
 
+void MotionPlanner::turn(){
+    setBodyVelocity(omega);
+    tripodGait();
+}
+
 // GAITS
 // teleop, indefinite version
 bool MotionPlanner::tripodGait(){ // some way to check messages here... for now hardcode but future would be interrupts

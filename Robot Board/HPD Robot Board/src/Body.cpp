@@ -239,7 +239,7 @@ Vector Body::B_TF_L(Vector bc, int id){
 }
 
 // TF function to help setup idle pose for robot -> store in foot_idle_R[] array
-Vector Body::L_TF_B(Vector v){
+void Body::L_TF_B(Vector v){
     Vector t_v;
     float t_x_b, t_y_b, t_z_b, t_x_f, t_y_f, t_z_f;  // foot frame, robot/body frame
     t_x_f = v.getX1();

@@ -28,7 +28,8 @@ class MotionPlanner{
         Leg* tp_L[3]; // 3 legs/tripod
         Leg* tp_R[3];
         Body b;
-        Twist t; // twist command (v_x, v_y, w_z)
+        Vector t; // twist command (v_x, v_y, w_z)
+        Vector omega = Vector(0.0, 0.0, 0.25); // constanct ccw rotation vector 
         float vx, vy, wz;
         float t_cycle, duty_factor, step_h, cycle_count; // gait cycle (hardcoded?) values
         bool walk_flag = NWALK;
@@ -67,6 +68,7 @@ class MotionPlanner{
         void unpackTwist();
         // 
         void walk();
+        void turn();
 };
 
 #endif

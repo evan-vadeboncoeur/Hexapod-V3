@@ -2,7 +2,6 @@
 #include "MotionPlanner.h"
 #include "Hexapod.h"
 
-
 #define GLOBAL_DEBUG
 //#define LEG_SETUP_DEBUG
 #define BODY_DEBUG
@@ -45,7 +44,7 @@ void setup(){
   #ifdef GLOBAL_DEBUG
   Serial.begin(9600); // open before creating legs (at least in testing phases)
   delay(1000);
-  Serial.println("In setup");
+  Serial.println("#####In setup#####");
   #endif
   #ifndef LEG_SETUP_DEBUG
   //mp = new MotionPlanner(g, duty_f, cycle_time, step_h);
@@ -73,7 +72,7 @@ void setup(){
 
 void loop() {
   #ifdef GLOBAL_DEBUG
-  Serial.println("In loop");
+  Serial.println("#####In loop#####");
   #endif
   #ifdef LEG_KINEMATICS_DEBUG
   //leg_test.moveFootToJV(home_j);
@@ -98,7 +97,6 @@ void loop() {
   #endif
   #ifdef COMM_H_DEBUG
   //cm.receiveMessage();
-  
   #endif
   //hp->stateManager();
   #ifndef LEG_SETUP_DEBUG

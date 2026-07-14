@@ -6,7 +6,7 @@
 #include "CommunicationManager.h"
 #include "BoardManager.h"
 
-#define HEXAPOD_LOOP_DELAY (50)
+#define HEXAPOD_LOOP_DELAY (20)
 
 class Hexapod{
     private:
@@ -15,17 +15,19 @@ class Hexapod{
         BoardManager board;
         Packet command;
         int gait, gait_old;
-        bool power_off = false, power_on=false;
+        bool power_off = false, power_on=false, powered_on = false;
+        unsigned long b_check = 0, b_check_prev = 0;
+        unsigned int b_time = 1000;
         Vector twist = Vector(0.0, 0.0, 0.0);
         Vector p_g; // global coordinate, if needed...
-        enum State{WAITING, WALKING, TURNING}state=WAITING;
+        enum State{WAITING, WALKING, TURNING, POWER_ON, POWER_OFF}state=WAITING;
         void processPacket();
         void gaitSetup();
         void gaitShutdown();
         void checkBattery();
         void walk();
         void turn();
-
+        void getCommand();
     public:
         Hexapod(int g, float df, float tc, float sh); // constructor 1 (all objects instantiated)
         void opMode(); // set operation mode: teleop (0), computer/robot (1)

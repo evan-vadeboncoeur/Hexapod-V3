@@ -20,7 +20,6 @@
 
 class BoardManager{
     private:
-        int in_pin, out_pin; 
         int adc_battery;   
         float v_battery, v_in;
         float full_scale = 1023.0, v_ref = 5.0, clamp = 4.7, max_battery = 8.4, low_battery = 6.2;

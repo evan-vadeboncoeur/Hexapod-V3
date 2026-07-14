@@ -8,7 +8,13 @@ CommunicationManager::CommunicationManager() : radio(CE_H, CSN_H) {
     // initialize the RF24 radio object with the given CE and CSN pins
     // this constructor uses an initializer list to directly initialize the radio member
     // without needing to create a temporary RF24 object and assign it to radio
-    
+    radio.maskIRQ(true, true, false); // configure which events trigger interrupt request pin (IRQ). active low. tx_success, tx_failure, rx_ready (data received)
+    pinMode(IRQ_NRF, INPUT_PULLUP); 
+    attachInterrupt(digitalPinToInterrupt(IRQ_NRF), CommunicationManager::radioISR, FALLING);
+}
+
+void CommunicationManager::radioISR(){
+    radio_interrupt = true;
 }
 
 void CommunicationManager::commBegin(){
@@ -29,9 +35,16 @@ void CommunicationManager::commBegin(){
 
 // recieve new packet -> let robot know
 bool CommunicationManager::receivePacket(){
-    if(radio.available()){
+    if(radio.available()){ 
+    
         #ifndef COMM_H_DEBUG
-        radio.read(&p, sizeof(p));
+        if(radio_interrupt){
+            while(radio.available()) // read all packets in the queue to get newest command
+            radio_interrupt = false;
+            radio.read(&p, sizeof(p));
+            //add debug prints here
+            return true;
+        }
         #endif
         #ifdef COMM_H_DEBUG
         //

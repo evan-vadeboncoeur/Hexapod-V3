@@ -15,6 +15,7 @@ void Hexapod::startupHexapod(){
     radio.commBegin();
     plan.powerOnSequence();
     power_on = false;
+    powered_on = true;
     state = WAITING;
 }
 
@@ -40,25 +41,20 @@ void Hexapod::walk(){
 }
 
 void Hexapod::turn(){
-
+    plan.turn();
 }
 
-// NEED:
-// 1) way to ensure the new twist vector is different than old (done in RC class)
-// 2) way to recieve change in walk commands inside the motion planner class...?
-//      new command
-//      setupWalk
-//      walk for cycle return true
-// check new command
-// if new command recompute gait, else walk one cycle??
-// 3) way to go to/from walking-> 0 speed -> walking
+void Hexapod::getCommand(){
+    if(radio.receivePacket()){// if IRQ pin falling edge (received data), load packet into register
+        processPacket(); // setup state
+    }
+}
 
 void Hexapod::processPacket(){
     #ifdef HEXAPOD_DEBUG
     Serial.println("--------------------NEW COMMAND--------------------");
     #endif
     // get new packet
-    
     command = radio.getPacket();
     // fill out new packet
     gait_old = gait;
@@ -80,8 +76,6 @@ void Hexapod::processPacket(){
     Serial.println("Tw Wz: ");
     Serial.print(gait);
     Serial.print('\t');
-    //int p_off = ((power_off) ? 1 : 0);
-    //int p_on = ((power_on) ? 1 : 0);
     Serial.print(power_off);
     Serial.print('\t');
     Serial.print(power_on);
@@ -92,61 +86,70 @@ void Hexapod::processPacket(){
     Serial.print('\t');
     Serial.println(twist.getX3());
     #endif
-    // check all types of non-gait update commands
-    if((!power_off) && (!power_on)){ // fix this... needs to be a new twist (should be from RC class, but need to verify)
-        if(twist.getMagnitude() > 0.0){ // non-zero twist command
+    // walking/non-walking commands
+    if((!power_off) && (!power_on) && (powered_on)){ // no macro, no turning
+        if(twist.getMagnitude() > 0.0){ // non-zero twist command update
             state = WALKING;
             gaitSetup();
-        } else{ // new command is 0 velocity, bring the robot to idle, but dont shutdown
-            gaitShutdown(); 
-        }
+        } else gaitShutdown(); // new command is 0 velocity, bring the robot to idle, but dont shutdown
     }
-    checkBattery(); // this would  be on a timer interrupt delay
+    else if((power_off) && (!power_on)) state = POWER_OFF; // only p off macro
+    else if((!power_off) && (power_on)) state = POWER_ON; // only p on macro
+    else if((power_off) && (power_on) && (powered_on)) state = TURNING; // both = turning mode (CCW) (MAY BE DIFFICULT GETTING BOTH AT SAME TIME)
+    
 }
-
-// while not given command to shutdown
-// check for new packet
-//  if new packet, process packet
-//      if there is a new gait, and we arent turning off or shuttong on, check magnitude of twist
-//          if twist > 0, init walking and walk
-//          if twist is 0, initializing waiting and move to idle
 
 void Hexapod::stateManager(){
     #ifdef HEXAPOD_DEBUG
     Serial.println("**********************State Manager***********************");
     #endif
     while(!power_off){
+        //getCommand();
+        //isolate below command to not have if/then
         if(radio.receivePacket()) processPacket();// this would be on some type of interrupt as well
-            
+        // Hexapod state machine 
         switch(state){
-            case WAITING:
+            case WAITING: // do nothing... maybe add in a blink for "NRF LED"
                 #ifdef HEXAPOD_DEBUG
                 Serial.println("--------------------WAITING--------------------");
                 #endif
-                if(power_on) startupHexapod();
             break;
             
-            case WALKING: // may need {} for setting values in switch statement
+            case WALKING: // 1 walk cycle at current speed
                 #ifdef HEXAPOD_DEBUG
                 Serial.println("--------------------WALKING--------------------");
                 #endif
-                walk();
+                walk(); 
             break;
             
-            case TURNING:
+            case TURNING: // 1 turn cycle at current speed
                 #ifdef HEXAPOD_DEBUG
                 Serial.println("--------------------TURNING--------------------");
                 #endif
-                state = WAITING;
+                turn(); // one turn cycle at current speed
+            break;
+
+            case POWER_ON: // power on macro
+                #ifdef HEXAPOD_DEBUG
+                Serial.println("--------------------POWERING ON--------------------");
+                #endif    
+                startupHexapod();
+            break;
+
+            case POWER_OFF: // power off macro
+                #ifdef HEXAPOD_DEBUG
+                Serial.println("--------------------POWERING OFF--------------------");
+                #endif    
+                shutdownHexapod();
             break;
         }
-    
-        delay(HEXAPOD_LOOP_DELAY);
+        checkBattery(); // this would  be on a timer overflow interrupt delay... (?)
+        delay(HEXAPOD_LOOP_DELAY); // make smaller
     }
-    shutdownHexapod();
 }
 
 void Hexapod::checkBattery(){
-    board.checkBatteries();
+    if((millis() - b_check) >= b_time) board.checkBatteries();
+    b_check = millis();
 }
 
