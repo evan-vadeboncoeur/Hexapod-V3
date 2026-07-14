@@ -1,13 +1,14 @@
 TODO Priority (ALL)
 -------------------
-Tripod Gait
-    1) build all 6 legs (4/6 done)
-    2) build full robot, test full gait 
-    4) build controller board
-    5) test hexapod class
-    6) Calculate workspace limitations and maximum swing angles / J1/2 interaction monitoring
-        need to work on leg interaction (J2 J3 collision monitoring)
-    7) J2 add rubber boot
+1) fix plastic servo horn (leg 5)
+2) re-zero legs
+3) do math for lower legs, higher body
+check math for straight line motion for xy 
+4) build RC board
+5) test hexapod class
+6) Calculate workspace limitations and maximum swing angles / J1/2 interaction monitoring
+    need to work on leg interaction (J2 J3 collision monitoring)
+7) J2 add rubber boot
 
 PCB/ECE TODO
 -------------

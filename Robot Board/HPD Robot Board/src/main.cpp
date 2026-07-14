@@ -9,9 +9,9 @@
 // might have to do joints & everything else BEFORE runtime, too, so that it's on the heap, not the stack?
 #ifdef LEG_SETUP_DEBUG
 Servo s0, s1, s2;
-int j0 = LEG_3_J0;
-int j1 = LEG_3_J1;
-int j2 = LEG_3_J2;
+int j0 = LEG_5_J0;
+int j1 = LEG_5_J1;
+int j2 = LEG_5_J2;
 #endif
 
 // Hexpaod Variables
@@ -37,7 +37,8 @@ Vector idle_p = Vector(178.755, 0.0, -63.631); // CAD output
 #ifndef LEG_SETUP_DEBUG
 Hexapod* hp = nullptr;
 MotionPlanner* mp = nullptr;
-Vector twist = Vector(140.0, 0.0, 0.0);
+Vector twist = Vector(110.0, -110.0, 0.0);
+//Vector twist = Vector(0.0, 0.0, 0.3);
 #endif
 
 void setup(){
@@ -100,10 +101,12 @@ void loop() {
   
   #endif
   //hp->stateManager();
+  #ifndef LEG_SETUP_DEBUG
   mp->movementSetup(0, twist);
   delay(2000);
   mp->powerOffSequence();
   delay(2000);
+  #endif
   exit(1);
   
 }
