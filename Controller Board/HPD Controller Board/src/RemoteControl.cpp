@@ -15,7 +15,7 @@ void RemoteControl::stateManager(){
     buildTwist(); // build twist value based on current joystick positioning
     // if there is a new command, build and transmit new message
     if(newCommand()) transmitMessage();
-    handlePrevInputs(); // set previous values for comparison
+    //handlePrevInputs(); // set previous values for comparison
 }
 
 bool RemoteControl::newCommand(){
@@ -30,18 +30,76 @@ bool RemoteControl::newCommand(){
 
 void RemoteControl::readSensors(){
     bmr.readInputs(); // read all inputs
-    lb = bmr.getLb(); 
+    lb = !(bmr.getLb()); 
     lx = bmr.getLx();
     ly = bmr.getLy();
-    rb = bmr.getRb();
+    rb = !(bmr.getRb());
     rx = bmr.getRx();
     ry = bmr.getRy();
     g = bmr.getGait();
+    #ifdef REMOTE_DEBUG
+    Serial.println("--------------------Sensor Output--------------------");
+    Serial.print("Lb");
+    Serial.print('\t');
+    Serial.print("Lx");
+    Serial.print('\t');
+    Serial.print("Ly");
+    Serial.print('\t');
+    Serial.print("Rb");
+    Serial.print('\t');
+    Serial.print("Rx");
+    Serial.print('\t');
+    Serial.print("Ry");
+    Serial.print('\t');
+    Serial.println("Gait");
+    Serial.print(lb);
+    Serial.print('\t');
+    Serial.print(lx);
+    Serial.print('\t');
+    Serial.print(ly);
+    Serial.print('\t');
+    Serial.print(rb);
+    Serial.print('\t');
+    Serial.print(rx);
+    Serial.print('\t');
+    Serial.print(ry);
+    Serial.print('\t');
+    Serial.println(g);
+    #endif
 }
 
 void RemoteControl::transmitMessage(){
     cmd = cmr.buildPacket(t, bmr.getGait(), bmr.getLb(), bmr.getRb());
-    Serial.println("cmd built");
+    #ifdef TRANSMIT_DEBUG
+    Serial.println("--------------------Transmit Debug--------------------");
+    Serial.println("Command Built: ");
+    Serial.print("t_vx");
+    Serial.print('\t');
+    Serial.print("t_vy");
+    Serial.print('\t');
+    Serial.print("t_wz");
+    Serial.print('\t');
+    Serial.print("t_vm");
+    Serial.print('\t');
+    Serial.print("gait");
+    Serial.print('\t');
+    Serial.print("Lb");
+    Serial.print('\t');
+    Serial.println("Rb");
+    Serial.print(cmd.t.getX1());
+    Serial.print('\t');
+    Serial.print(cmd.t.getX2());
+    Serial.print('\t');
+    Serial.print(cmd.t.getX3());
+    Serial.print('\t');
+    Serial.print(cmd.t.getMagnitude());
+    Serial.print('\t');
+    Serial.print(cmd.g);
+    Serial.print('\t');
+    Serial.print(cmd.lb);
+    Serial.print('\t');
+    Serial.println(cmd.rb)
+    #endif
     cmr.sendMessage(&cmd);
 }
 void RemoteControl::transmitMessage(char msg[]){
@@ -61,7 +119,7 @@ void RemoteControl::handlePrevInputs(){
 
 Vector RemoteControl::buildTwist(){
     // X_JS > 0 is left, Y_JS > 0 is up therefore we will treat the vertical pot as x and the horizontal as y to mimic the robot setup
-    int x = ly, y = lx;
+    int x = lx, y = ly;
     x -= ADC_MID, y -= ADC_MID; // shift to midpoint of ranges to allow for signed values
     r = sqrt(x*x + y*y); // magnitude of the command, will designate speed
     r = map (r, 0, R_MAX, V_MIN, V_MAX); // map adc value to velocity min/max range (abs value of velocity, theta determines component signs)
@@ -78,5 +136,24 @@ Vector RemoteControl::buildTwist(){
     t.setX1(vx);
     t.setX2(vy);
     t.setX3(wz);
+    Serial.println("-----TWIST DEBUG-----");
+    Serial.print("r");
+    Serial.print('\t');
+    Serial.print("theta");
+    Serial.print('\t');
+    Serial.print("vx");
+    Serial.print('\t');
+    Serial.print("vy");
+    Serial.print('\t');
+    Serial.println("wz");
+    Serial.print(r);
+    Serial.print('\t');
+    Serial.print(theta_tw);
+    Serial.print('\t');
+    Serial.print(vx);
+    Serial.print('\t');
+    Serial.print(vy);
+    Serial.print('\t');
+    Serial.println(wz);
     return Vector(vx, vy, wz);
 }

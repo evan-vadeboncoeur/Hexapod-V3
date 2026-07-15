@@ -10,7 +10,7 @@ CommunicationManager::CommunicationManager() : radio(CE_H, CSN_H) {
     // without needing to create a temporary RF24 object and assign it to radio
     radio.maskIRQ(true, true, false); // configure which events trigger interrupt request pin (IRQ). active low. tx_success, tx_failure, rx_ready (data received)
     pinMode(IRQ_NRF, INPUT_PULLUP); 
-    attachInterrupt(digitalPinToInterrupt(IRQ_NRF), CommunicationManager::radioISR, FALLING);
+    //attachInterrupt(digitalPinToInterrupt(IRQ_NRF), CommunicationManager::radioISR, FALLING);
 }
 
 void CommunicationManager::radioISR(){

@@ -14,10 +14,6 @@ void setup() {
 }
 
 void loop() {
-    #ifdef COMM_R_DEBUG
-    rc.transmitMessage(msg);
-    Serial.println(msg);
-    #endif
     rc.stateManager();
     delay(CMD_DELAY);
 }

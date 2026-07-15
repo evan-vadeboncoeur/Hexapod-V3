@@ -311,9 +311,24 @@ R2 = 10k ohms
 R1 = 3125 ohms
 
 
-
-
-
+Comm. Board Debug
+------------------
+0) added ground plane to top of board
+0.5) added thermal reliefs to ground and power pads
+1) re-assigned GPIO2 (left button) to a non-programming pin (GPI16)
+	GPIO2 is used as the board on LED
+2) GPIO25 (dipswitch 2) was not reading
+	pin was not properly initialized in setup (was using dipswitch 1 pin twice)
+3) dipswitch byte outputting ENQ?
+	a) was not using bitwise xor (^=) was instead using bitwise or (|=)
+	b) data types needed to be byte to properly be read (probably issue w/ xor a char integral type)
+4) E (6188) gpio: gpio_set_level(227): GPIO output gpio_num error
+	went away when swapped to proper pin (from GPIO35 to GPIO3), seems GPIO35 doesnt exist and therefore out of range
+5) low battery output already on 
+	Battery in: GPIO15
+	Low Battery Output: GPIO35 -> change to GPIO3 like schematic calls for
+	Change code back to wite Low -> all set, no problems here
+6) test low battery analog in on comm board to make sure 5625 ohm resistor and pin does its job
 
 
 

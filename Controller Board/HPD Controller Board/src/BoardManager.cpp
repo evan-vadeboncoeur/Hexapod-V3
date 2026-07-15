@@ -7,7 +7,7 @@ BoardManager::BoardManager(){
     pinMode(RB_P, INPUT_PULLUP);
     // pulled-down on board for dipswitch array
     pinMode(GP_1, INPUT_PULLDOWN);
-    pinMode(GP_1, INPUT_PULLDOWN);
+    pinMode(GP_2, INPUT_PULLDOWN);
     pinMode(GP_3, INPUT_PULLDOWN);
     pinMode(GP_4, INPUT_PULLDOWN);
     // analog pin setup
@@ -75,16 +75,30 @@ void BoardManager::readRightJS(){
 // battery management
 void BoardManager::readBattery(){
     adc_battery = analogRead(BATT_IN_P);
+    
     // R1 = 3125 ohms, R2 = 10000 ohms, V_full_charge = 4.2V, V_nom = 3.7V
     // V_full_charge computes to V_fc_in = 3.2V (padding for analog input channels)
     v_in = (float)adc_battery/full_scale * v_ref;
     v_battery = v_in * (float)((R1 + R2) / R1);
+    #ifdef BATTERY_DEBUG
+    Serial.println("-----Battery Debug-----");
+    Serial.print("adc");
+    Serial.print('\t');
+    Serial.print("v_in");
+    Serial.print('\t');
+    Serial.println("v_batt");
+    Serial.print(adc_battery);
+    Serial.print('\t');
+    Serial.print(v_in);
+    Serial.print('\t');
+    Serial.println(v_battery);
+    #endif
     lowBattery();
 }
 
 void BoardManager::lowBattery(){
     if(v_battery <= low_battery) digitalWrite(LOW_BATT_P, HIGH);
-    else digitalWrite(LOW_BATT_P, LOW);
+    digitalWrite(LOW_BATT_P, LOW);
 }
 
 void BoardManager::nrfConnected(){
@@ -93,40 +107,39 @@ void BoardManager::nrfConnected(){
 
 // reads dipswitch values and stores in objects fields
 void BoardManager::readDS(){
-    char ga=0;
+    byte ga=0;
     // read input pins on DS array
     s_one = digitalRead(GP_1);
     s_two = digitalRead(GP_2);
     s_three = digitalRead(GP_3);
     s_four = digitalRead(GP_4);
+    #ifdef GAIT_DEBUG
+    Serial.println("-----Gait Debug-----");
+    Serial.print("g1");
+    Serial.print('\t');
+    Serial.print("g2");
+    Serial.print('\t');
+    Serial.print("g3");
+    Serial.print('\t');
+    Serial.println("g4");
+    Serial.print(s_one);
+    Serial.print('\t');
+    Serial.print(s_two);
+    Serial.print('\t');
+    Serial.print(s_three);
+    Serial.print('\t');
+    Serial.println(s_four);
+    #endif
     // xor bits together into char
-    ga |= (s_one);
-    ga |= (s_two << 1);
-    ga |= (s_three << 2);
-    ga |= (s_four << 3);
+    ga ^= (s_one);
+    ga ^= (s_two << 1);
+    ga ^= (s_three << 2);
+    ga ^= (s_four << 3);
+    Serial.println(ga);
     // store in object member
     g = ga;
+    Serial.println(g);
 }
 
-// getters
-int BoardManager::getLx(){
-    return lx;
-}
-int BoardManager::getLy(){
-    return ly;
-}
-bool BoardManager::getLb(){
-    return lb;
-}
-int BoardManager::getRx(){
-    return rx;
-}
-int BoardManager::getRy(){
-    return ry;
-}
-bool BoardManager::getRb(){
-    return rb;
-}
-char BoardManager::getGait(){
-    return g;
-}
+
+

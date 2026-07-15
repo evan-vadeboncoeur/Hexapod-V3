@@ -1,6 +1,8 @@
 #ifndef REMOTE_H
 #define REMOTE_H
 #define REMOTE_DEBUG
+#define TWIST_DEBUG
+#define TRANSMIT_DEBUG
 
 #define L0 (0)
 #define L1 (1)
@@ -16,7 +18,7 @@
 #define R_MAX (724) //(root2 * ADC_MID)
 #define V_MIN (10) // mm/s, maginute, not maximum
 #define V_MAX (140)
-#define CMD_DELAY (1000)
+#define CMD_DELAY (5000)
 #define R_DELTA (100.0)
 #define T_DELTA (1.0)
 #define R_ZERO (5.0)
@@ -40,7 +42,7 @@ class RemoteControl{
         float v_ref = 3.3; // reference voltage on the ESP32
         int lx, ly, rx, ry;
         bool lb, rb, lb_p, rb_p;
-        char g, g_p;
+        byte g, g_p;
         bool s_one, s_two, s_three, s_four;
         float theta_tw, theta_tw_p, vx, vx_p, vy, vy_p, v, v_p, wz, wz_p, r, r_p;
         
