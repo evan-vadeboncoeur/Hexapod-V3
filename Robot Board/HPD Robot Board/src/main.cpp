@@ -52,7 +52,7 @@ void setup(){
   #ifndef LEG_SETUP_DEBUG
   //mp = new MotionPlanner(g, duty_f, cycle_time, step_h);
   
-  static MotionPlanner planner(g, duty_f, cycle_time, step_h); // statically stored for life of program
+  //static MotionPlanner planner(g, duty_f, cycle_time, step_h); // statically stored for life of program
   //mp = &planner;
   //mp->powerOnSequence();
   static Hexapod hexa(g, duty_f, cycle_time, step_h);

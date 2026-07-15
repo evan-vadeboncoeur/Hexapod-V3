@@ -4,9 +4,7 @@ TODO Priority (ALL)
 2) fix leg 2
 3) fix cm extern/static declaration
 4) fix cm ISR 
-5) too much ram???
-    what to delete...
-        do ifdef things get counted in RAM (probably not, ignored by pre-processor)
+
 4) re-zero legs
 
 5) test hexapod class
