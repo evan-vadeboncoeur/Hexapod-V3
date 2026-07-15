@@ -33,8 +33,6 @@ Vector idle_j2 = Vector(0.0, -0.643, 1.9211971);
 Vector idle_p2 = Vector(185.29, 0.00, -89.66);
 #endif
 
-
-
 #ifndef LEG_SETUP_DEBUG
 //Hexapod* hp = nullptr;
 //MotionPlanner* mp = nullptr;
@@ -51,15 +49,18 @@ void setup(){
   #endif
   #ifndef LEG_SETUP_DEBUG
   //mp = new MotionPlanner(g, duty_f, cycle_time, step_h);
-  
+  //MotionPlanner* mp = nullptr;
   //static MotionPlanner planner(g, duty_f, cycle_time, step_h); // statically stored for life of program
   //mp = &planner;
   //mp->powerOnSequence();
-  static Hexapod hexa(g, duty_f, cycle_time, step_h);
+  //static Hexapod hexa(g, duty_f, cycle_time, step_h);
   //hp = &hexa;
   //hp->startupHexapod();
-  //static CommunicationManager comm();
-  //cm = &commun;
+  #ifdef COMM_DEBUG
+  static CommunicationManager comm;
+  cm = &comm;
+  cm->commBegin();
+  #endif
   //mp.powerOffSequence();
   //Body b = Body(duty_f, cycle_time, step_h);
   //b.velocityCommand(Vector(0.0, 20.0, 0.0));
@@ -102,8 +103,8 @@ void loop() {
   #ifdef BODY_DEBUG
   
   #endif
-  #ifdef COMM_H_DEBUG
-  //cm.receiveMessage();
+  #ifdef COMM_DEBUG
+  //cm->receivePacket();
   #endif
   //hp->stateManager();
   #ifndef LEG_SETUP_DEBUG

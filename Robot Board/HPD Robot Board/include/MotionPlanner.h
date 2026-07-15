@@ -17,7 +17,7 @@
 #define TP_2 (2)
 #define TEST_STEPS (10)
 
-#define MOTION_PLANNER_DELAY (50)
+#define MOTION_PLANNER_DELAY (25)
 #define HALF_TRIPOD_DELAY (100)
 #define MACRO_DELAY (500)
 
@@ -32,6 +32,7 @@ class MotionPlanner{
         Vector omega = Vector(0.0, 0.0, 0.25); // constanct ccw rotation vector 
         float vx, vy, wz;
         float t_cycle, duty_factor, step_h, cycle_count; // gait cycle (hardcoded?) values
+        int t_c_m=0;
         bool walk_flag = NWALK, even_forward = false, idle = true;
         bool halfTripod(Leg** sw, Leg** st);
         bool push(Leg** l_st, Leg** l_sw);

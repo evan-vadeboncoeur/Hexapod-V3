@@ -7,9 +7,8 @@ MotionPlanner::MotionPlanner(int g, float df, float tc, float sh)
     : b{Body(df, tc, sh)} // initialize body first (set alpha, idle, gait cycle values), set tripods too in body constructor
 {
     delay(5);
-    setGait(g, NWALK); // off rip
-    // powerOnSequence()
-    // waitForInput...?
+    setGait(g, NWALK); 
+    t_c_m = tc * 1000; // make an int for millis comparison
 }
 
 // GAIT SETUP
@@ -338,17 +337,10 @@ bool MotionPlanner::push(Leg** l_st, Leg** l_sw){
         Serial.println(J_swing[i].getX3());
         #endif
     }
-    
-   
-    // move at same time
-    
-    //delay(HALF_TRIPOD_DELAY); // consider adding delay here
-    
+    // move at same time    
     b.moveTripod(l_sw, J_swing);
     b.moveTripod(l_st, J_stance);
-    
-
-    delay(50);
+    delay(MOTION_PLANNER_DELAY);
     return true;
 }
 
@@ -363,7 +355,19 @@ bool MotionPlanner::rippleGait(){
     // tripods front to back, alternate tripods:
     // Legs CCW about hexagon circle, X-axis aligned between legs 0 and 5. Legs: 0, 1, 2, 3, 4, 5
     // 0, 4, 2 -> 5, 1, 3
-    // at each foot: 
+    // at each foot: 1 leg in swing, rest in stance
+    // ||swing|| == ||stance||, all stance legs move 1/6 the amount of swing leg during that particular swing leg's motion
+    // sort tripods in ripple gait manner ... ? change tripod pre-existing?
+    // pretty much all setBodyVelocity commands with calculated vectors should be identical for the setup.. will need some wizardry for indexes though
+    static int ripple_ct=0; // life of program
+    float s = (float)(millis() % t_c_m) / t_c_m;
+    
+    if((s > (float (ripple_ct*((float)1/6)))) && (s < (float ((ripple_ct+1)*((float)1/6))))){
+        //Serial.println(ripple_ct);
+        // swing(RIPPLE, (*(legs + ripple_ct)) // swing chosen leg, stance everything else (1/6), change legs to ripple order (if needed/not if conflicts with tripod)
+        ripple_ct++;
+        ripple_ct %= NUM_LEGS; // wraparound 6 to 0
+  }
     return true;
 }
 

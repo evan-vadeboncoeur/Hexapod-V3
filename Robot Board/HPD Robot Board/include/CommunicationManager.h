@@ -1,6 +1,6 @@
 #ifndef COMM_H_H
 #define COMM_H_H
-#define COMM_H_DEBUG
+#define COMM_DEBUG
 
 #define CE_H (48)
 #define CSN_H (49)
@@ -35,8 +35,10 @@ class CommunicationManager{
         RF24 radio; // filled out in initializer list of constructor
         const uint64_t address = 0xDEADBEEF01; 
         const uint8_t pipe = 0;
-        void static radioISR();
-        volatile static bool radio_interrupt;
+        static void radioISR();
+        volatile bool radio_interrupt = false;
+        void handleInterrupt();
+        static CommunicationManager* instance;
         
 };
 
