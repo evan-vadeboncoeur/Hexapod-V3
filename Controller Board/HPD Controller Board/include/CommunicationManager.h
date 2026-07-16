@@ -1,6 +1,6 @@
 #ifndef COMM_R_H
 #define COMM_R_H
-//#define COMM_R_DEBUG
+#define COMM_DEBUG
 
 #define CE_T (4)
 #define CSN_T (5)
@@ -23,7 +23,7 @@ class CommunicationManager{
     public:
         CommunicationManager(int ce, int cs);
         void sendMessage(Packet *p);
-        Packet buildPacket(Vector t, char g, bool lb, bool rb);
+        Packet buildPacket(Vector t, uint8_t g, bool lb, bool rb);
         void sendMessage(char msg[]);
         void initCM();
     private:

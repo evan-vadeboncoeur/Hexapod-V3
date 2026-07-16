@@ -14,7 +14,8 @@ void RemoteControl::stateManager(){
     readSensors(); // update sensor values
     buildTwist(); // build twist value based on current joystick positioning
     // if there is a new command, build and transmit new message
-    if(newCommand()) transmitMessage();
+    //transmitMessage();
+    //if(newCommand()) transmitMessage();
     //handlePrevInputs(); // set previous values for comparison
 }
 
@@ -24,7 +25,7 @@ bool RemoteControl::newCommand(){
     // right macro
     // angle change
     // significant magnitude change
-    if((g_p != g) || (rb && (!rb_p)) || (lb && (!lb_p)) || (abs(theta_tw - theta_tw_p) > T_DELTA) || (abs(r - r_p) > R_DELTA) || r < R_ZERO) return true; // theta: any amount change is grounds for new command since in this version we are discretely using multiples of PI/3
+    if((g_p != g) || (rb != rb_p) || (lb != lb_p) || (abs(theta_tw - theta_tw_p) > T_DELTA) || (abs(r - r_p) > R_DELTA) || r < R_ZERO) return true; // theta: any amount change is grounds for new command since in this version we are discretely using multiples of PI/3
     else return false;
 }
 
@@ -98,7 +99,7 @@ void RemoteControl::transmitMessage(){
     Serial.print('\t');
     Serial.print(cmd.lb);
     Serial.print('\t');
-    Serial.println(cmd.rb)
+    Serial.println(cmd.rb);
     #endif
     cmr.sendMessage(&cmd);
 }
@@ -121,14 +122,22 @@ Vector RemoteControl::buildTwist(){
     // X_JS > 0 is left, Y_JS > 0 is up therefore we will treat the vertical pot as x and the horizontal as y to mimic the robot setup
     int x = lx, y = ly;
     x -= ADC_MID, y -= ADC_MID; // shift to midpoint of ranges to allow for signed values
+    x = (abs(x) < X_BUFF) ? 0 : x; // clamp to 0
+    y = (abs(y) < Y_BUFF) ? 0 : y;
+    Serial.println(x); // how are 0 , 0 going to r = 25, vx  =25.0
+    Serial.println(y);
     r = sqrt(x*x + y*y); // magnitude of the command, will designate speed
-    r = map (r, 0, R_MAX, V_MIN, V_MAX); // map adc value to velocity min/max range (abs value of velocity, theta determines component signs)
+
+    r = map(r, 0, R_MAX, V_MIN, V_MAX); // map adc value to velocity min/max range (abs value of velocity, theta determines component signs)
+    Serial.println(r);
     theta_tw = (float)(atan2(y,x)); // will return the same as typical RHR XY coordinate system, works for this viewpoint of frame
     theta_tw = M_PI_3*roundf(theta_tw/M_PI_3); // "Quantization"
     
     // convert back to velocity components
     vx = r*cos(theta_tw); 
     vy = r*sin(theta_tw); 
+    vx = (abs(vx) < (float)V_MIN_CLAMP) ? 0.0 : vx; // probably wont need if we clamp xy to 0 first...
+    vy = (abs(vy) < (float)V_MIN_CLAMP) ? 0.0 : vy;
     // handle angular another time...
     // TODO
     wz = 0.0;

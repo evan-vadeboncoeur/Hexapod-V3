@@ -10,10 +10,10 @@ CommunicationManager::CommunicationManager() : radio(CE_H, CSN_H) {
     // initialize the RF24 radio object with the given CE and CSN pins
     // this constructor uses an initializer list to directly initialize the radio member
     // without needing to create a temporary RF24 object and assign it to radio
-    instance = this;
-    radio.maskIRQ(true, true, false); // configure which events trigger interrupt request pin (IRQ). active low. tx_success, tx_failure, rx_ready (data received)
-    pinMode(IRQ_NRF, INPUT_PULLUP); 
-    attachInterrupt(digitalPinToInterrupt(IRQ_NRF), radioISR, FALLING);
+    //instance = this;
+    //radio.maskIRQ(true, true, false); // configure which events trigger interrupt request pin (IRQ). active low. tx_success, tx_failure, rx_ready (data received)
+    //pinMode(IRQ_NRF, INPUT_PULLUP); 
+    //attachInterrupt(digitalPinToInterrupt(IRQ_NRF), radioISR, FALLING);
 }
 
 void CommunicationManager::radioISR(){ // static, so does not receive a hidden object* this pointer -> void (*)() rather than void(*)(CommunicationManager*)
@@ -24,6 +24,9 @@ void CommunicationManager::radioISR(){ // static, so does not receive a hidden o
 
 void CommunicationManager::handleInterrupt(){
     radio_interrupt = true;
+    #ifdef COMM_DEBUG
+    Serial.println("Radio handler!");
+    #endif
 }
 
 void CommunicationManager::commBegin(){
@@ -32,11 +35,10 @@ void CommunicationManager::commBegin(){
     #endif
     if(!radio.begin()){
         #ifdef COMM_DEBUG
-        Serial.println("FATAL: No NRF (Local) Connected. Check wiring. Program Terminating.");
+        Serial.println("FATAL: No NRF (MEGA2560) Connected. Check wiring. Program Terminating.");
         #endif
         delay(3000);
-        exit(1);
-        
+        exit(1); 
     }
     radio.openReadingPipe(pipe, address); // TX/RX must agree on address
     radio.setPALevel(RF24_PA_MIN);
@@ -45,9 +47,12 @@ void CommunicationManager::commBegin(){
 
 // recieve new packet -> let robot know
 bool CommunicationManager::receivePacket(){
-    if(radio_interrupt){ // comment this out for testing purposes
+    #ifdef COMM_DEBUG
+    Serial.println("####################Checking for Packet####################");
+    #endif
+    //if(radio_interrupt){ // comment this out for testing purposes
         while(radio.available()) // read all packets in the queue to get newest command
-        radio_interrupt = false;
+        //radio_interrupt = false;
         radio.read(&p, sizeof(p));
         //add debug prints here
         #ifdef COMM_DEBUG
@@ -76,7 +81,7 @@ bool CommunicationManager::receivePacket(){
         Serial.println(p.t.getX3());
         #endif
         return true;
-    }
+    //}
     return false;
 }
 

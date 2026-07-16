@@ -135,10 +135,9 @@ void BoardManager::readDS(){
     ga ^= (s_two << 1);
     ga ^= (s_three << 2);
     ga ^= (s_four << 3);
-    Serial.println(ga);
     // store in object member
     g = ga;
-    Serial.println(g);
+
 }
 
 

@@ -14,12 +14,16 @@
 #define M_PI_6 (0.52359)
 #define ADC_MIN (0)
 #define ADC_MAX (4095) // 12-bit
-#define ADC_MID (2048)
-#define R_MAX (724) //(root2 * ADC_MID)
-#define V_MIN (10) // mm/s, maginute, not maximum
+#define ADC_MID (1958) // should be 2048
+#define CENTER_SHIFT (90) // |MID_THeoretical - MID_Actual|
+#define X_BUFF (10)
+#define Y_BUFF (10)
+#define R_MAX (2769) //(root2 * ADC_MID)
+#define V_MIN (14) // mm/s
 #define V_MAX (140)
-#define CMD_DELAY (5000)
-#define R_DELTA (100.0)
+#define V_MIN_CLAMP (15.0)
+#define CMD_DELAY (2000)
+#define R_DELTA (13.0)
 #define T_DELTA (1.0)
 #define R_ZERO (5.0)
 

@@ -9,9 +9,10 @@ CommunicationManager::CommunicationManager(int ce, int cs) : radio(ce, cs) {
 
 // transmit the packet to the reciever (packet already constructed)
 void CommunicationManager::sendMessage(Packet *p){
-    Serial.println("sending.");
     radio.write(p, sizeof(*p));
-    Serial.println("sent");
+    digitalWrite(32, HIGH);
+    delay(200);
+    digitalWrite(32, LOW);
 }
 
 void CommunicationManager::sendMessage(char msg[]){
@@ -23,14 +24,24 @@ void CommunicationManager::sendMessage(char msg[]){
 }
 
 void CommunicationManager::initCM(){
+    #ifdef COMM_DEBUG
+    Serial.println("--------------------COMM INITIALIZATION--------------------");
+    #endif
     radio.begin();
+    //if(!radio.begin()){
+        #ifdef COMM_DEBUG
+        Serial.println("FATAL: No NRF (ESP32) Connected. Check wiring. Program Terminating.");
+        #endif
+        delay(3000);
+        //exit(1);
+    //}
     radio.openWritingPipe(address);
     radio.setPALevel(RF24_PA_MIN);
     radio.stopListening(); // stop listening for incoming messages, switch to transmit mode
 }
 
 // construct a packet struct (data values already read - probably isolate to power class)
-Packet CommunicationManager::buildPacket(Vector t, char g, bool lb, bool rb){
+Packet CommunicationManager::buildPacket(Vector t, uint8_t g, bool lb, bool rb){
     Packet p;
     p.t = t;
     p.g = g;

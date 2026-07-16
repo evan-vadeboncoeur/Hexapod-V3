@@ -29,8 +29,6 @@ class CommunicationManager{
         char msg[10];
         int comm_ind = 0;
         Packet getPacket(){return p;}
-        void setRadioInt(){radio_interrupt=false;}
-        bool getRadioInt(){return radio_interrupt;}
     private:
         RF24 radio; // filled out in initializer list of constructor
         const uint64_t address = 0xDEADBEEF01; 

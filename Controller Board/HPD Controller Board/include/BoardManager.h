@@ -30,10 +30,10 @@ class BoardManager{
         BoardManager();
         int getLx(){return lx;}
         int getLy(){return ly;}
-        bool getLb(){return lb;}
+        bool getLb(){return !lb;}
         int getRx(){return rx;}
         int getRy(){return ry;};
-        bool getRb(){return rb;}
+        bool getRb(){return !rb;}
         byte getGait(){return g;}
         void readInputs();
     private:

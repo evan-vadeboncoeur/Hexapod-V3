@@ -6,7 +6,7 @@
 
 struct Packet{
     Vector t; // twist command
-    char g; // gait
+    uint8_t g; // gait
     bool lb; // left button
     bool rb; // right button
         

@@ -1,16 +1,23 @@
 TODO Priority (ALL)
 -------------------
-1) fix plastic servo horn (leg 5)
-2) fix leg 2
-3) fix cm extern/static declaration
-4) fix cm ISR 
-
-4) re-zero legs
-
+COMM
+1) interrupt that watches the state of NRF output pin on BOTH devices, turns high then low (tf, rec)
+2) verify RC -> robot interrupt
+3) make angle clamp velocities better:
+    seems like R_MAX is the current point of contention - need to differentiate between half velocity and MAX/MIN ADC
+4) figure out how to get it so the command packet doesnt get seen as new on the rec arduino even tho one isnt sent
 5) test hexapod class
-6) Calculate workspace limitations and maximum swing angles / J1/2 interaction monitoring
+6) solder 5.6k to robot
+ROBOT
+1) slot for NRF in body (fix along with removing weight, adding small radial bores for soldering iron...)
+2) fix plastic servo horn (leg 5)
+3) fix leg 2
+4) re-zero legs
+5) Calculate workspace limitations and maximum swing angles / J1/2 interaction monitoring
     need to work on leg interaction (J2 J3 collision monitoring)
-7) J2 add rubber boot
+6) J2 add rubber boot
+
+
 
 PCB/ECE TODO
 -------------
@@ -19,8 +26,7 @@ PCB/ECE TODO
         nrf
         big caps
         aux IO
-3) solder full comm board
-    b) solder reamining resistor - see resistors above
+3) solder full comm board (5.6k ohm in BAG)
 5) test NRF communications!!!
 
 

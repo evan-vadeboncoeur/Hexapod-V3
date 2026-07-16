@@ -49,7 +49,6 @@ void setup(){
   #endif
   #ifndef LEG_SETUP_DEBUG
   //mp = new MotionPlanner(g, duty_f, cycle_time, step_h);
-  //MotionPlanner* mp = nullptr;
   //static MotionPlanner planner(g, duty_f, cycle_time, step_h); // statically stored for life of program
   //mp = &planner;
   //mp->powerOnSequence();
@@ -104,16 +103,16 @@ void loop() {
   
   #endif
   #ifdef COMM_DEBUG
-  //cm->receivePacket();
+  cm->receivePacket();
   #endif
   //hp->stateManager();
   #ifndef LEG_SETUP_DEBUG
   //mp->movementSetup(0, twist);
-  delay(2000);
+  delay(500);
+  //Serial.println(digitalRead(2));
   //mp->powerOffSequence();
-  delay(2000);
   #endif
-  exit(1);
+  //exit(1);
   
 }
 
