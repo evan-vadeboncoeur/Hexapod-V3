@@ -15,10 +15,11 @@
 #define ADC_MIN (0)
 #define ADC_MAX (4095) // 12-bit
 #define ADC_MID (1958) // should be 2048
-#define CENTER_SHIFT (90) // |MID_THeoretical - MID_Actual|
+#define CENTER_SHIFT (90) // |MID_Theoretical - MID_Actual|
 #define X_BUFF (10)
 #define Y_BUFF (10)
-#define R_MAX (2769) //(root2 * ADC_MID)
+#define R_MIN (0)
+#define R_MAX (2894) //(root2 * ADC_MID) (true ADC MID)
 #define V_MIN (14) // mm/s
 #define V_MAX (140)
 #define V_MIN_CLAMP (15.0)

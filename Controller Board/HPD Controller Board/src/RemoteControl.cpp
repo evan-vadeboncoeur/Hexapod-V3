@@ -4,9 +4,8 @@ RemoteControl::RemoteControl(){
     
 }
 
-void RemoteControl::initComm() // figure out if initializer list is needed for this 
-{
-    cmr.initCM();
+void RemoteControl::initComm(){
+    cmr.commBegin();
     // initalize prev variables here?
 }
 
@@ -31,7 +30,7 @@ bool RemoteControl::newCommand(){
 
 void RemoteControl::readSensors(){
     bmr.readInputs(); // read all inputs
-    lb = !(bmr.getLb()); 
+    lb = !(bmr.getLb()); // flip to opposite (active low -> active high)
     lx = bmr.getLx();
     ly = bmr.getLy();
     rb = !(bmr.getRb());
@@ -120,25 +119,23 @@ void RemoteControl::handlePrevInputs(){
 
 Vector RemoteControl::buildTwist(){
     // X_JS > 0 is left, Y_JS > 0 is up therefore we will treat the vertical pot as x and the horizontal as y to mimic the robot setup
-    int x = lx, y = ly;
-    x -= ADC_MID, y -= ADC_MID; // shift to midpoint of ranges to allow for signed values
-    x = (abs(x) < X_BUFF) ? 0 : x; // clamp to 0
-    y = (abs(y) < Y_BUFF) ? 0 : y;
+    int x = lx, y = ly; // get adc values
+    x -= ADC_MID, y -= ADC_MID; // shift to midpoint of ranges to allow for signed values and process out 0 velocit y
+    x = (abs(x) < X_BUFF || x == 0) ? 0 : (x - CENTER_SHIFT); // if not 0 or in 0 range, shift back to full-scale +/- ranges (could make back to nested ternary with +/- 1 to make symmetrical about 0)
+    y = (abs(y) < Y_BUFF || y == 0) ? 0 : (y - CENTER_SHIFT);
     Serial.println(x); // how are 0 , 0 going to r = 25, vx  =25.0
     Serial.println(y);
+    // compute magnitude of velocity vector
     r = sqrt(x*x + y*y); // magnitude of the command, will designate speed
-
-    r = map(r, 0, R_MAX, V_MIN, V_MAX); // map adc value to velocity min/max range (abs value of velocity, theta determines component signs)
+    r = map(r, R_MIN, R_MAX, V_MIN, V_MAX); // map adc value to velocity min/max range (abs value of velocity, theta determines component signs)
+    r = (r > (float)V_MAX) ? (float)V_MAX : r; // clamp to V_MAX
     Serial.println(r);
+    // compute angle of velocity vector, centered along the perpendicular bisector of 1 of 6 edges between J0's
     theta_tw = (float)(atan2(y,x)); // will return the same as typical RHR XY coordinate system, works for this viewpoint of frame
     theta_tw = M_PI_3*roundf(theta_tw/M_PI_3); // "Quantization"
-    
     // convert back to velocity components
     vx = r*cos(theta_tw); 
     vy = r*sin(theta_tw); 
-    vx = (abs(vx) < (float)V_MIN_CLAMP) ? 0.0 : vx; // probably wont need if we clamp xy to 0 first...
-    vy = (abs(vy) < (float)V_MIN_CLAMP) ? 0.0 : vy;
-    // handle angular another time...
     // TODO
     wz = 0.0;
     // in-class object

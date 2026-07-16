@@ -21,12 +21,3 @@ motion planner pipeline:
         leg velocities                             indicator LEDS
         leg prev posns
         twist vector comd
-Debugging
----------------
-1) too much ram usage
-    initially, both setup::planner and setup::hexa were in the compilation
-    this effectively doubles up the RAM needed for setup::planner, which overshoots the RAM capabilities of the chip
-        commenting out either object reveals this
-    8192 bytes is RAM maximum, 5695 bytes is current RAM usage
-    reduce float usage, increase pointer usage
-    see if way to reduce Vectors...?

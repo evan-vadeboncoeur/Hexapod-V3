@@ -108,7 +108,7 @@ void loop() {
   //hp->stateManager();
   #ifndef LEG_SETUP_DEBUG
   //mp->movementSetup(0, twist);
-  delay(500);
+  delay(3000);
   //Serial.println(digitalRead(2));
   //mp->powerOffSequence();
   #endif

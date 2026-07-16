@@ -1,6 +1,7 @@
 #ifndef COMM_H_H
 #define COMM_H_H
 #define COMM_DEBUG
+#define IQR2_DEBUG
 
 #define CE_H (48)
 #define CSN_H (49)
@@ -8,6 +9,7 @@
 #define MISO_H (50)
 #define SCK_H (52)
 #define IRQ_NRF (2)
+#define NRF_LED (A8)
 
 #include <SPI.h>
 #include "nRF24L01.h"

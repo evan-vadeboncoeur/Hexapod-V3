@@ -23,7 +23,7 @@ void CommunicationManager::sendMessage(char msg[]){
     radio.write(msg, i);
 }
 
-void CommunicationManager::initCM(){
+void CommunicationManager::commBegin(){
     #ifdef COMM_DEBUG
     Serial.println("--------------------COMM INITIALIZATION--------------------");
     #endif

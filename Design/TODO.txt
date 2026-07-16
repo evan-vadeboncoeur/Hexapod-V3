@@ -1,22 +1,35 @@
 TODO Priority (ALL)
--------------------
+--------------------
 COMM
-1) interrupt that watches the state of NRF output pin on BOTH devices, turns high then low (tf, rec)
-2) verify RC -> robot interrupt
-3) make angle clamp velocities better:
-    seems like R_MAX is the current point of contention - need to differentiate between half velocity and MAX/MIN ADC
-4) figure out how to get it so the command packet doesnt get seen as new on the rec arduino even tho one isnt sent
-5) test hexapod class
-6) solder 5.6k to robot
+1) solder 5.6k to rc board, test battery management function
+2) make angle clamp velocities better:
+    test new buildTwist logic
+3) figure out how to get it so the command packet doesnt get seen as new on the rec arduino even tho one isnt sent (test other arduino mega...)
+    test while loop with brackets around radio.read (no interrupt enabled)
+4) test hexapod class
+5) interrupt management
+    a) received interrupt  
+        i) figure out way to connect pin 2 to NRF pin 8... (IRQ)
+            cutout pin 4 (and opp if needed)
+            solder wire to board and NRF pin
+            solder to pin D2?
+        ii) test interrupt code
+    b) interrupt that watches the state of NRF output pin on EPS32, input pin on 2560. pulls LED high, timer flag high for LED pin, then polling timer turns it off. 
+        potentially use another interrupt for timer overflow -> led pin = off
+    
 ROBOT
 1) slot for NRF in body (fix along with removing weight, adding small radial bores for soldering iron...)
-2) fix plastic servo horn (leg 5)
-3) fix leg 2
-4) re-zero legs
-5) Calculate workspace limitations and maximum swing angles / J1/2 interaction monitoring
-    need to work on leg interaction (J2 J3 collision monitoring)
-6) J2 add rubber boot
+2) swap plastic servo horns (leg 5) for aluminum, zero
+3) rebuild leg 2, zero
+4) re-zero necessary legs
+5) test tripod gait 
+6) continue programming ripple gait / modifying tripodGait to allow for helper functions to be used again
+    ensure proper memory usage so that RAM doesnt top out
 
+MISC/LOW PRIORITY
+1) Calculate workspace limitations and maximum swing angles / J1/2 interaction monitoring
+    need to work on leg interaction (J2 J3 collision monitoring)
+2) J2 add rubber boot
 
 
 PCB/ECE TODO
@@ -41,7 +54,6 @@ L3
 
 Code TODO
 ----------
-1) test RC interaction
 2) test hexapod class 
     state machine
     walking single up function
