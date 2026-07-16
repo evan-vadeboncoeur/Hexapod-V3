@@ -54,6 +54,7 @@ class MotionPlanner{
         bool tripodGait(int cc);
         bool waveGait();
         bool rippleGait();
+        bool ripplePush(int s);
         bool quadrapedGait();
         // Motion macros
         bool powerOnSequence();

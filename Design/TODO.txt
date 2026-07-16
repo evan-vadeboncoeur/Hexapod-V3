@@ -1,12 +1,20 @@
 TODO Priority (ALL)
 --------------------
+ORDER
+C1
+C2
+C3
+R2
+R3
+R5
+
 COMM
 1) solder 5.6k to rc board, test battery management function
 2) make angle clamp velocities better:
     test new buildTwist logic
 3) figure out how to get it so the command packet doesnt get seen as new on the rec arduino even tho one isnt sent (test other arduino mega...)
     test while loop with brackets around radio.read (no interrupt enabled)
-4) test hexapod class
+4) test hexapod class (after R2, R3, R4)
 5) interrupt management
     a) received interrupt  
         i) figure out way to connect pin 2 to NRF pin 8... (IRQ)
@@ -18,7 +26,7 @@ COMM
         potentially use another interrupt for timer overflow -> led pin = off
     
 ROBOT
-1) slot for NRF in body (fix along with removing weight, adding small radial bores for soldering iron...)
+1) slot for NRF in body (fix along with removing weight, adding small radial bores for soldering iron...) (also see if can screw in???)
 2) swap plastic servo horns (leg 5) for aluminum, zero
 3) rebuild leg 2, zero
 4) re-zero necessary legs

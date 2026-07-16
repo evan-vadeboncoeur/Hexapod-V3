@@ -7,21 +7,29 @@ Body::Body(){
 Body::Body(float df, float t_c, float sh) // initialize each leg before contructing the rest of the object
     : legs{
         Leg(LEG_0, LEG_0_J0, LEG_0_J1, LEG_0_J2, CCW_CONFIG),
-        Leg(LEG_1, LEG_1_J0, LEG_1_J1, LEG_1_J2, CCW_CONFIG), // switch back when done w/ R&D 
-        Leg(LEG_2, LEG_2_J0, LEG_2_J1, LEG_2_J2, CCW_CONFIG),
-        Leg(LEG_3, LEG_3_J0, LEG_3_J1, LEG_3_J2, CCW_CONFIG),
         Leg(LEG_4, LEG_4_J0, LEG_4_J1, LEG_4_J2, CCW_CONFIG),
-        Leg(LEG_5, LEG_5_J0, LEG_5_J1, LEG_5_J2, CCW_CONFIG)
-    }    ,
+        Leg(LEG_2, LEG_2_J0, LEG_2_J1, LEG_2_J2, CCW_CONFIG),
+        Leg(LEG_5, LEG_5_J0, LEG_5_J1, LEG_5_J2, CCW_CONFIG),
+        Leg(LEG_1, LEG_1_J0, LEG_1_J1, LEG_1_J2, CCW_CONFIG),
+        Leg(LEG_3, LEG_3_J0, LEG_3_J1, LEG_3_J2, CCW_CONFIG)
+    },
     tp_even{ // initialize tripods for ease of gait scheduling
         &(legs[LEG_0]),
-        &(legs[LEG_2]),
-        &(legs[LEG_4])
+        &(legs[LEG_4]),
+        &(legs[LEG_2])
     },
     tp_odd{
+        &(legs[LEG_5]),
         &(legs[LEG_1]),
-        &(legs[LEG_3]),
-        &(legs[LEG_5])
+        &(legs[LEG_3])
+    },
+    leg_list{
+        &(legs[LEG_0]),
+        &(legs[LEG_4]),
+        &(legs[LEG_2]),
+        &(legs[LEG_5]),
+        &(legs[LEG_1]),
+        &(legs[LEG_3])
     }
 {
     step_height = sh;
@@ -299,3 +307,4 @@ Leg** Body::getTripod(int tp){
     if (tp == TP_EVEN) return (tp_even);
     else return tp_odd;
 }
+

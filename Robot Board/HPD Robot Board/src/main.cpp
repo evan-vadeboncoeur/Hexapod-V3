@@ -47,6 +47,7 @@ void setup(){
   delay(1000);
   Serial.println("#####In setup#####");
   #endif
+
   #ifndef LEG_SETUP_DEBUG
   //mp = new MotionPlanner(g, duty_f, cycle_time, step_h);
   //static MotionPlanner planner(g, duty_f, cycle_time, step_h); // statically stored for life of program
@@ -55,16 +56,14 @@ void setup(){
   //static Hexapod hexa(g, duty_f, cycle_time, step_h);
   //hp = &hexa;
   //hp->startupHexapod();
+  #endif
+
   #ifdef COMM_DEBUG
   static CommunicationManager comm;
   cm = &comm;
   cm->commBegin();
   #endif
-  //mp.powerOffSequence();
-  //Body b = Body(duty_f, cycle_time, step_h);
-  //b.velocityCommand(Vector(0.0, 20.0, 0.0));
-  delay(1000);
-  #endif
+ 
 
   #ifdef LEG_SETUP_DEBUG
   s0.attach(j0, PWM_MIN, PWM_MAX);
@@ -72,7 +71,7 @@ void setup(){
   s2.attach(j2, PWM_MIN, PWM_MAX);
   #endif
   
- 
+ delay(1000);
 }
 
 void loop() {

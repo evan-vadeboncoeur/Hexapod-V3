@@ -61,6 +61,7 @@ class Body{
         Leg* getLeg(int ln){return (&(legs[ln]));} // return pointer to desired leg
         Leg* getLegTripod(int ln, int tp); // return pointer to leg in specific tripod
         Leg** getTripod(int tp);
+        Leg** getLegList(){return leg_list;}
         Vector getLift(int id){return foot_lift_R[id];}
         Vector getSwing(int id){return foot_swing_R[id];}
         Vector getStance(int id){return foot_stance_R[id];}
@@ -80,6 +81,7 @@ class Body{
         Leg legs[NUM_LEGS];
         Leg* tp_even[NUM_LEGS/2];
         Leg* tp_odd[NUM_LEGS/2];
+        Leg* leg_list[NUM_LEGS];
         Vector foot_idle_R[NUM_LEGS]; // idle foot positions in body frame
         Vector foot_swing_R[NUM_LEGS]; // swing foot positions in body frame
         Vector foot_stance_R[NUM_LEGS]; // stance foot positions in body frame

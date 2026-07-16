@@ -361,13 +361,58 @@ bool MotionPlanner::rippleGait(){
     // pretty much all setBodyVelocity commands with calculated vectors should be identical for the setup.. will need some wizardry for indexes though
     static int ripple_ct=0; // life of program
     float s = (float)(millis() % t_c_m) / t_c_m;
-    
-    if((s > (float (ripple_ct*((float)1/6)))) && (s < (float ((ripple_ct+1)*((float)1/6))))){
+    // gait scheduler code
+    if((s >= (float (ripple_ct*((float)1/6)))) && (s < (float ((ripple_ct+1)*((float)1/6))))){
         //Serial.println(ripple_ct);
         // swing(RIPPLE, (*(legs + ripple_ct)) // swing chosen leg, stance everything else (1/6), change legs to ripple order (if needed/not if conflicts with tripod)
         ripple_ct++;
         ripple_ct %= NUM_LEGS; // wraparound 6 to 0
   }
+    return true;
+}
+
+bool MotionPlanner::ripplePush(int rc){
+    // for each push:
+        // calculate body frame coordinates along trajectory (stance + swing*s, s = 1/6*i) BUT also need to assign stance at different times along the cycle...
+        // calculate foot coordinates in leg frame
+        // calculate joint vectors of push
+    // for swing:
+        // calculate body frame coordinates of swing position
+        // calculate foot coordinate in leg frame
+        // calculate joint vector
+    // move function that simultaneously moves all joints to calculated positions
+    // Challenges: gait startup, gait pause, memory usage
+    // setup variables
+    float s = (float)rc*(float (1/6));
+    float sf;
+    Leg* t_l; // temp leg for ids
+    int t_id;
+    Vector B_st, B_sw, B_t;
+    Vector F_st_sw; // stance or swing in foot frame (only need one temp.)
+    Vector J_st_sw[NUM_LEGS]; //stance OR swing in joint space
+    // sort into swing (1) and push (5) -> dont need to if we just use if() in for loop for calculations
+    Leg** all_legs = b.getLegList();
+    for(int i=0; i<NUM_LEGS; i++){
+        t_l = *(all_legs+i);
+        t_id = t_l->getID();
+        // find magnitude away from rc leg (but make note of direction)
+        sf = abs(i - rc)*(float(1/6));
+        sf = (sf <=  0.0) ? sf : 1.0 - sf;
+        // sf * x, y, etc here, then B_TF_L <------------------------------- do this part <---------------------------------
+        // assuming linear translation, it *should* be ok to chunk everything into linear lines in 1/6 increments of the gait
+        // make sure swing legs go fwd, stance go bwd
+        // swing[i_x1] - (swing[i_x1] - stance[i_x1])*sf 
+        // swing[i_x2] - ...
+        B_st = b.getStance(t_id);
+        B_sw = b.getSwing(t_id);
+        B_t.setX1((B_sw.getX1() - B_st.getX1())*sf);
+        B_t.setX2((B_sw.getX2() - B_st.getX3())*sf);
+        B_t.setX3(B_sw.getX3()); // Z is constant
+        F_st_sw = b.B_TF_L(B_t, t_id);
+        J_st_sw[i] = b.computeIK(t_l, F_st_sw, ELBOW_DOWN);        
+    }
+    // call push all legs function ... ?
+    // need to add a lift intermediate for swing leg??
     return true;
 }
 
