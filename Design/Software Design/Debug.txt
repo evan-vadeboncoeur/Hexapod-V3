@@ -48,3 +48,9 @@ Debugging
     a) TM code faster frequency than receive, so buffer (3 max) may get filled, but while(radio.available()) {radio.read(...)} should take care of this issue
         looks like there werent brackets around the read portion, so the while loops was doing its thing and then not reading new data
         latency should be fixed here now - test this
+8) send/rec numbers were not lining up
+    a) attempt to change to integral data types to verify sending the same message
+    b) see that sizeof(packet) sent and received were different (16 sent, 15 received)
+        esp32 processor was padding to make things even
+            struct __attribute__((packed)) Packet to pack it down to 15 bytes, no padding
+                byte size agrees, but vx is still -11.53 instead of 0...

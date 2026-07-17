@@ -79,7 +79,7 @@ void BoardManager::readBattery(){
     // R1 = 3125 ohms, R2 = 10000 ohms, V_full_charge = 4.2V, V_nom = 3.7V
     // V_full_charge computes to V_fc_in = 3.2V (padding for analog input channels)
     v_in = (float)adc_battery/full_scale * v_ref;
-    v_battery = v_in * (float)((R1 + R2) / R1);
+    v_battery = v_in * (float)(float(R1 + R2) / R2);
     #ifdef BATTERY_DEBUG
     Serial.println("-----Battery Debug-----");
     Serial.print("adc");

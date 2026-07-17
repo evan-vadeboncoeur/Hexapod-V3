@@ -22,14 +22,15 @@
 class CommunicationManager{
     public:
         CommunicationManager(int ce, int cs);
-        void sendMessage(Packet *p);
-        Packet buildPacket(Vector t, uint8_t g, bool lb, bool rb);
+        void sendMessage();
+        void buildPacket(float x, float y, float w, uint8_t g, uint8_t lb, uint8_t rb);
         void sendMessage(char msg[]);
         void commBegin();
     private:
         RF24 radio; // filled out in initializer list of constructor
         const uint64_t address = 0xDEADBEEF01; 
         const uint8_t pipe = 0;
+        Packet p;
         
 
 

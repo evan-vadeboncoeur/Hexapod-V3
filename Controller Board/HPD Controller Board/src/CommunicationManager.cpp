@@ -8,8 +8,11 @@ CommunicationManager::CommunicationManager(int ce, int cs) : radio(ce, cs) {
 }
 
 // transmit the packet to the reciever (packet already constructed)
-void CommunicationManager::sendMessage(Packet *p){
-    radio.write(p, sizeof(*p));
+void CommunicationManager::sendMessage(){
+    Serial.println(sizeof(p));
+    Serial.println(p.v_x);
+    radio.write(&p, sizeof(p));
+    
     digitalWrite(32, HIGH);
     delay(200);
     digitalWrite(32, LOW);
@@ -41,11 +44,12 @@ void CommunicationManager::commBegin(){
 }
 
 // construct a packet struct (data values already read - probably isolate to power class)
-Packet CommunicationManager::buildPacket(Vector t, uint8_t g, bool lb, bool rb){
-    Packet p;
-    p.t = t;
+void CommunicationManager::buildPacket(float x, float y, float w, uint8_t g, uint8_t lb, uint8_t rb){
+    p.v_x = x;
+    p.v_y = y;
+    p.w_z = w;
     p.g = g;
     p.lb = lb;
     p.rb = rb;
-    return p;
+
 }

@@ -4,11 +4,13 @@
 #include "Vector.h"
 // struct for un/packing data packets for the NRF24L01
 
-struct Packet{
-    Vector t; // twist command
+struct __attribute__((packed)) Packet{
+    float v_x;
+    float v_y;
+    float w_z;
     uint8_t g; // gait
-    bool lb; // left button
-    bool rb; // right button
+    uint8_t lb; // left button
+    uint8_t rb; // right button
         
 };
 

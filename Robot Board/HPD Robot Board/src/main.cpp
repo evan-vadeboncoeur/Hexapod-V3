@@ -8,9 +8,9 @@
 // might have to do joints & everything else BEFORE runtime, too, so that it's on the heap, not the stack?
 #ifdef LEG_SETUP_DEBUG
 Servo s0, s1, s2;
-int j0 = LEG_5_J0;
-int j1 = LEG_5_J1;
-int j2 = LEG_5_J2;
+int j0 = LEG_2_J0;
+int j1 = LEG_2_J1;
+int j2 = LEG_2_J2;
 #endif
 
 // Hexpaod Variables
@@ -107,7 +107,7 @@ void loop() {
   //hp->stateManager();
   #ifndef LEG_SETUP_DEBUG
   //mp->movementSetup(0, twist);
-  delay(3000);
+  delay(600);
   //Serial.println(digitalRead(2));
   //mp->powerOffSequence();
   #endif

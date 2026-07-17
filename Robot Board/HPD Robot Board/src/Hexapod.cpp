@@ -61,7 +61,7 @@ void Hexapod::processPacket(){
     gait = command.g;
     power_off = command.rb;
     power_on = command.lb; 
-    twist = command.t;
+    twist = Vector(command.v_x, command.v_y, command.w_z);
     #ifdef HEXAPOD_DEBUG
     Serial.print("Gait: ");
     Serial.print('\t');

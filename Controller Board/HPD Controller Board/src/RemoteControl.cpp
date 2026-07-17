@@ -13,9 +13,9 @@ void RemoteControl::stateManager(){
     readSensors(); // update sensor values
     buildTwist(); // build twist value based on current joystick positioning
     // if there is a new command, build and transmit new message
-    //transmitMessage();
-    //if(newCommand()) transmitMessage();
-    //handlePrevInputs(); // set previous values for comparison
+    transmitMessage();
+    if(newCommand()) transmitMessage();
+    handlePrevInputs(); // set previous values for comparison
 }
 
 bool RemoteControl::newCommand(){
@@ -69,38 +69,8 @@ void RemoteControl::readSensors(){
 }
 
 void RemoteControl::transmitMessage(){
-    cmd = cmr.buildPacket(t, bmr.getGait(), bmr.getLb(), bmr.getRb());
-    #ifdef TRANSMIT_DEBUG
-    Serial.println("--------------------Transmit Debug--------------------");
-    Serial.println("Command Built: ");
-    Serial.print("t_vx");
-    Serial.print('\t');
-    Serial.print("t_vy");
-    Serial.print('\t');
-    Serial.print("t_wz");
-    Serial.print('\t');
-    Serial.print("t_vm");
-    Serial.print('\t');
-    Serial.print("gait");
-    Serial.print('\t');
-    Serial.print("Lb");
-    Serial.print('\t');
-    Serial.println("Rb");
-    Serial.print(cmd.t.getX1());
-    Serial.print('\t');
-    Serial.print(cmd.t.getX2());
-    Serial.print('\t');
-    Serial.print(cmd.t.getX3());
-    Serial.print('\t');
-    Serial.print(cmd.t.getMagnitude());
-    Serial.print('\t');
-    Serial.print(cmd.g);
-    Serial.print('\t');
-    Serial.print(cmd.lb);
-    Serial.print('\t');
-    Serial.println(cmd.rb);
-    #endif
-    cmr.sendMessage(&cmd);
+    cmr.buildPacket(v_x, v_y, w_z, bmr.getGait(), bmr.getLb(), bmr.getRb());
+    cmr.sendMessage();
 }
 void RemoteControl::transmitMessage(char msg[]){
     cmr.sendMessage(msg);
@@ -117,10 +87,10 @@ void RemoteControl::handlePrevInputs(){
     r_p = r;
 }
 
-Vector RemoteControl::buildTwist(){
+void RemoteControl::buildTwist(){
     // X_JS > 0 is left, Y_JS > 0 is up therefore we will treat the vertical pot as x and the horizontal as y to mimic the robot setup
     int x = lx, y = ly; // get adc values
-    x -= ADC_MID, y -= ADC_MID; // shift to midpoint of ranges to allow for signed values and process out 0 velocit y
+    x -= ADC_MID, y -= ADC_MID; // shift to midpoint of ranges to allow for signed values and process out 0 velocity
     x = (abs(x) < X_BUFF || x == 0) ? 0 : (x - CENTER_SHIFT); // if not 0 or in 0 range, shift back to full-scale +/- ranges (could make back to nested ternary with +/- 1 to make symmetrical about 0)
     y = (abs(y) < Y_BUFF || y == 0) ? 0 : (y - CENTER_SHIFT);
     Serial.println(x); // how are 0 , 0 going to r = 25, vx  =25.0
@@ -136,12 +106,15 @@ Vector RemoteControl::buildTwist(){
     // convert back to velocity components
     vx = r*cos(theta_tw); 
     vy = r*sin(theta_tw); 
+    vy = (vy < 5.0) ? 0.0 : vy;
     // TODO
     wz = 0.0;
     // in-class object
-    t.setX1(vx);
-    t.setX2(vy);
-    t.setX3(wz);
+    v_x = vx;
+    v_y = vy;
+    w_z = wz;
+    
+    #ifdef TWIST_DEBUG
     Serial.println("-----TWIST DEBUG-----");
     Serial.print("r");
     Serial.print('\t');
@@ -161,5 +134,6 @@ Vector RemoteControl::buildTwist(){
     Serial.print(vy);
     Serial.print('\t');
     Serial.println(wz);
-    return Vector(vx, vy, wz);
+    #endif
+    
 }

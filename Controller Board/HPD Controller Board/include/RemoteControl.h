@@ -19,8 +19,8 @@
 #define X_BUFF (10)
 #define Y_BUFF (10)
 #define R_MIN (0)
-#define R_MAX (2894) //(root2 * ADC_MID) (true ADC MID)
-#define V_MIN (14) // mm/s
+#define R_MAX (2047) //(root2 * ADC_MID) (true ADC MID = 2894)
+#define V_MIN (0) // mm/s
 #define V_MAX (140)
 #define V_MIN_CLAMP (15.0)
 #define CMD_DELAY (2000)
@@ -38,8 +38,10 @@ class RemoteControl{
         CommunicationManager cmr = CommunicationManager(CE_T, CSN_T);
         BoardManager bmr = BoardManager();
         Packet cmd;
-        Vector t;
-        
+        //Vector t;
+        float v_x;
+        float v_y;
+        float w_z;
         void readSensors();
         void transmitMessage();
         void handlePrevInputs();
@@ -56,7 +58,7 @@ class RemoteControl{
         void stateManager();
         void initComm();
         void transmitMessage(char msg[]);
-        Vector buildTwist();
+        void buildTwist();
 };
 
 #endif
