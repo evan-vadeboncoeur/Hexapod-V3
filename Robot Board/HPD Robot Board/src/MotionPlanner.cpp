@@ -29,6 +29,7 @@ void MotionPlanner::setGait(int g, bool walk){
             break;
         case RIPPLE: 
             gait = RIPPLE;
+            if(walk) rippleGait(1);
         case WAVE: 
             gait = WAVE;
             break;
@@ -47,7 +48,7 @@ void MotionPlanner::walk(){
         tripodGait();
         break;
     case RIPPLE: 
-        rippleGait();
+        rippleGait(1);
     case WAVE: 
         waveGait();
         break;
@@ -351,7 +352,7 @@ bool MotionPlanner::waveGait(){
     return true;
 }
 
-bool MotionPlanner::rippleGait(){
+bool MotionPlanner::rippleGait(int cc){
     // tripods front to back, alternate tripods:
     // Legs CCW about hexagon circle, X-axis aligned between legs 0 and 5. Legs: 0, 1, 2, 3, 4, 5
     // 0, 4, 2 -> 5, 1, 3
@@ -360,14 +361,19 @@ bool MotionPlanner::rippleGait(){
     // sort tripods in ripple gait manner ... ? change tripod pre-existing?
     // pretty much all setBodyVelocity commands with calculated vectors should be identical for the setup.. will need some wizardry for indexes though
     static int ripple_ct=0; // life of program
-    float s = (float)(millis() % t_c_m) / t_c_m;
-    // gait scheduler code
-    if((s >= (float (ripple_ct*((float)1/6)))) && (s < (float ((ripple_ct+1)*((float)1/6))))){
-        //Serial.println(ripple_ct);
-        // swing(RIPPLE, (*(legs + ripple_ct)) // swing chosen leg, stance everything else (1/6), change legs to ripple order (if needed/not if conflicts with tripod)
-        ripple_ct++;
-        ripple_ct %= NUM_LEGS; // wraparound 6 to 0
-  }
+    int num_cycle=0;
+    while(num_cycle < cc){
+        float s = (float)(millis() % t_c_m) / t_c_m;
+        // gait scheduler code
+        if((s >= (float (ripple_ct*((float)1/6)))) && (s < (float ((ripple_ct+1)*((float)1/6))))){
+            //Serial.println(ripple_ct);
+            ripplePush(ripple_ct);
+            ripple_ct++;
+            ripple_ct %= NUM_LEGS; // wraparound 6 to 0
+            if(ripple_ct == 0) num_cycle++; // full cycle?
+        }
+    }
+    
     return true;
 }
 
@@ -383,36 +389,114 @@ bool MotionPlanner::ripplePush(int rc){
     // move function that simultaneously moves all joints to calculated positions
     // Challenges: gait startup, gait pause, memory usage
     // setup variables
-    float s = (float)rc*(float (1/6));
-    float sf;
+    float sf, theta;
+    theta = b.getTheta();
     Leg* t_l; // temp leg for ids
     int t_id;
     Vector B_st, B_sw, B_t;
-    Vector F_st_sw; // stance or swing in foot frame (only need one temp.)
+    #ifdef PLAN_DEBUG
+    Vector F_st_sw[NUM_LEGS]; // array for printing coordinates in debug form
+    #endif
+    #ifndef PLAN_DEBUG
+    Vector F_st_sw; // no debug, optimize
+    #endif
     Vector J_st_sw[NUM_LEGS]; //stance OR swing in joint space
     // sort into swing (1) and push (5) -> dont need to if we just use if() in for loop for calculations
     Leg** all_legs = b.getLegList();
+    #ifdef PLAN_DEBUG
+    Serial.println("---------Ripple ST/SW Coordinates----------");
+    Serial.print("RC: ");
+    Serial.print('\t');
+    Serial.print("Leg: ");
+    Serial.print('\t');
+    Serial.print("S");
+    Serial.print('\t');
+    Serial.print("SW/ST: ");
+    Serial.print('\t');
+    Serial.print("X_B: ");
+    Serial.print('\t');
+    Serial.print("Y_B: ");
+    Serial.print('\t');
+    Serial.print("Z_B: ");
+    Serial.print('\t');
+    Serial.print("X_F: ");
+    Serial.print('\t');
+    Serial.print("Y_F: ");
+    Serial.print('\t');
+    Serial.print("Z_F: ");
+    Serial.print('\t');
+    Serial.print("J0: ");
+    Serial.print('\t');
+    Serial.print("J1: ");
+    Serial.print('\t');
+    Serial.println("J2: ");
+    #endif
     for(int i=0; i<NUM_LEGS; i++){
         t_l = *(all_legs+i);
         t_id = t_l->getID();
         // find magnitude away from rc leg (but make note of direction)
-        sf = abs(i - rc)*(float(1/6));
-        sf = (sf <=  0.0) ? sf : 1.0 - sf;
+        sf = (abs(i - rc)*((float)1/6));
+        sf = ((i - rc) <=  0.0) ? sf : 1.0 - sf;
         // sf * x, y, etc here, then B_TF_L <------------------------------- do this part <---------------------------------
         // assuming linear translation, it *should* be ok to chunk everything into linear lines in 1/6 increments of the gait
         // make sure swing legs go fwd, stance go bwd
         // swing[i_x1] - (swing[i_x1] - stance[i_x1])*sf 
         // swing[i_x2] - ...
+        // get bounds of leg in body frame
         B_st = b.getStance(t_id);
         B_sw = b.getSwing(t_id);
-        B_t.setX1((B_sw.getX1() - B_st.getX1())*sf);
-        B_t.setX2((B_sw.getX2() - B_st.getX3())*sf);
+        // modify linear coordinate from SW->stance (may need actual linear interpolation helper function)
+        // need to dot product in direction of motion
+        B_t.setX1(B_sw.getX1() - ((B_sw.getX1() - B_st.getX1())*(sf)*cos(theta)));
+        B_t.setX2(B_sw.getX2() - ((B_sw.getX2() - B_st.getX2())*(sf)*sin(theta)));
         B_t.setX3(B_sw.getX3()); // Z is constant
+        #ifdef PLAN_DEBUG
+        F_st_sw[i] = b.B_TF_L(B_t, t_id);
+        #endif
+        #ifndef PLAN_DEBUG
         F_st_sw = b.B_TF_L(B_t, t_id);
-        J_st_sw[i] = b.computeIK(t_l, F_st_sw, ELBOW_DOWN);        
+        #endif
+        J_st_sw[i] = b.computeIK(t_l, 
+        #ifdef PLAN_DEBUG    
+            F_st_sw[i], 
+        #endif
+        #ifndef PLAN_DEBUG
+            F_st_sw,
+        #endif
+            ELBOW_DOWN);    
+        // printout
+        #ifdef PLAN_DEBUG
+        Serial.print(rc);
+        Serial.print('\t');
+        Serial.print(t_id); // leg
+        Serial.print('\t');
+        Serial.print(sf);
+        Serial.print('\t');
+        if(sf < 0.15) Serial.print("SW");
+        else Serial.print("ST");
+        Serial.print('\t');
+        Serial.print(B_t.getX1()); // body coordinate
+        Serial.print('\t');
+        Serial.print(B_t.getX2());
+        Serial.print('\t');
+        Serial.print(B_t.getX3());
+        Serial.print('\t');
+        Serial.print(F_st_sw[i].getX1()); // foot cood
+        Serial.print('\t');
+        Serial.print(F_st_sw[i].getX2());
+        Serial.print('\t');
+        Serial.print(F_st_sw[i].getX3());
+        Serial.print('\t');
+        Serial.print(J_st_sw[i].getX1()); // joint coord
+        Serial.print('\t');
+        Serial.print(J_st_sw[i].getX2());
+        Serial.print('\t');
+        Serial.println(J_st_sw[i].getX3());
+        #endif
     }
-    // call push all legs function ... ?
-    // need to add a lift intermediate for swing leg??
+    // call push all legs function
+    // need to add a lift intermediate for swing leg?
+    b.moveLegs(J_st_sw);
     return true;
 }
 

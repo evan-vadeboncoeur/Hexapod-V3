@@ -34,10 +34,10 @@ Vector idle_p2 = Vector(185.29, 0.00, -89.66);
 #endif
 
 #ifndef LEG_SETUP_DEBUG
-//Hexapod* hp = nullptr;
-//MotionPlanner* mp = nullptr;
+Hexapod* hp = nullptr;
+MotionPlanner* mp = nullptr;
 CommunicationManager* cm = nullptr;
-//Vector twist = Vector(110.0, 0.0, 0.0);
+Vector twist = Vector(110.0, 0.0, 0.0);
 //Vector twist = Vector(0.0, 0.0, 0.3);
 #endif
 
@@ -50,18 +50,18 @@ void setup(){
 
   #ifndef LEG_SETUP_DEBUG
   //mp = new MotionPlanner(g, duty_f, cycle_time, step_h);
-  //static MotionPlanner planner(g, duty_f, cycle_time, step_h); // statically stored for life of program
-  //mp = &planner;
-  //mp->powerOnSequence();
+  static MotionPlanner planner(g, duty_f, cycle_time, step_h); // statically stored for life of program
+  mp = &planner;
+  mp->powerOnSequence();
   //static Hexapod hexa(g, duty_f, cycle_time, step_h);
   //hp = &hexa;
   //hp->startupHexapod();
   #endif
 
   #ifdef COMM_DEBUG
-  static CommunicationManager comm;
-  cm = &comm;
-  cm->commBegin();
+  //static CommunicationManager comm;
+  //cm = &comm;
+  //cm->commBegin();
   #endif
  
 
@@ -102,16 +102,17 @@ void loop() {
   
   #endif
   #ifdef COMM_DEBUG
-  cm->receivePacket();
+  //cm->receivePacket();
   #endif
   //hp->stateManager();
   #ifndef LEG_SETUP_DEBUG
-  //mp->movementSetup(0, twist);
-  delay(600);
+  mp->movementSetup(1, twist);
+  delay(3000);
+  
   //Serial.println(digitalRead(2));
   //mp->powerOffSequence();
   #endif
-  //exit(1);
+  exit(1);
   
 }
 

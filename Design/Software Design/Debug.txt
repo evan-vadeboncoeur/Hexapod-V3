@@ -1,13 +1,13 @@
 Debugging
 ---------------
-1) too much ram usage
+1) [R] too much ram usage
     initially, both setup::planner and setup::hexa were in the compilation
     this effectively doubles up the RAM needed for setup::planner, which overshoots the RAM capabilities of the chip
         commenting out either object reveals this
     8192 bytes is RAM maximum, 5695 bytes is current RAM usage
     reduce float usage, increase pointer usage
     see if way to reduce Vectors...?
-2) timing and dynamic memory allocation of object declaration
+2) [R] timing and dynamic memory allocation of object declaration
     a) some objects need to be instantiated after Serial.begin() is called to ensure that the protocol works and does not crash the program
     b) there are two methods to solve this:
         i) heap allocation using the new keyword
@@ -19,16 +19,16 @@ Debugging
                 static MotionPlanner planner(g, duty_f, cycle_time, step_h); // statically stored for life of program
                 mp = &planner; // connect pointer and static object
             }
-3) "a block-scope function may only have extern storage class"
+3) [R] "a block-scope function may only have extern storage class"
     a) C++ is denoting this as a function delaration inside void setup(). this worked for MotionPlanner and Hexapod because () were filled with arguments
     b) solution is to remove () -> static CommunicationManager comm;
-4) C:\Users\E_VADE~1\AppData\Local\Temp\cc3mJ23C.ltrans0.ltrans.o: In function `CommunicationManager::radioISR()':
+4) [R] C:\Users\E_VADE~1\AppData\Local\Temp\cc3mJ23C.ltrans0.ltrans.o: In function `CommunicationManager::radioISR()':
 <artificial>:(.text+0x22c): undefined reference to `CommunicationManager::radio_interrupt'
     a) seems that radio_interrupt is not visible to radioISR(), but ONLY when attachInterrupt() is not called on the ISR (works with just the ISR declaration)
     b) radio_interrupt is declared private: volatile static bool radio_interrupt;
         solution for this specific problem was radio_interrupt could only be accessed by a class-member function, whereas initially the static radioISR() converts
         it to a global function. therefore, changing the architecture to have a "2-stage" approach lets the interrupt access the class function and adjust the member variable
-5) argument of type \"void (CommunicationManager::*)()\" is incompatible with parameter of type \"void (*)()\
+5) [R] argument of type \"void (CommunicationManager::*)()\" is incompatible with parameter of type \"void (*)()\
     a) occurs when interrupt expects ISR to be global and not have an additional this, which occurs for non-static member functions
         void(*)(CommunicationManager*) is what the ISR received when the function was not static
         void(*)() is what the ISR received when static
@@ -38,7 +38,7 @@ Debugging
     a) seems like radio_interrupt in CM class blocks rest of code from compiling/executing?
         solution: when radio is not connected, maskIQR and setStatusFlags both blocked the code from continuing. 
             check if this works with the radio actually connected to the MEGA2560
-    b) pin state is never actually pulled low from high (or vice versa, edge never seems to fall)
+    b) [R] pin state is never actually pulled low from high (or vice versa, edge never seems to fall)
         potentially make something in just main.cpp to test IRQ w/ NRF
         seems like the code would hang everytime radio was called without a radio being initialized
         can setup IRQ on pin 2 and work the interrupter in the CM class with a button, but it remains to be seen if this pin works with the nrf (hardcoded)
@@ -48,9 +48,11 @@ Debugging
     a) TM code faster frequency than receive, so buffer (3 max) may get filled, but while(radio.available()) {radio.read(...)} should take care of this issue
         looks like there werent brackets around the read portion, so the while loops was doing its thing and then not reading new data
         latency should be fixed here now - test this
-8) send/rec numbers were not lining up
+        print conditions adjusted, if(newCommand) uncommented
+8) NRF send/rec packets not aligning, specifically float vx
     a) attempt to change to integral data types to verify sending the same message
-    b) see that sizeof(packet) sent and received were different (16 sent, 15 received)
+        instead of using Vector twist {float...}, creating the packet with integral types only removes ambiguity
+    b) see that sizeof(packet) sent and received were different (16 bytes/packet sent from ESP32, 15 bytes received/packet on mega 2560)
         esp32 processor was padding to make things even
             struct __attribute__((packed)) Packet to pack it down to 15 bytes, no padding
-                byte size agrees, but vx is still -11.53 instead of 0...
+                byte size agrees, but vx is still -11.53 instead of 0, sometimes -12.03 or -12.53

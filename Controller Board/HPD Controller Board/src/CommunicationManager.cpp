@@ -12,10 +12,6 @@ void CommunicationManager::sendMessage(){
     Serial.println(sizeof(p));
     Serial.println(p.v_x);
     radio.write(&p, sizeof(p));
-    
-    digitalWrite(32, HIGH);
-    delay(200);
-    digitalWrite(32, LOW);
 }
 
 void CommunicationManager::sendMessage(char msg[]){
@@ -40,6 +36,8 @@ void CommunicationManager::commBegin(){
     //}
     radio.openWritingPipe(address);
     radio.setPALevel(RF24_PA_MIN);
+    radio.setDataRate(RF24_250KBPS);
+    radio.setChannel(RADIO_CHANNEL);
     radio.stopListening(); // stop listening for incoming messages, switch to transmit mode
 }
 

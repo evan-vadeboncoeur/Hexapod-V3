@@ -7,11 +7,11 @@ Body::Body(){
 Body::Body(float df, float t_c, float sh) // initialize each leg before contructing the rest of the object
     : legs{
         Leg(LEG_0, LEG_0_J0, LEG_0_J1, LEG_0_J2, CCW_CONFIG),
-        Leg(LEG_4, LEG_4_J0, LEG_4_J1, LEG_4_J2, CCW_CONFIG),
-        Leg(LEG_2, LEG_2_J0, LEG_2_J1, LEG_2_J2, CCW_CONFIG),
-        Leg(LEG_5, LEG_5_J0, LEG_5_J1, LEG_5_J2, CCW_CONFIG),
         Leg(LEG_1, LEG_1_J0, LEG_1_J1, LEG_1_J2, CCW_CONFIG),
-        Leg(LEG_3, LEG_3_J0, LEG_3_J1, LEG_3_J2, CCW_CONFIG)
+        Leg(LEG_2, LEG_2_J0, LEG_2_J1, LEG_2_J2, CCW_CONFIG),
+        Leg(LEG_3, LEG_3_J0, LEG_3_J1, LEG_3_J2, CCW_CONFIG),
+        Leg(LEG_4, LEG_4_J0, LEG_4_J1, LEG_4_J2, CCW_CONFIG),
+        Leg(LEG_5, LEG_5_J0, LEG_5_J1, LEG_5_J2, CCW_CONFIG)  
     },
     tp_even{ // initialize tripods for ease of gait scheduling
         &(legs[LEG_0]),
@@ -295,6 +295,16 @@ bool Body::moveTripod(Leg** tp, Vector jv[3]){
     (*(tp+0))->moveFootToJV(jv[0]);
     (*(tp+1))->moveFootToJV(jv[1]);
     (*(tp+2))->moveFootToJV(jv[2]);
+    return true;
+}
+
+bool Body::moveLegs(Vector jv[6]){
+    (*(leg_list+0))->moveFootToJV(jv[0]);
+    (*(leg_list+1))->moveFootToJV(jv[1]);
+    (*(leg_list+2))->moveFootToJV(jv[2]);
+    (*(leg_list+3))->moveFootToJV(jv[3]);
+    (*(leg_list+4))->moveFootToJV(jv[4]);
+    (*(leg_list+5))->moveFootToJV(jv[5]);
     return true;
 }
 

@@ -4,6 +4,7 @@
 
 #define CE_T (4)
 #define CSN_T (5)
+#define RADIO_CHANNEL (108)
 
 // MOSI: GPIO23
 // MISO: GPIOD19

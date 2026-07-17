@@ -1,6 +1,6 @@
 #ifndef MTN_PLNR_H
 #define MTN_PLNR_H
-//#define PLAN_DEBUG
+#define PLAN_DEBUG
 //#define PLAN_T_DEBUG
 
 #include "Twist.h"
@@ -53,7 +53,7 @@ class MotionPlanner{
         bool tripodGait();
         bool tripodGait(int cc);
         bool waveGait();
-        bool rippleGait();
+        bool rippleGait(int cc);
         bool ripplePush(int s);
         bool quadrapedGait();
         // Motion macros

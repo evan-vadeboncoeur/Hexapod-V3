@@ -24,9 +24,9 @@
 #define V_MAX (140)
 #define V_MIN_CLAMP (15.0)
 #define CMD_DELAY (2000)
-#define R_DELTA (13.0)
+#define R_DELTA (5.0)
 #define T_DELTA (1.0)
-#define R_ZERO (5.0)
+#define R_ZERO (10.0)
 
 #include "CommunicationManager.h"
 #include "BoardManager.h"

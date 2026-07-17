@@ -140,5 +140,11 @@ void BoardManager::readDS(){
 
 }
 
+void BoardManager::transmitBlink(){
+    digitalWrite(NRFR_P, HIGH);
+    delay(200);
+    digitalWrite(NRFR_P, LOW);
+}
+
 
 

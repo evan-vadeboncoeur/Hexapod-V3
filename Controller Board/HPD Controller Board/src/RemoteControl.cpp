@@ -13,17 +13,13 @@ void RemoteControl::stateManager(){
     readSensors(); // update sensor values
     buildTwist(); // build twist value based on current joystick positioning
     // if there is a new command, build and transmit new message
-    transmitMessage();
+    //transmitMessage(); // oh.. this might not have been commented
     if(newCommand()) transmitMessage();
     handlePrevInputs(); // set previous values for comparison
 }
 
 bool RemoteControl::newCommand(){
-    // gait change
-    // left macro
-    // right macro
-    // angle change
-    // significant magnitude change
+    // gait change, left macro, right macro, angle change, significant magnitude change, 0 velocity
     if((g_p != g) || (rb != rb_p) || (lb != lb_p) || (abs(theta_tw - theta_tw_p) > T_DELTA) || (abs(r - r_p) > R_DELTA) || r < R_ZERO) return true; // theta: any amount change is grounds for new command since in this version we are discretely using multiples of PI/3
     else return false;
 }
@@ -71,6 +67,7 @@ void RemoteControl::readSensors(){
 void RemoteControl::transmitMessage(){
     cmr.buildPacket(v_x, v_y, w_z, bmr.getGait(), bmr.getLb(), bmr.getRb());
     cmr.sendMessage();
+    bmr.transmitBlink();
 }
 void RemoteControl::transmitMessage(char msg[]){
     cmr.sendMessage(msg);
@@ -106,7 +103,7 @@ void RemoteControl::buildTwist(){
     // convert back to velocity components
     vx = r*cos(theta_tw); 
     vy = r*sin(theta_tw); 
-    vy = (vy < 5.0) ? 0.0 : vy;
+    // vy = (abs(vy) < 5.0) ? 0.0 : vy; // ? why is vy negative sometimes? oh, probably because i wasnt using abs, but still?
     // TODO
     wz = 0.0;
     // in-class object

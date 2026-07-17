@@ -288,7 +288,7 @@ V_nom = 3.7V
 V_low = 2.75V
 
 
-voltage divider for adc input
+voltage divider for adc input (deprecated LiPo 7.4V cell version)
 ------------------------------
 V_adc_max = 3.3V
 V_adc_cushion = 3.2V max

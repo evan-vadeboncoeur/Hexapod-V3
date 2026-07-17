@@ -20,7 +20,7 @@
 #define BATT_IN_P (15) // does indeed work, is not "boot-strapped"
 #define LOW_BATT_P (3)
 #define NRFR_P (32)
-#define R1 (3125)
+#define R1 (3300)
 #define R2 (10000)
 
 // class for managing the power of the board (low power LED, board on, analog read voltage), inputs, etc.
@@ -36,6 +36,7 @@ class BoardManager{
         bool getRb(){return !rb;}
         byte getGait(){return g;}
         void readInputs();
+        void transmitBlink();
     private:
         int lx, ly, rx, ry;
         bool lb, rb;

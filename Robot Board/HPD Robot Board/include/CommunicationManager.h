@@ -10,6 +10,7 @@
 #define SCK_H (52)
 #define IRQ_NRF (2)
 #define NRF_LED (A8)
+#define RADIO_CHANNEL (108)
 
 #include <SPI.h>
 #include "nRF24L01.h"

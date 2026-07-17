@@ -1,18 +1,22 @@
 TODO Priority (ALL)
 --------------------
 ORDER
-C3
+R1
 R2
-R3
-R5
+C1
+C2
 
 COMM
 1) figure out why vy is non-zero
 2) looks like vx coming thru as negative, despite sending as 0.00?
-    -11.3?
-        changed to integral datatypes, still get -11.53...? shouldnt be possible with buildTwist()?
+    changed struct to pack data so byte sizes agree
+    changed packets to only integral data types
+    added radio channel, radio data rate
+    made sure to print only the newest command, not every command in the buffer
+    uncommented (if new command) line, hopefully transmits appropriate packets
 3) figure out how to get it so the command packet doesnt get seen as new on the rec arduino even tho one isnt sent (test other arduino mega...)
     test while loop with brackets around radio.read (no interrupt enabled)
+    test exiting after sending 2-3 commands on esp32
 4) test hexapod class (after R2, R3, R4)
 5) interrupt management
     a) received interrupt  
@@ -23,13 +27,15 @@ COMM
         ii) test interrupt code
     b) interrupt that watches the state of NRF output pin on EPS32, input pin on 2560. pulls LED high, timer flag high for LED pin, then polling timer turns it off. 
         potentially use another interrupt for timer overflow -> led pin = off
-n) get 3125 ohm resistor, swap with 5600 ohm
+6) get 3.3k ohm resistor, swap with 5600 ohm
+
 ROBOT
-1) slot for NRF in body (fix along with removing weight, adding small radial bores for soldering iron...) (also see if can screw in???)
-3) rebuild leg 2, zero
-5) test tripod gait 
-6) continue programming ripple gait / modifying tripodGait to allow for helper functions to be used again
-    ensure proper memory usage so that RAM doesnt top out
+1) rebuild leg 2, zero
+2) test tripod gait 
+3) continue programming ripple gait
+    early ripple test
+4) ensure proper memory usage so that RAM doesnt top out -> remove unused arrays in motion planner class
+5) slot for NRF in body (fix along with removing weight, adding small radial bores for soldering iron...) (also see if can screw in???)
 
 MISC/LOW PRIORITY
 1) Calculate workspace limitations and maximum swing angles / J1/2 interaction monitoring
@@ -44,9 +50,11 @@ PCB/ECE TODO
         nrf
         big caps
         aux IO
-3) solder full comm board (5.6k ohm in BAG)
-5) test NRF communications!!!
-
+2) desolder 5.6k resistor
+3) solder 3.3k resistor
+4) test batter management
+    comm
+    robot
 
 CAD TODO
 ---------------------
@@ -59,12 +67,8 @@ L3
 
 Code TODO
 ----------
-2) test hexapod class 
-    state machine
-    walking single up function
-    startup, shutdown
-    new twist
-    zero twist
+1) verify ripple gait
+2) program wave gait
 
 
 
