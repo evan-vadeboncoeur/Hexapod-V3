@@ -38,6 +38,8 @@ Hexapod* hp = nullptr;
 MotionPlanner* mp = nullptr;
 CommunicationManager* cm = nullptr;
 Vector twist = Vector(110.0, 0.0, 0.0);
+
+
 //Vector twist = Vector(0.0, 0.0, 0.3);
 #endif
 

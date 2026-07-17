@@ -239,9 +239,15 @@ bool MotionPlanner::push(Leg** l_st, Leg** l_sw){
     Leg* t_st_l; // temp leg for ids
     Leg* t_sw_l;
     int t_st_id, t_sw_id; // temp id
+    #ifdef PLAN_DEBUG
     Vector F_stance[NUM_LEGS/2]; // lifts in foot frames
-    Vector J_stance[NUM_LEGS/2]; //lifts in joint space
     Vector F_swing[NUM_LEGS/2]; // lifts in foot frames
+    #endif
+    #ifndef PLAN_DEBUG
+    Vector F_stance; // lifts in foot frames
+    Vector F_swing; // lifts in foot frames
+    #endif
+    Vector J_stance[NUM_LEGS/2]; //lifts in joint space
     Vector J_swing[NUM_LEGS/2]; //lifts in joint space
     #ifdef PLAN_DEBUG
     Serial.println("---------PUSH----------");
