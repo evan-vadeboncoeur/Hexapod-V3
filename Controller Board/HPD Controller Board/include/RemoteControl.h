@@ -1,6 +1,6 @@
 #ifndef REMOTE_H
 #define REMOTE_H
-#define REMOTE_DEBUG
+//#define REMOTE_DEBUG
 #define TWIST_DEBUG
 #define TRANSMIT_DEBUG
 
@@ -10,10 +10,14 @@
 #define L3 (3)
 #define L4 (4)
 #define L5 (5)
-#define M_PI_3 (1.04791)
-#define M_PI_6 (0.52359)
+#define M_PI_3 (1.04719755)
+#define M_PI_6 (0.523598776) 
 #define ADC_MIN (0)
 #define ADC_MAX (4095) // 12-bit
+#define ADC_MID_18650_X (1782)
+#define ADC_MID_18650_Y (1775)
+#define CENTER_SHIFT_18650_X (266)
+#define CENTER_SHIFT_18650_Y (273)
 #define ADC_MID (1958) // should be 2048
 #define CENTER_SHIFT (90) // |MID_Theoretical - MID_Actual|
 #define X_BUFF (10)
@@ -23,7 +27,7 @@
 #define V_MIN (0) // mm/s
 #define V_MAX (140)
 #define V_MIN_CLAMP (15.0)
-#define CMD_DELAY (2000)
+#define CMD_DELAY (500)
 #define R_DELTA (5.0)
 #define T_DELTA (1.0)
 #define R_ZERO (10.0)
@@ -39,9 +43,6 @@ class RemoteControl{
         BoardManager bmr = BoardManager();
         Packet cmd;
         //Vector t;
-        float v_x;
-        float v_y;
-        float w_z;
         void readSensors();
         void transmitMessage();
         void handlePrevInputs();

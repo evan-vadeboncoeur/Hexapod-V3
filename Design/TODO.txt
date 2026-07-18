@@ -1,22 +1,18 @@
 TODO Priority (ALL)
 --------------------
 ORDER
-R1
 R2
 C1
 C2
 
 COMM
-1) figure out why vy is non-zero
 2) looks like vx coming thru as negative, despite sending as 0.00?
+    potentially usbc voltage reading @ 0 pos different than battery??? would need to send over tx
     changed struct to pack data so byte sizes agree
     changed packets to only integral data types
     added radio channel, radio data rate
     made sure to print only the newest command, not every command in the buffer
     uncommented (if new command) line, hopefully transmits appropriate packets
-3) figure out how to get it so the command packet doesnt get seen as new on the rec arduino even tho one isnt sent (test other arduino mega...)
-    test while loop with brackets around radio.read (no interrupt enabled)
-    test exiting after sending 2-3 commands on esp32
 4) test hexapod class (after R2, R3, R4)
 5) interrupt management
     a) received interrupt  
@@ -30,10 +26,7 @@ COMM
 6) get 3.3k ohm resistor, swap with 5600 ohm
 
 ROBOT
-1) rebuild leg 2, zero
-2) test tripod gait 
 3) continue programming ripple gait
-    early ripple test
 4) ensure proper memory usage so that RAM doesnt top out -> remove unused arrays in motion planner class
 5) slot for NRF in body (fix along with removing weight, adding small radial bores for soldering iron...) (also see if can screw in???)
 

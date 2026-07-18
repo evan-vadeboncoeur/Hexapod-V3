@@ -44,11 +44,11 @@ Debugging
         can setup IRQ on pin 2 and work the interrupter in the CM class with a button, but it remains to be seen if this pin works with the nrf (hardcoded)
             solution: looks like IQR pin needs to physically be connected - datasheet: pin 4
             radio pin needs to be reset after falling to LOW/0, by calling radio.whatHappened(bool...) which dictates which event triggered the int, and then resets pin to 1/HIGH
-7) fix receiver continuosly outputting data even when there are no new commands
+7) [R] fix receiver continuosly outputting data even when there are no new commands
     a) TM code faster frequency than receive, so buffer (3 max) may get filled, but while(radio.available()) {radio.read(...)} should take care of this issue
         looks like there werent brackets around the read portion, so the while loops was doing its thing and then not reading new data
         latency should be fixed here now - test this
-        print conditions adjusted, if(newCommand) uncommented
+        solution: print conditions adjusted (only if new command received), if(newCommand) uncommented
 8) NRF send/rec packets not aligning, specifically float vx
     a) attempt to change to integral data types to verify sending the same message
         instead of using Vector twist {float...}, creating the packet with integral types only removes ambiguity
@@ -56,3 +56,5 @@ Debugging
         esp32 processor was padding to make things even
             struct __attribute__((packed)) Packet to pack it down to 15 bytes, no padding
                 byte size agrees, but vx is still -11.53 instead of 0, sometimes -12.03 or -12.53
+9) [R] vy is nonzero despite sin(theta) = 0
+    sin(theta) was in fact not zero because the wrong digits of pi/3 were used, resulting in a small y component

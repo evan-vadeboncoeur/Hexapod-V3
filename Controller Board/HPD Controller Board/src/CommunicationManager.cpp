@@ -9,8 +9,17 @@ CommunicationManager::CommunicationManager(int ce, int cs) : radio(ce, cs) {
 
 // transmit the packet to the reciever (packet already constructed)
 void CommunicationManager::sendMessage(){
-    Serial.println(sizeof(p));
+    //p.v_x = 1.0;
+    //p.v_y = 2.0;
+    #ifdef COMM_DEBUG
+    Serial.println("**********Sending Command**********");
+    Serial.print("P size");
+    Serial.print('\t');
+    Serial.println("xv");
+    Serial.print(sizeof(p));
+    Serial.print('\t');
     Serial.println(p.v_x);
+    #endif
     radio.write(&p, sizeof(p));
 }
 

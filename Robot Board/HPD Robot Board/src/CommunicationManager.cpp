@@ -89,18 +89,9 @@ bool CommunicationManager::receivePacket(){
         radio_interrupt = false;
         digitalWrite(NRF_LED, LOW);
         #endif
-
+        
+        #ifdef COMM_DEBUG
         if(packet_received){
-            //Serial.println(p.v_x);
-
-            // uint8_t* ptr = (uint8_t*)&p;
-
-            // for(int i=0;i<sizeof(Packet);i++){
-            //     Serial.print(ptr[i], HEX);
-            //     Serial.print(' ');
-            // }
-            // Serial.println();
-            #ifdef COMM_DEBUG
             Serial.println("-----Test Packet Recieved-----");
             Serial.print("Gait: ");
             Serial.print('\t');
@@ -124,9 +115,10 @@ bool CommunicationManager::receivePacket(){
             Serial.print(p.v_y);
             Serial.print('\t');
             Serial.println(p.w_z);
-            #endif
+            
             return true;
-        }    
+        }  
+        #endif  
     #ifndef IQR2_DEBUG
     }
     #endif

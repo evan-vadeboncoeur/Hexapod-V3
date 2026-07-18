@@ -1,6 +1,6 @@
 #ifndef MTN_PLNR_H
 #define MTN_PLNR_H
-#define PLAN_DEBUG
+//#define PLAN_DEBUG
 //#define PLAN_T_DEBUG
 
 #include "Twist.h"

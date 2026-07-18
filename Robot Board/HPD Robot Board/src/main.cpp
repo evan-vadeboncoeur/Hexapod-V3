@@ -38,7 +38,7 @@ Hexapod* hp = nullptr;
 MotionPlanner* mp = nullptr;
 CommunicationManager* cm = nullptr;
 Vector twist = Vector(110.0, 0.0, 0.0);
-
+Vector twist2 = Vector(0.0, 0.0, 0.4);
 
 //Vector twist = Vector(0.0, 0.0, 0.3);
 #endif
@@ -61,9 +61,9 @@ void setup(){
   #endif
 
   #ifdef COMM_DEBUG
-  //static CommunicationManager comm;
-  //cm = &comm;
-  //cm->commBegin();
+  static CommunicationManager comm;
+  cm = &comm;
+  cm->commBegin();
   #endif
  
 
@@ -104,17 +104,21 @@ void loop() {
   
   #endif
   #ifdef COMM_DEBUG
-  //cm->receivePacket();
+  cm->receivePacket();
+  delay(200);
   #endif
   //hp->stateManager();
   #ifndef LEG_SETUP_DEBUG
-  mp->movementSetup(1, twist);
-  delay(3000);
-  
+  // mp->movementSetup(0, twist);
+  // delay(1000);
+  // mp->moveIdle();
+  // delay(1000);
+  // mp->movementSetup(0, twist2);
+  // delay(3000);
   //Serial.println(digitalRead(2));
   //mp->powerOffSequence();
   #endif
-  exit(1);
+  //exit(1);
   
 }
 
