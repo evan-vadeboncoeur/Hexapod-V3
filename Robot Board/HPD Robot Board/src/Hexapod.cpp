@@ -12,16 +12,19 @@ void Hexapod::startupHexapod(){
     #ifdef HEXAPOD_DEBUG
     Serial.println("**********************Startup Hexapod***********************");
     #endif
-    radio.commBegin();
     plan.powerOnSequence();
     power_on = false;
     powered_on = true;
     state = WAITING;
 }
 
+void Hexapod::commInit(){
+    radio.commBegin();
+}
+
 void Hexapod::shutdownHexapod(){
     #ifdef HEXAPOD_DEBUG
-    Serial.println("**********************Startup Hexapod***********************");
+    Serial.println("**********************Shutdown Hexapod***********************");
     #endif
     plan.powerOffSequence();
     state = WAITING;
@@ -56,6 +59,7 @@ void Hexapod::processPacket(){
     #endif
     // get new packet
     command = radio.getPacket();
+    //board.receiveBlink(); // blink board (need this on interrupt timer, cant be delay)
     // fill out new packet
     gait_old = gait;
     gait = command.g;
@@ -65,9 +69,9 @@ void Hexapod::processPacket(){
     #ifdef HEXAPOD_DEBUG
     Serial.print("Gait: ");
     Serial.print('\t');
-    Serial.print("PowOff: ");
+    Serial.print("P On: ");
     Serial.print('\t');
-    Serial.print("PowOn: ");
+    Serial.print("P Off: ");
     Serial.print('\t');
     Serial.print("Tw Vx: ");
     Serial.print('\t');
@@ -76,9 +80,9 @@ void Hexapod::processPacket(){
     Serial.println("Tw Wz: ");
     Serial.print(gait);
     Serial.print('\t');
-    Serial.print(power_off);
-    Serial.print('\t');
     Serial.print(power_on);
+    Serial.print('\t');
+    Serial.print(power_off);
     Serial.print('\t');
     Serial.print(twist.getX1());
     Serial.print('\t');
@@ -146,6 +150,10 @@ void Hexapod::stateManager(){
         checkBattery(); // this would  be on a timer overflow interrupt delay... (?)
         delay(HEXAPOD_LOOP_DELAY); // make smaller
     }
+    #ifdef HEXAPOD_DEBUG
+    Serial.println("-----Shutting Down-----");
+    #endif
+    delay(2000);
 }
 
 void Hexapod::checkBattery(){

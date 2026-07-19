@@ -1,5 +1,6 @@
 #ifndef BRD_H_H
 #define BRD_H_H
+//#define BRD_DEBUG
 
 #define LED_ON (500)
 #define LED_OFF (0)
@@ -8,7 +9,7 @@
 #define LOW_BATT_P (A7)
 #define NRFR_P (A8)
 
-#define R1 (7800)
+#define R1 (8200)
 #define R2 (10000)
 
 #include "Arduino.h"
@@ -23,12 +24,14 @@ class BoardManager{
         int adc_battery;   
         float v_battery, v_in;
         float full_scale = 1023.0, v_ref = 5.0, clamp = 4.7, max_battery = 8.4, low_battery = 6.2;
+        float r1 = 8200.0, r2 = 10000.0;
         float v_out;
         void readBattery();
         void lowBattery();
     public:
         BoardManager();
         void checkBatteries();
+        void receiveBlink();
         
 
 

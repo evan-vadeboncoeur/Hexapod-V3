@@ -25,7 +25,7 @@ void MotionPlanner::setGait(int g, bool walk){
     switch(g){
         case TRIPOD: 
             gait = TRIPOD;
-            if(walk) tripodGait(TEST_STEPS); // test version
+            //if(walk) tripodGait(TEST_STEPS); // test version
             break;
         case RIPPLE: 
             gait = RIPPLE;

@@ -13,14 +13,41 @@ void RemoteControl::stateManager(){
     readSensors(); // update sensor values
     buildTwist(); // build twist value based on current joystick positioning
     // if there is a new command, build and transmit new message
-    transmitMessage(); // oh.. this might not have been commented
-    //if(newCommand()) transmitMessage();
+    if(newCommand()) transmitMessage();
     handlePrevInputs(); // set previous values for comparison
 }
 
 bool RemoteControl::newCommand(){
-    // gait change, left macro, right macro, angle change, significant magnitude change, 0 velocity
-    if((g_p != g) || (rb != rb_p) || (lb != lb_p) || (abs(theta_tw - theta_tw_p) > T_DELTA) || (abs(r - r_p) > R_DELTA) || r < R_ZERO) return true; // theta: any amount change is grounds for new command since in this version we are discretely using multiples of PI/3
+    // gait change, left macro, right macro, angle change, significant magnitude change, 0 velocity (& not prev 0 velocity)
+    
+    #ifdef NEW_DEBUG
+    uint8_t a = (abs(r - r_p) > R_DELTA);
+    uint8_t b = (r < R_ZERO);
+    Serial.println("--------------------New Command Debug--------------------");
+    Serial.print("Gait");
+    Serial.print('\t');
+    Serial.print("Power On");
+    Serial.print('\t');
+    Serial.print("Power Off");
+    Serial.print('\t');
+    Serial.print("Angle");
+    Serial.print('\t');
+    Serial.print("V Mag");
+    Serial.print('\t');
+    Serial.println("V 0");
+    Serial.print((g_p != g));
+    Serial.print('\t');
+    Serial.print((lb != lb_p));
+    Serial.print('\t');
+    Serial.print((rb != rb_p));
+    Serial.print('\t');
+    Serial.print((abs(theta_tw - theta_tw_p) > T_DELTA));
+    Serial.print('\t');
+    Serial.print(a);
+    Serial.print('\t');
+    Serial.println(b);
+    #endif
+    if((g_p != g) || (rb != rb_p) || (lb != lb_p) || (abs(theta_tw - theta_tw_p) > T_DELTA) || (abs(r - r_p) > R_DELTA) || (r <= R_ZERO && (r_p > R_ZERO))) return true; // theta: any amount change is grounds for new command since in this version we are discretely using multiples of PI/3
     else return false;
 }
 
@@ -33,6 +60,7 @@ void RemoteControl::readSensors(){
     rx = bmr.getRx();
     ry = bmr.getRy();
     g = bmr.getGait();
+    g = (g == 0) ? g : (g - 1);
     #ifdef REMOTE_DEBUG
     Serial.println("--------------------Sensor Output--------------------");
     Serial.print("Lb");
@@ -87,9 +115,9 @@ void RemoteControl::handlePrevInputs(){
 void RemoteControl::buildTwist(){
     // X_JS > 0 is left, Y_JS > 0 is up therefore we will treat the vertical pot as x and the horizontal as y to mimic the robot setup
     int x = lx, y = ly; // get adc values
-    x -= ADC_MID, y -= ADC_MID; // shift to midpoint of ranges to allow for signed values and process out 0 velocity
-    x = (abs(x) < X_BUFF || x == 0) ? 0 : ((x > 0) ? (x + CENTER_SHIFT) : (x - CENTER_SHIFT)); // if not 0 or in 0 range, shift back to full-scale +/- ranges (could make back to nested ternary with +/- 1 to make symmetrical about 0)
-    y = (abs(y) < Y_BUFF || y == 0) ? 0 : ((y > 0) ? (y + CENTER_SHIFT) : (y - CENTER_SHIFT));
+    x -= ADC_MID_18650_X, y -= ADC_MID_18650_Y; // shift to midpoint of ranges to allow for signed values and process out 0 velocity
+    x = (abs(x) < X_BUFF || x == 0) ? 0 : ((x > 0) ? (x + CENTER_SHIFT_18650_X) : (x - CENTER_SHIFT_18650_X)); // if not 0 or in 0 range, shift back to full-scale +/- ranges (could make back to nested ternary with +/- 1 to make symmetrical about 0)
+    y = (abs(y) < Y_BUFF || y == 0) ? 0 : ((y > 0) ? (y + CENTER_SHIFT_18650_Y) : (y - CENTER_SHIFT_18650_Y));
     // compute magnitude of velocity vector
     r = sqrt(x*x + y*y); // magnitude of the command, will designate speed
     r = map(r, R_MIN, R_MAX, V_MIN, V_MAX); // map adc value to velocity min/max range (abs value of velocity, theta determines component signs)

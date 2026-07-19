@@ -1,20 +1,12 @@
 TODO Priority (ALL)
 --------------------
-ORDER
-R2
-C1
-C2
-
-COMM
-2) looks like vx coming thru as negative, despite sending as 0.00?
-    potentially usbc voltage reading @ 0 pos different than battery??? would need to send over tx
-    changed struct to pack data so byte sizes agree
-    changed packets to only integral data types
-    added radio channel, radio data rate
-    made sure to print only the newest command, not every command in the buffer
-    uncommented (if new command) line, hopefully transmits appropriate packets
-4) test hexapod class (after R2, R3, R4)
-5) interrupt management
+0) modify chassis upper
+1) print chassis upper
+2) rebuild robot (re-zero legs)
+3) test hexapod class (after R2, R3, R4)
+    need to fix something about lb + rb turn -> idle doing nothing
+    fix non-fluid pause between steps (lessen the delay / MAKE CLASS VARIABLES TO STORE VALUE IN, SKIP CALC IF NOT NEW COM [add bool: new])
+4) interrupt management
     a) received interrupt  
         i) figure out way to connect pin 2 to NRF pin 8... (IRQ)
             cutout pin 4 (and opp if needed)
@@ -23,7 +15,7 @@ COMM
         ii) test interrupt code
     b) interrupt that watches the state of NRF output pin on EPS32, input pin on 2560. pulls LED high, timer flag high for LED pin, then polling timer turns it off. 
         potentially use another interrupt for timer overflow -> led pin = off
-6) get 3.3k ohm resistor, swap with 5600 ohm
+5) solder in 8.2k, test battery voltage, throw out 2S??? (meantime: probe regularly)
 
 ROBOT
 3) continue programming ripple gait

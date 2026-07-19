@@ -6,7 +6,7 @@
 #include "CommunicationManager.h"
 #include "BoardManager.h"
 
-#define HEXAPOD_LOOP_DELAY (20)
+#define HEXAPOD_LOOP_DELAY (50)
 
 class Hexapod{
     private:
@@ -28,12 +28,14 @@ class Hexapod{
         void walk();
         void turn();
         void getCommand();
+        
     public:
         Hexapod(int g, float df, float tc, float sh); // constructor 1 (all objects instantiated)
         void opMode(); // set operation mode: teleop (0), computer/robot (1)
         void startupHexapod();
         void shutdownHexapod();
         void stateManager(); // basically the hexapod's while loop
+        void commInit();
 };
 
 #endif

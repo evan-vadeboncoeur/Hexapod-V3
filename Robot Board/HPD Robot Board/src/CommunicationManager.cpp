@@ -69,6 +69,9 @@ void CommunicationManager::commBegin(){
     radio.setChannel(RADIO_CHANNEL); // select channel frequency (2400MHz + Channel)
     radio.flush_rx();
     radio.startListening(); 
+    #ifdef COMM_DEBUG
+    Serial.println("-----RADIO INIT COMPLETE-----");
+    #endif
 }
 
 // recieve new packet -> let robot know
@@ -79,10 +82,13 @@ bool CommunicationManager::receivePacket(){
     #ifndef IQR2_DEBUG
     if(radio_interrupt){ // comment this out for testing purposes
     #endif
+
         bool packet_received = false;
         while(radio.available()) { 
+            Serial.println("broken radiuo");
             radio.read(&p, sizeof(p)); // read all packets in the queue to get newest command
             packet_received = true;
+            
         }
 
         #ifndef IQR2_DEBUG // outside of packet received block in case false-positive
@@ -92,12 +98,12 @@ bool CommunicationManager::receivePacket(){
         
         #ifdef COMM_DEBUG
         if(packet_received){
-            Serial.println("-----Test Packet Recieved-----");
+            Serial.println("-----Packet Recieved-----");
             Serial.print("Gait: ");
             Serial.print('\t');
-            Serial.print("P Off: ");
+            Serial.print("P On: ");
             Serial.print('\t');
-            Serial.print("PowOn: ");
+            Serial.print("P Off: ");
             Serial.print('\t');
             Serial.print("Tw Vx: ");
             Serial.print('\t');
@@ -121,6 +127,9 @@ bool CommunicationManager::receivePacket(){
         #endif  
     #ifndef IQR2_DEBUG
     }
+    #endif
+    #ifdef COMM_DEBUG
+    Serial.println("-----NO PACKET RECEIVED-----");
     #endif
     return false;
 }

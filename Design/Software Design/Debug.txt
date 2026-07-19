@@ -49,12 +49,14 @@ Debugging
         looks like there werent brackets around the read portion, so the while loops was doing its thing and then not reading new data
         latency should be fixed here now - test this
         solution: print conditions adjusted (only if new command received), if(newCommand) uncommented
-8) NRF send/rec packets not aligning, specifically float vx
+8) [R] NRF send/rec packets not aligning, specifically float vx
     a) attempt to change to integral data types to verify sending the same message
         instead of using Vector twist {float...}, creating the packet with integral types only removes ambiguity
     b) see that sizeof(packet) sent and received were different (16 bytes/packet sent from ESP32, 15 bytes received/packet on mega 2560)
         esp32 processor was padding to make things even
             struct __attribute__((packed)) Packet to pack it down to 15 bytes, no padding
                 byte size agrees, but vx is still -11.53 instead of 0, sometimes -12.03 or -12.53
+    solution: the center_shift was not centered for the /- nonzero values and was making things negative that shouldnt have been
+        also, the adc values when plugged in via the battery were different than the VCC pin, about 200 bits larger so the values changed
 9) [R] vy is nonzero despite sin(theta) = 0
     sin(theta) was in fact not zero because the wrong digits of pi/3 were used, resulting in a small y component

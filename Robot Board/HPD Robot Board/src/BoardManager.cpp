@@ -12,10 +12,23 @@ BoardManager::BoardManager(){
 // battery management
 void BoardManager::readBattery(){
     adc_battery = analogRead(BATT_IN_P);
-    // R1 = 5100 ohms, R2 = 10000 ohms, V_full_charge = 4.2V, V_nom = 3.7V
-    // V_full_charge computes to V_fc_in = 3.2V (padding for analog input channels)
-    v_in = (float)adc_battery/full_scale * v_ref;
-    v_battery = v_in * (float)((R1 + R2) / R1);
+    // R1 = 7.8k ohms, R2 = 10k ohms, V_full_charge = 8.4V, V_nom = 7.6V
+    // V_full_charge computes to V_fc_in = 4.7V (padding for analog input channels)
+    v_in = ((float) adc_battery)/full_scale * v_ref;
+    v_battery = v_in * (float)(float(R1 + R2) / R2);
+    #ifdef BRD_DEBUG
+    Serial.println("-----Battery Readout-----");
+    Serial.print("adc");
+    Serial.print('\t');
+    Serial.print("v_adc");
+    Serial.print('\t');
+    Serial.println("v_battery");
+    Serial.print(adc_battery);
+    Serial.print('\t');
+    Serial.print(v_in);
+    Serial.print('\t');
+    Serial.println(v_battery);
+    #endif
     lowBattery();
 }
 
@@ -26,4 +39,10 @@ void BoardManager::lowBattery(){
 
 void BoardManager::checkBatteries(){
     readBattery();
+}
+
+void BoardManager::receiveBlink(){
+    digitalWrite(NRFR_P, HIGH);
+    delay(200);
+    digitalWrite(NRFR_P, LOW);
 }
