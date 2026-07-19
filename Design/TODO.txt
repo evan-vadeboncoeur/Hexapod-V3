@@ -1,21 +1,15 @@
 TODO Priority (ALL)
 --------------------
-0) modify chassis upper
-1) print chassis upper
-2) rebuild robot (re-zero legs)
-3) test hexapod class (after R2, R3, R4)
+) rebuild robot (re-zero legs)
+) test hexapod class
     need to fix something about lb + rb turn -> idle doing nothing
-    fix non-fluid pause between steps (lessen the delay / MAKE CLASS VARIABLES TO STORE VALUE IN, SKIP CALC IF NOT NEW COM [add bool: new])
-4) interrupt management
-    a) received interrupt  
-        i) figure out way to connect pin 2 to NRF pin 8... (IRQ)
-            cutout pin 4 (and opp if needed)
-            solder wire to board and NRF pin
-            solder to pin D2?
-        ii) test interrupt code
-    b) interrupt that watches the state of NRF output pin on EPS32, input pin on 2560. pulls LED high, timer flag high for LED pin, then polling timer turns it off. 
-        potentially use another interrupt for timer overflow -> led pin = off
-5) solder in 8.2k, test battery voltage, throw out 2S??? (meantime: probe regularly)
+    fix non-fluid pause between steps (should only recalculate on new command)
+        is delay(50) enough to ruin the fluidity of the robot?
+        maybe the HEXAPOD_DEBUG prints are hurting the latency, too?
+) solder in 8.2k, test battery voltage, throw out 2S??? (meantime: probe regularly)
+interrupt that watches the state of NRF output pin on EPS32, input pin on 2560. pulls LED high, timer flag high for LED pin, then polling timer turns it off. 
+    potentially use another interrupt for timer overflow -> led pin = off
+) add slat to bottom chassis for battery (dovetail in and out - still have hex cuts)
 
 ROBOT
 3) continue programming ripple gait

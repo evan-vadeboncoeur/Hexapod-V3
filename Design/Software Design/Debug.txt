@@ -34,7 +34,7 @@ Debugging
         void(*)() is what the ISR received when static
         solution: static void radioISR() with handler function discussed above that can access the class object
             static functions cannot access members regardless of member visibility
-6) fix command received interrupt
+6) [R] fix command received interrupt
     a) seems like radio_interrupt in CM class blocks rest of code from compiling/executing?
         solution: when radio is not connected, maskIQR and setStatusFlags both blocked the code from continuing. 
             check if this works with the radio actually connected to the MEGA2560
@@ -44,6 +44,9 @@ Debugging
         can setup IRQ on pin 2 and work the interrupter in the CM class with a button, but it remains to be seen if this pin works with the nrf (hardcoded)
             solution: looks like IQR pin needs to physically be connected - datasheet: pin 4
             radio pin needs to be reset after falling to LOW/0, by calling radio.whatHappened(bool...) which dictates which event triggered the int, and then resets pin to 1/HIGH
+    Solution: move setStatusFlags(MASK) to commBegin so that the radio was initialized before trying to interface with it
+        code hangs when it cant get the SPI comm to work since the slave device isnt initialized
+        also need to PHYSCIALLY connect interrupt pin to NRF (resources made it seem like SPI would handle this)
 7) [R] fix receiver continuosly outputting data even when there are no new commands
     a) TM code faster frequency than receive, so buffer (3 max) may get filled, but while(radio.available()) {radio.read(...)} should take care of this issue
         looks like there werent brackets around the read portion, so the while loops was doing its thing and then not reading new data
