@@ -63,8 +63,11 @@ void Hexapod::processPacket(){
     // fill out new packet
     gait_old = gait;
     gait = command.g;
-    power_off = command.rb;
-    power_on = command.lb; 
+    turnc = command.rb && command.lb;
+    power_off = command.rb && !command.lb;
+    power_on = command.lb && !command.rb; 
+    
+    
     twist = Vector(command.v_x, command.v_y, command.w_z);
     #ifdef HEXAPOD_DEBUG
     Serial.print("Gait: ");
@@ -91,15 +94,15 @@ void Hexapod::processPacket(){
     Serial.println(twist.getX3());
     #endif
     // walking/non-walking commands
-    if((!power_off) && (!power_on) && (powered_on)){ // no macro, no turning
+    if((!power_off) && (!power_on) && (!turnc) && (powered_on)){ // no macro, no turning
         if(twist.getMagnitude() > 0.0){ // non-zero twist command update
             state = WALKING;
             gaitSetup();
         } else gaitShutdown(); // new command is 0 velocity, bring the robot to idle, but dont shutdown
     }
-    else if((power_off) && (!power_on)) state = POWER_OFF; // only p off macro
-    else if((!power_off) && (power_on)) state = POWER_ON; // only p on macro
-    else if((power_off) && (power_on) && (powered_on)) state = TURNING; // both = turning mode (CCW) (MAY BE DIFFICULT GETTING BOTH AT SAME TIME)
+    else if(power_off) state = POWER_OFF; // only p off macro
+    else if(power_on) state = POWER_ON; // only p on macro
+    else if(turnc && (powered_on)) state = TURNING; // both = turning mode (CCW) (MAY BE DIFFICULT GETTING BOTH AT SAME TIME)
     
 }
 
@@ -108,9 +111,7 @@ void Hexapod::stateManager(){
     Serial.println("**********************State Manager***********************");
     #endif
     while(!power_off){
-        //getCommand();
-        //isolate below command to not have if/then
-        if(radio.receivePacket()) processPacket();// this would be on some type of interrupt as well
+        getCommand();
         // Hexapod state machine 
         switch(state){
             case WAITING: // do nothing... maybe add in a blink for "NRF LED"

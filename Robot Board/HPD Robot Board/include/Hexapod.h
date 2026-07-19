@@ -15,7 +15,7 @@ class Hexapod{
         BoardManager board;
         Packet command;
         int gait, gait_old;
-        bool power_off = false, power_on=false, powered_on = false;
+        bool power_off = false, power_on=false, powered_on = false, turnc = false;
         unsigned long b_check = 0, b_check_prev = 0;
         unsigned int b_time = 1000;
         Vector twist = Vector(0.0, 0.0, 0.0);

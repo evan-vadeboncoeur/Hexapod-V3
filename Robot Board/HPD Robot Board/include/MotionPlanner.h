@@ -18,7 +18,7 @@
 #define TEST_STEPS (10)
 
 #define MOTION_PLANNER_DELAY (25)
-#define HALF_TRIPOD_DELAY (100)
+#define HALF_TRIPOD_DELAY (10)
 #define MACRO_DELAY (500)
 
 // motion planner class that recieves a command (gait, direction, # steps...). Controls order of leg movements

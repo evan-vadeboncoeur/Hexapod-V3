@@ -9,28 +9,7 @@ CommunicationManager::CommunicationManager() : radio(CE_H, CSN_H) {
     // initialize the RF24 radio object with the given CE and CSN pins
     // this constructor uses an initializer list to directly initialize the radio member
     // without needing to create a temporary RF24 object and assign it to radio
-    #ifdef COMM_DEBUG
-    Serial.println("********************Initializing Radio**********************");
-    #endif
-    instance = this;
-    #ifdef COMM_DEBUG
-    Serial.println("----------Instance Created-----------");
-    #endif
-    //radio.setStatusFlags(RF24_RX_DR); // try setStatusFlags instead of deprecated maskIRQ (still hangs w/o NRF)
-    //radio.maskIRQ(true, true, false); // configure which events trigger interrupt request pin (IRQ). active low. tx_success, tx_failure, rx_ready (data received)
-    #ifdef COMM_DEBUG
-    Serial.println("----------IRQ Bits Masked-----------");
-    #endif
-    //pinMode(IRQ_NRF, INPUT_PULLUP); 
-    #ifdef COMM_DEBUG
-    Serial.println("----------IRQ Pin Configured-----------");
-    #endif
-    #ifndef IQR2_DEBUG
-    attachInterrupt(digitalPinToInterrupt(IRQ_NRF), radioISR, FALLING);
-    #endif
-    #ifdef COMM_DEBUG
-    Serial.println("----------Interrupt Attached-----------");
-    #endif
+    
 }
 
 void CommunicationManager::radioISR(){ // static, so does not receive a hidden object* this pointer -> void (*)() rather than void(*)(CommunicationManager*)
@@ -68,6 +47,28 @@ void CommunicationManager::commBegin(){
     radio.setDataRate(RF24_250KBPS);
     radio.setChannel(RADIO_CHANNEL); // select channel frequency (2400MHz + Channel)
     radio.flush_rx();
+    #ifdef COMM_DEBUG
+    Serial.println("********************Initializing Radio**********************");
+    #endif
+    instance = this;
+    #ifdef COMM_DEBUG
+    Serial.println("----------Instance Created-----------");
+    #endif
+    radio.setStatusFlags(RF24_RX_DR); // try setStatusFlags instead of deprecated maskIRQ (still hangs w/o NRF)
+    //radio.maskIRQ(true, true, false); // configure which events trigger interrupt request pin (IRQ). active low. tx_success, tx_failure, rx_ready (data received)
+    #ifdef COMM_DEBUG
+    Serial.println("----------IRQ Bits Masked-----------");
+    #endif
+    pinMode(IRQ_NRF, INPUT_PULLUP); 
+    #ifdef COMM_DEBUG
+    Serial.println("----------IRQ Pin Configured-----------");
+    #endif
+    #ifndef IQR2_DEBUG
+    attachInterrupt(digitalPinToInterrupt(IRQ_NRF), radioISR, FALLING);
+    #endif
+    #ifdef COMM_DEBUG
+    Serial.println("----------Interrupt Attached-----------");
+    #endif
     radio.startListening(); 
     #ifdef COMM_DEBUG
     Serial.println("-----RADIO INIT COMPLETE-----");
@@ -85,7 +86,6 @@ bool CommunicationManager::receivePacket(){
 
         bool packet_received = false;
         while(radio.available()) { 
-            Serial.println("broken radiuo");
             radio.read(&p, sizeof(p)); // read all packets in the queue to get newest command
             packet_received = true;
             
@@ -93,6 +93,7 @@ bool CommunicationManager::receivePacket(){
 
         #ifndef IQR2_DEBUG // outside of packet received block in case false-positive
         radio_interrupt = false;
+        radio.clearStatusFlags(RF24_IRQ_ALL);
         digitalWrite(NRF_LED, LOW);
         #endif
         
