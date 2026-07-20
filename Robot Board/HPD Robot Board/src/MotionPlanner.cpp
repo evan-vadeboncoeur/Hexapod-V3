@@ -442,8 +442,9 @@ bool MotionPlanner::ripplePush(int rc){
         t_l = *(all_legs+i);
         t_id = t_l->getID();
         // find magnitude away from rc leg (but make note of direction)
-        sf = (abs(i - rc)*((float)1/6));
-        sf = ((i - rc) <=  0.0) ? sf : 1.0 - sf;
+        sf = (abs(rc - i)*((float)1/6)); // change to FIFTHS?
+        //sf = 1.0 - sf;
+        sf = ((i - rc) <=  0) ? sf : 1.0 - sf;
         // assuming linear translation, it *should* be ok to chunk everything into linear lines in 1/6 increments of the gait- ...
         // get bounds of leg in body frame
         B_st = b.getStance(t_id);
