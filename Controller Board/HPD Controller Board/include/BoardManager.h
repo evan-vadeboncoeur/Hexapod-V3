@@ -37,6 +37,8 @@ class BoardManager{
         byte getGait(){return g;}
         void readInputs();
         void transmitBlink();
+        int readLeftX(){return analogRead(LX_P);}
+        int readLeftY(){return analogRead(LY_P);}
     private:
         int lx, ly, rx, ry;
         bool lb, rb;
@@ -50,6 +52,7 @@ class BoardManager{
         void readDS();
         void lowBattery();
         void nrfConnected();
+
         
 };
 

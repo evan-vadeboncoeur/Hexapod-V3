@@ -4,9 +4,40 @@ RemoteControl::RemoteControl(){
     
 }
 
-void RemoteControl::initComm(){
+void RemoteControl::initRC(){
+    #ifdef REMOTE_DEBUG
+    Serial.println("####################JOYSTICK CENTER SETUP####################");
+    #endif
     cmr.commBegin();
-    // initalize prev variables here?
+    int adc_read_x[ADC_READINGS];
+    int adc_read_y[ADC_READINGS];
+    int adc_x_sum=0, adc_y_sum=0;
+    for(int i=0; i<ADC_READINGS; i++){
+        adc_x_sum += bmr.readLeftX();
+        adc_y_sum += bmr.readLeftY();
+        delay(40);
+    }
+    adc_mid_x = adc_x_sum / ADC_READINGS;
+    adc_mid_y = adc_y_sum / ADC_READINGS;
+    center_shift_x = ADC_MID - adc_mid_x;
+    center_shift_y = ADC_MID - adc_mid_y;
+
+    #ifdef REMOTE_DEBUG
+    Serial.print("MidX");
+    Serial.print('\t');
+    Serial.print("MidY");
+    Serial.print('\t');
+    Serial.print("ShiftX");
+    Serial.print('\t');
+    Serial.println("ShiftY");
+    Serial.print(adc_mid_x);
+    Serial.print('\t');
+    Serial.print(adc_mid_y);
+    Serial.print('\t');
+    Serial.print(center_shift_x);
+    Serial.print('\t');
+    Serial.println(center_shift_y);
+    #endif
 }
 
 void RemoteControl::stateManager(){
@@ -115,9 +146,9 @@ void RemoteControl::handlePrevInputs(){
 void RemoteControl::buildTwist(){
     // X_JS > 0 is left, Y_JS > 0 is up therefore we will treat the vertical pot as x and the horizontal as y to mimic the robot setup
     int x = lx, y = ly; // get adc values
-    x -= ADC_MID_18650_X, y -= ADC_MID_18650_Y; // shift to midpoint of ranges to allow for signed values and process out 0 velocity
-    x = (abs(x) < X_BUFF || x == 0) ? 0 : ((x > 0) ? (x + CENTER_SHIFT_18650_X) : (x - CENTER_SHIFT_18650_X)); // if not 0 or in 0 range, shift back to full-scale +/- ranges (could make back to nested ternary with +/- 1 to make symmetrical about 0)
-    y = (abs(y) < Y_BUFF || y == 0) ? 0 : ((y > 0) ? (y + CENTER_SHIFT_18650_Y) : (y - CENTER_SHIFT_18650_Y));
+    x -= adc_mid_x, y -= adc_mid_y; // shift to midpoint of ranges to allow for signed values and process out 0 velocity
+    x = (abs(x) < X_BUFF || x == 0) ? 0 : ((x > 0) ? (x + center_shift_x) : (x - center_shift_x)); // if not 0 or in 0 range, shift back to full-scale +/- ranges (could make back to nested ternary with +/- 1 to make symmetrical about 0)
+    y = (abs(y) < Y_BUFF || y == 0) ? 0 : ((y > 0) ? (y + center_shift_y) : (y - center_shift_y));
     // compute magnitude of velocity vector
     r = sqrt(x*x + y*y); // magnitude of the command, will designate speed
     r = map(r, R_MIN, R_MAX, V_MIN, V_MAX); // map adc value to velocity min/max range (abs value of velocity, theta determines component signs)

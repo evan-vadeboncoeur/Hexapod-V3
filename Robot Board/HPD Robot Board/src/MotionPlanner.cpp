@@ -29,7 +29,7 @@ void MotionPlanner::setGait(int g, bool walk){
             break;
         case RIPPLE: 
             gait = RIPPLE;
-            if(walk) rippleGait(5);
+            //if(walk) rippleGait(5);
         case WAVE: 
             gait = WAVE;
             break;
@@ -610,8 +610,8 @@ bool MotionPlanner::powerOffSequence(){
     #endif
     moveIdle();
     delay(100);
-    moveHome();
-    delay(100);
+    //moveHome();
+    //delay(100);
     moveStorage();
     delay(1000);
     return true;

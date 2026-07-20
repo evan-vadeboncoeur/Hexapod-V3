@@ -12,7 +12,7 @@ void setup() {
     delay(1000);
     Serial.println("#####In setup#####");
     #endif
-    rc.initComm();
+    rc.initRC();
     delay(50);
 }
 

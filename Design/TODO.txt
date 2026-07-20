@@ -1,7 +1,6 @@
 TODO Priority (ALL)
 --------------------
 ) solder in 8.2k, test battery voltage function (meantime: probe regularly)
-) rebuild robot (re-zero legs)
 ) test hexapod class
     fix non-fluid pause between steps (should only recalculate on new command)
         is delay(50) enough to ruin the fluidity of the robot?

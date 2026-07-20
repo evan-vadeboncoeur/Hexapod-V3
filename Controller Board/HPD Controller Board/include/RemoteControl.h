@@ -1,6 +1,6 @@
 #ifndef REMOTE_H
 #define REMOTE_H
-//#define REMOTE_DEBUG
+#define REMOTE_DEBUG
 #define TWIST_DEBUG
 #define TRANSMIT_DEBUG
 #define NEW_DEBUG
@@ -14,12 +14,12 @@
 #define M_PI_3 (1.04719755)
 #define M_PI_6 (0.523598776) 
 #define ADC_MIN (0)
+#define ADC_MID (2048)
 #define ADC_MAX (4095) // 12-bit
-#define ADC_MID_18650_X (1782)
-#define ADC_MID_18650_Y (1775)
+#define ADC_MID_18650_X (1745) // add startup command that runs adc reads 20, takes average
+#define ADC_MID_18650_Y (1735)
 #define CENTER_SHIFT_18650_X (266)
 #define CENTER_SHIFT_18650_Y (273)
-#define ADC_MID (1958) // should be 2048
 #define CENTER_SHIFT (90) // |MID_Theoretical - MID_Actual|
 #define X_BUFF (21)
 #define Y_BUFF (21)
@@ -32,6 +32,7 @@
 #define R_DELTA (5.0)
 #define T_DELTA (1.0)
 #define R_ZERO (10.0)
+#define ADC_READINGS (50)
 
 #include "CommunicationManager.h"
 #include "BoardManager.h"
@@ -54,11 +55,11 @@ class RemoteControl{
         uint8_t g, g_p;
         bool s_one, s_two, s_three, s_four;
         float theta_tw, theta_tw_p, vx, vx_p, vy, vy_p, v, v_p, wz, wz_p, r, r_p;
-        
+        int center_shift_x, center_shift_y, adc_mid_x, adc_mid_y;
     public:
         RemoteControl();
         void stateManager();
-        void initComm();
+        void initRC();
         void transmitMessage(char msg[]);
         void buildTwist();
 };
