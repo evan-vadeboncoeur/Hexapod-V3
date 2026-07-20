@@ -63,3 +63,5 @@ Debugging
         also, the adc values when plugged in via the battery were different than the VCC pin, about 200 bits larger so the values changed
 9) [R] vy is nonzero despite sin(theta) = 0
     sin(theta) was in fact not zero because the wrong digits of pi/3 were used, resulting in a small y component
+10) [R] lb + rb turn -> shutdown
+    lb rb simultaneously was not treated as its own state because the individual poweron/power off variables were still set. used && ! other flags to make it separate

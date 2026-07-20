@@ -168,6 +168,7 @@ void Body::compute_SLS(){
     //p_lift_z = z_ground + h*sin(pi*s), z_ground = p_idle_z (see idle value), h = clearance height = 20mm, s = 0.5 (halfway pt of cycle)
     // compute lift of leg, apply in for loop
     l_z = z_g + step_height*sin(M_PI*linear_interpolation); // only need to compute once
+    setStepHeight(l_z);
     st_z = z_g; // only set once, added for clarity
     sw_z = z_g;
 

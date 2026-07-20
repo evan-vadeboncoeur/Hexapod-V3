@@ -1,13 +1,18 @@
 TODO Priority (ALL)
 --------------------
+) solder in 8.2k, test battery voltage function (meantime: probe regularly)
 ) rebuild robot (re-zero legs)
 ) test hexapod class
-    need to fix something about lb + rb turn -> idle doing nothing
     fix non-fluid pause between steps (should only recalculate on new command)
         is delay(50) enough to ruin the fluidity of the robot?
         maybe the HEXAPOD_DEBUG prints are hurting the latency, too?
-) solder in 8.2k, test battery voltage, throw out 2S??? (meantime: probe regularly)
-interrupt that watches the state of NRF output pin on EPS32, input pin on 2560. pulls LED high, timer flag high for LED pin, then polling timer turns it off. 
+            TRY: removing debug prints -> test, remove loop delay completely -> test, both
+) fix startup -> belly flop (should be spaced into tripods...? has macro delay in it)
+) potentially skip idle -> home before going to storage in macro
+) fix ripple gait (needs some sort of lift?)
+    add code that moves swing leg to z = z_step_height
+        but, this will make us lose out on 1/6 gait cycle touching the ground... try and adjust, i guess
+)interrupt that watches the state of NRF output pin on EPS32, input pin on 2560. pulls LED high, timer flag high for LED pin, then polling timer turns it off. 
     potentially use another interrupt for timer overflow -> led pin = off
 ) add slat to bottom chassis for battery (dovetail in and out - still have hex cuts)
 
@@ -24,15 +29,7 @@ MISC/LOW PRIORITY
 
 PCB/ECE TODO
 -------------
-1) solder full ctl board
-    add final components
-        nrf
-        big caps
-        aux IO
-2) desolder 5.6k resistor
-3) solder 3.3k resistor
-4) test batter management
-    comm
+1) test battery management
     robot
 
 CAD TODO

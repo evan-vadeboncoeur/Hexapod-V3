@@ -438,24 +438,22 @@ bool MotionPlanner::ripplePush(int rc){
     Serial.println("J2: ");
     #endif
     for(int i=0; i<NUM_LEGS; i++){
+        float sw_z;
         t_l = *(all_legs+i);
         t_id = t_l->getID();
         // find magnitude away from rc leg (but make note of direction)
         sf = (abs(i - rc)*((float)1/6));
         sf = ((i - rc) <=  0.0) ? sf : 1.0 - sf;
-        // sf * x, y, etc here, then B_TF_L <------------------------------- do this part <---------------------------------
-        // assuming linear translation, it *should* be ok to chunk everything into linear lines in 1/6 increments of the gait
-        // make sure swing legs go fwd, stance go bwd
-        // swing[i_x1] - (swing[i_x1] - stance[i_x1])*sf 
-        // swing[i_x2] - ...
+        // assuming linear translation, it *should* be ok to chunk everything into linear lines in 1/6 increments of the gait- ...
         // get bounds of leg in body frame
         B_st = b.getStance(t_id);
         B_sw = b.getSwing(t_id);
         // modify linear coordinate from SW->stance (may need actual linear interpolation helper function)
-        // need to dot product in direction of motion
+        // need to "dot product" in direction of motion
         B_t.setX1(B_sw.getX1() - ((B_sw.getX1() - B_st.getX1())*(sf)*cos(theta)));
         B_t.setX2(B_sw.getX2() - ((B_sw.getX2() - B_st.getX2())*(sf)*sin(theta)));
-        B_t.setX3(B_sw.getX3()); // Z is constant
+        sw_z = (sf < 0.12) ? b.getStepHeight() : B_sw.getX3();
+        B_t.setX3(sw_z); // Z is constant
         #ifdef PLAN_DEBUG
         F_st_sw[i] = b.B_TF_L(B_t, t_id);
         #endif

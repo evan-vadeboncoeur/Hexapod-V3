@@ -70,6 +70,8 @@ class Body{
         bool moveTripod(Leg** tp, Vector jv[NUM_LEGS/2]);
         bool moveLegs(Vector jv[NUM_LEGS]);
         float getTheta(){return theta;}
+        void setStepHeight(float sh){step_height = sh;}
+        float getStepHeight(){return step_height;}
     private:
         // body members
         Vector twist;
@@ -78,7 +80,7 @@ class Body{
         float duty_factor, t_cycle, t_stance; 
         float chassis_radius = 92.5; // radius of circumscribed leg circle
         float z_g; // ground "height" in body frame (where feet contact ground in body frame)
-        float step_height; // step height parameter
+        float step_height, sh_r; // step height parameter, step height in robot frame
         // leg members
         Leg legs[NUM_LEGS];
         Leg* tp_even[NUM_LEGS/2];

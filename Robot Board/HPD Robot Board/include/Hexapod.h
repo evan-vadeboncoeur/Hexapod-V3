@@ -28,6 +28,8 @@ class Hexapod{
         void walk();
         void turn();
         void getCommand();
+        unsigned long prev=0;
+        unsigned long update=100;
         
     public:
         Hexapod(int g, float df, float tc, float sh); // constructor 1 (all objects instantiated)

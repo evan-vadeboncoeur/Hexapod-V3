@@ -111,45 +111,48 @@ void Hexapod::stateManager(){
     Serial.println("**********************State Manager***********************");
     #endif
     while(!power_off){
-        getCommand();
-        // Hexapod state machine 
-        switch(state){
-            case WAITING: // do nothing... maybe add in a blink for "NRF LED"
-                #ifdef HEXAPOD_DEBUG
-                Serial.println("--------------------WAITING--------------------");
-                #endif
-            break;
-            
-            case WALKING: // 1 walk cycle at current speed
-                #ifdef HEXAPOD_DEBUG
-                Serial.println("--------------------WALKING--------------------");
-                #endif
-                walk(); 
-            break;
-            
-            case TURNING: // 1 turn cycle at current speed
-                #ifdef HEXAPOD_DEBUG
-                Serial.println("--------------------TURNING--------------------");
-                #endif
-                turn(); // one turn cycle at current speed
-            break;
+        getCommand(); // check every loop for new command interrupt
+        if(millis() - prev >= update){ // 100Hz robot controller update rate
+            prev = millis();
+            // Hexapod state machine 
+            switch(state){
+                case WAITING: // do nothing... maybe add in a blink for "NRF LED"
+                    #ifdef HEXAPOD_DEBUG
+                    Serial.println("--------------------WAITING--------------------");
+                    #endif
+                break;
+                
+                case WALKING: // 1 current gait walk cycle at current speed
+                    #ifdef HEXAPOD_DEBUG
+                    Serial.println("--------------------WALKING--------------------");
+                    #endif
+                    walk(); 
+                break;
+                
+                case TURNING: // 1 turn cycle at current speed
+                    #ifdef HEXAPOD_DEBUG
+                    Serial.println("--------------------TURNING--------------------");
+                    #endif
+                    turn(); // one turn cycle at current speed
+                break;
 
-            case POWER_ON: // power on macro
-                #ifdef HEXAPOD_DEBUG
-                Serial.println("--------------------POWERING ON--------------------");
-                #endif    
-                startupHexapod();
-            break;
+                case POWER_ON: // power on macro
+                    #ifdef HEXAPOD_DEBUG
+                    Serial.println("--------------------POWERING ON--------------------");
+                    #endif    
+                    startupHexapod();
+                break;
 
-            case POWER_OFF: // power off macro
-                #ifdef HEXAPOD_DEBUG
-                Serial.println("--------------------POWERING OFF--------------------");
-                #endif    
-                shutdownHexapod();
-            break;
+                case POWER_OFF: // power off macro
+                    #ifdef HEXAPOD_DEBUG
+                    Serial.println("--------------------POWERING OFF--------------------");
+                    #endif    
+                    shutdownHexapod();
+                break;
+            }
         }
         checkBattery(); // this would  be on a timer overflow interrupt delay... (?)
-        delay(HEXAPOD_LOOP_DELAY); // make smaller
+        //delay(HEXAPOD_LOOP_DELAY); // make smaller - test taking delay out entirely
     }
     #ifdef HEXAPOD_DEBUG
     Serial.println("-----Shutting Down-----");

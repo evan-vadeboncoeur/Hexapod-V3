@@ -3,7 +3,7 @@
 #include "Hexapod.h"
 
 #define GLOBAL_DEBUG
-#define LEG_SETUP_DEBUG
+//#define LEG_SETUP_DEBUG
 #define BODY_DEBUG
 // might have to do joints & everything else BEFORE runtime, too, so that it's on the heap, not the stack?
 #ifdef LEG_SETUP_DEBUG
@@ -35,7 +35,7 @@ Vector idle_p2 = Vector(185.29, 0.00, -89.66);
 
 #ifndef LEG_SETUP_DEBUG
 Hexapod* hp = nullptr;
-//MotionPlanner* mp = nullptr;
+MotionPlanner* mp = nullptr;
 //CommunicationManager* cm = nullptr;
 Vector twist = Vector(110.0, 0.0, 0.0);
 Vector twist2 = Vector(0.0, 0.0, 0.4);
@@ -51,13 +51,12 @@ void setup(){
   #endif
 
   #ifndef LEG_SETUP_DEBUG
-  //mp = new MotionPlanner(g, duty_f, cycle_time, step_h);
-  //static MotionPlanner planner(g, duty_f, cycle_time, step_h); // statically stored for life of program
-  //mp = &planner;
-  //mp->powerOnSequence();
-  static Hexapod hexa(g, duty_f, cycle_time, step_h);
-  hp = &hexa;
-  hp->commInit();
+  static MotionPlanner planner(g, duty_f, cycle_time, step_h); // statically stored for life of program
+  mp = &planner;
+  mp->powerOnSequence();
+  // static Hexapod hexa(g, duty_f, cycle_time, step_h);
+  // hp = &hexa;
+  // hp->commInit();
   //hp->startupHexapod();
   #endif
 
@@ -110,7 +109,7 @@ void loop() {
   #endif
   //hp->stateManager();
   #ifndef LEG_SETUP_DEBUG
-  // mp->movementSetup(0, twist);
+   mp->movementSetup(1, twist);
   // delay(1000);
   // mp->moveIdle();
   // delay(1000);
