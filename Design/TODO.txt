@@ -12,6 +12,7 @@ TODO Priority (ALL)
 ) fix ripple gait (needs some sort of lift?)
     add code that moves swing leg to z = z_step_height
         but, this will make us lose out on 1/6 gait cycle touching the ground... try and adjust, i guess
+            also looks like need to change the stance to 1/5 since 1 cycle off (swing) 5 cycles on (not 5), so test with 1/6 first then change
 )interrupt that watches the state of NRF output pin on EPS32, input pin on 2560. pulls LED high, timer flag high for LED pin, then polling timer turns it off. 
     potentially use another interrupt for timer overflow -> led pin = off
 ) add slat to bottom chassis for battery (dovetail in and out - still have hex cuts)
