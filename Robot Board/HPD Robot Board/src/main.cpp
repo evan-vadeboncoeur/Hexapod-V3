@@ -3,8 +3,9 @@
 #include "Hexapod.h"
 
 #define GLOBAL_DEBUG
-//#define LEG_SETUP_DEBUG
-#define BODY_DEBUG
+#define LEG_SETUP_DEBUG
+//#define MP_DEBUG
+//#define COMMS_DEBUG
 // might have to do joints & everything else BEFORE runtime, too, so that it's on the heap, not the stack?
 #ifdef LEG_SETUP_DEBUG
 Servo s0, s1, s2;
@@ -34,12 +35,17 @@ Vector idle_p2 = Vector(185.29, 0.00, -89.66);
 #endif
 
 #ifndef LEG_SETUP_DEBUG
+#if !defined(MP_DEBUG) && !defined(COMMS_DEBUG)
 Hexapod* hp = nullptr;
+#endif
+#if defined(MP_DEBUG) && !defined(COMMS_DEBUG)
 MotionPlanner* mp = nullptr;
-//CommunicationManager* cm = nullptr;
+#endif
+#if defined(COMMS_DEBUG) && !defined(MP_DEBUG)
+CommunicationManager* cm = nullptr;
+#endif
 Vector twist = Vector(110.0, 0.0, 0.0);
 Vector twist2 = Vector(0.0, 0.0, 0.4);
-
 //Vector twist = Vector(0.0, 0.0, 0.3);
 #endif
 
@@ -49,21 +55,26 @@ void setup(){
   delay(1000);
   Serial.println("#####In setup#####");
   #endif
-
   #ifndef LEG_SETUP_DEBUG
+  // hexapod
+  #if !defined(MP_DEBUG) && !defined(COMMS_DEBUG)
+  static Hexapod hexa(g, duty_f, cycle_time, step_h);
+  hp = &hexa;
+  hp->commInit();
+  //hp->startupHexapod();
+  #endif
+  // mp debug 
+  #if defined(MP_DEBUG) && !defined(COMMS_DEBUG)
   static MotionPlanner planner(g, duty_f, cycle_time, step_h); // statically stored for life of program
   mp = &planner;
   mp->powerOnSequence();
-  // static Hexapod hexa(g, duty_f, cycle_time, step_h);
-  // hp = &hexa;
-  // hp->commInit();
-  //hp->startupHexapod();
   #endif
-
-  #ifdef COMM_DEBUG
-  //static CommunicationManager comm;
-  //cm = &comm;
-  //cm->commBegin();
+  // comm debug
+  #if defined(COMMS_DEBUG) && !defined(MP_DEBUG)
+  static CommunicationManager comm;
+  cm = &comm;
+  cm->commBegin();
+  #endif
   #endif
  
 
@@ -80,6 +91,7 @@ void loop() {
   #ifdef GLOBAL_DEBUG
   Serial.println("#####In loop#####");
   #endif
+  // kinematic test
   #ifdef LEG_KINEMATICS_DEBUG
   //leg_test.moveFootToJV(home_j);
   //leg_test.moveFootToJV(idle_j);
@@ -90,6 +102,7 @@ void loop() {
   leg_test.moveFootToJV(idle_j2);
   leg_test.moveFootToPV(idle_p2, ELBOW_DOWN);
   #endif
+  // leg setup
   #ifdef LEG_SETUP_DEBUG
   s0.write(HPS_2018_CTR);
   delay(1000);
@@ -100,16 +113,9 @@ void loop() {
   //s2.write(545); // test deadband
   delay(2000);
   #endif
-  #ifdef BODY_DEBUG
-  
-  #endif
-  #ifdef COMM_DEBUG
-  //cm->receivePacket();
-  //delay(200);
-  #endif
-  //hp->stateManager();
-  #ifndef LEG_SETUP_DEBUG
-   mp->movementSetup(1, twist);
+  // motion planner gait test
+  #if defined(MP_DEBUG) && !defined(LEG_SETUP_DEBUG) && !defined(COMMS_DEBUG)
+  mp->movementSetup(1, twist);
   // delay(1000);
   // mp->moveIdle();
   // delay(1000);
@@ -118,6 +124,15 @@ void loop() {
   //Serial.println(digitalRead(2));
   //mp->powerOffSequence();
   #endif
+  // comm setup tests
+  #if defined(COMMS_DEBUG) && !defined(LEG_SETUP_DEBUG) && !defined(MP_DEBUG) 
+  cm->receivePacket();
+  delay(200);
+  #endif
+  #if !defined(COMMS_DEBUG) && !defined(LEG_SETUP_DEBUG) && !defined(MP_DEBUG)
+  hp->stateManager();
+  #endif
+
   delay(2000);
   exit(1);
   
