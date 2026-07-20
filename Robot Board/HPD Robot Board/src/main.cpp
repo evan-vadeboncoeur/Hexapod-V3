@@ -3,14 +3,14 @@
 #include "Hexapod.h"
 
 #define GLOBAL_DEBUG
-//#define LEG_SETUP_DEBUG
+#define LEG_SETUP_DEBUG
 #define BODY_DEBUG
 // might have to do joints & everything else BEFORE runtime, too, so that it's on the heap, not the stack?
 #ifdef LEG_SETUP_DEBUG
 Servo s0, s1, s2;
-int j0 = LEG_2_J0;
-int j1 = LEG_2_J1;
-int j2 = LEG_2_J2;
+int j0 = LEG_1_J0;
+int j1 = LEG_1_J1;
+int j2 = LEG_1_J2;
 #endif
 
 // Hexpaod Variables
@@ -108,7 +108,7 @@ void loop() {
   //cm->receivePacket();
   //delay(200);
   #endif
-  hp->stateManager();
+  //hp->stateManager();
   #ifndef LEG_SETUP_DEBUG
   // mp->movementSetup(0, twist);
   // delay(1000);
