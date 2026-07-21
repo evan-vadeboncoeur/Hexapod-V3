@@ -119,8 +119,7 @@ void loop() {
   mp->moveIdle();
   delay(1000);
   mp->movementSetup(1, twist);
-  // mp->moveIdle();
-  // delay(1000);
+
   // mp->movementSetup(0, twist2);
   // delay(3000);
   //Serial.println(digitalRead(2));

@@ -1,6 +1,7 @@
 TODO Priority (ALL)
 --------------------
 ) test RAM optimizations (make sure tripod and ripple work)
+) test new ripple! (make sure to comment out the tripod and ripple test code in setupGait)
 ) test hexapod->startup to make sure motors go to storage pose, not 0 pose
 ) test NRF code that does NOT use SPI on the interrupt stack
     (hex->commBegin is currently off)

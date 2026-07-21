@@ -1,7 +1,7 @@
 #ifndef JOINT_H
 #define JOINT_H
-#define MEMORY_DEBUG
-#define JOINT_DEBUG
+//#define MEMORY_DEBUG
+//#define JOINT_DEBUG
 
 #define JOINT_DELAY (15)
 #define HPS_2018_CTR (90)

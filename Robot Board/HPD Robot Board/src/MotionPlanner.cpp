@@ -29,7 +29,7 @@ void MotionPlanner::setGait(int g, bool walk){
             break;
         case RIPPLE: 
             gait = RIPPLE;
-            //if(walk) rippleGait(5);
+            if(walk) rippleGait(5);
         case WAVE: 
             gait = WAVE;
             break;
@@ -433,12 +433,14 @@ bool MotionPlanner::ripplePush(int rc){
     #endif
     for(int i=0; i<NUM_LEGS; i++){
         float sw_z;
+        int drc = rc - i;
         t_l = *(all_legs+i);
         t_id = t_l->getID();
         // find magnitude away from rc leg (but make note of direction)
-        sf = (abs(rc - i)*((float)1/6)); // change to FIFTHS?
-        //sf = 1.0 - sf;
-        sf = ((i - rc) <=  0) ? sf : 1.0 - sf;
+        //sf = (abs(rc - i)*((float)1/6)); // change to FIFTHS
+        //sf = ((i - rc) <=  0) ? sf : 1.0 - sf;
+        sf = (drc == 0) ? 0.0 : ((drc < 0) ? (1.0 - ((abs(drc)-1.0)/5.0)) : (abs(drc))/5.0); // has to be an easier way than this?
+        //sf = 1.0 - (rc - i)*((float)1/5);
         // assuming linear translation, it *should* be ok to chunk everything into linear lines in 1/6 increments of the gait- ...
         // get bounds of leg in body frame
         B_st = b.getStance(t_id);
