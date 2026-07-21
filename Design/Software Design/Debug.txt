@@ -65,3 +65,21 @@ Debugging
     sin(theta) was in fact not zero because the wrong digits of pi/3 were used, resulting in a small y component
 10) [R] lb + rb turn -> shutdown
     lb rb simultaneously was not treated as its own state because the individual poweron/power off variables were still set. used && ! other flags to make it separate
+11) [R] memory corruption on stack or heap?
+    SRAM is allocated at compile time and accounts for:
+        program variables:
+            global/static variables
+            class members
+        heap (new, malloc, calloc, realloc)
+            grows upward
+            https://www.embeddedrelated.com/glossary/heap
+        free space
+        stack (grows downward)
+            local variables at runtime
+            function pointers
+            return addresses
+    Allocating everything at compile time in an embedded system is better so that there are no memory-leak surprises
+    Using freeMemory() at various places into the deepest call-chain revealed there is still over 500 bytes of RAM free
+12) NRF / interrupt SPI failure
+    interrupt is more than just set/calculate, it calls a handler, sets an IO, and uses SPI (radio.whatHappened) to determine the nature of the interrupt
+        this could cause multiple SPI calls on the same thread which may mess things up

@@ -157,8 +157,11 @@ Vector LegKinematics::ik(Vector t_pV, bool elbow){
     Serial.println(t3_2, 6);
     #endif
     calculated_jV = configurationHelper(elbow);  // Solve for desired configuration and return
+    #ifdef MEMORY_DEBUG
+    Serial.println(freeMemory());
+    #endif
     //Vector output = calculated_jV;
-    if(!ikCheck()) return;
+    if(!ikCheck()) return Vector(0,0,0);
     return calculated_jV;
 }
 

@@ -4,7 +4,7 @@
 
 #define GLOBAL_DEBUG
 //#define LEG_SETUP_DEBUG
-//#define MP_DEBUG
+#define MP_DEBUG
 //#define COMMS_DEBUG
 // might have to do joints & everything else BEFORE runtime, too, so that it's on the heap, not the stack?
 #ifdef LEG_SETUP_DEBUG
@@ -60,14 +60,13 @@ void setup(){
   #if !defined(MP_DEBUG) && !defined(COMMS_DEBUG)
   static Hexapod hexa(g, duty_f, cycle_time, step_h);
   hp = &hexa;
-  hp->commInit();
-  //hp->startupHexapod();
+  hp->startupHexapod();
   #endif
   // mp debug 
   #if defined(MP_DEBUG) && !defined(COMMS_DEBUG)
   static MotionPlanner planner(g, duty_f, cycle_time, step_h); // statically stored for life of program
   mp = &planner;
-  mp->moveIdle();
+  mp->moveIdle(); 
   #endif
   // comm debug
   #if defined(COMMS_DEBUG) && !defined(MP_DEBUG)
@@ -115,8 +114,11 @@ void loop() {
   #endif
   // motion planner gait test
   #if defined(MP_DEBUG) && !defined(LEG_SETUP_DEBUG) && !defined(COMMS_DEBUG)
-  //mp->movementSetup(1, twist);
-  // delay(1000);
+  mp->movementSetup(0, twist);
+  delay(1000);
+  mp->moveIdle();
+  delay(1000);
+  mp->movementSetup(1, twist);
   // mp->moveIdle();
   // delay(1000);
   // mp->movementSetup(0, twist2);
@@ -130,6 +132,10 @@ void loop() {
   delay(200);
   #endif
   #if !defined(COMMS_DEBUG) && !defined(LEG_SETUP_DEBUG) && !defined(MP_DEBUG)
+ 
+  #ifdef MEMORY_DEBUG
+  Serial.println(freeMemory());
+  #endif
   hp->stateManager();
   #endif
 

@@ -90,11 +90,11 @@ class Body{
         Vector foot_swing_R[NUM_LEGS]; // swing foot positions in body frame
         Vector foot_stance_R[NUM_LEGS]; // stance foot positions in body frame
         Vector foot_lift_R[NUM_LEGS]; // lift (idle + z offset using linear interpolation)
-        Vector foot_p_R[NUM_LEGS]; // foot positions in body frame
+        //Vector foot_p_R[NUM_LEGS]; // foot positions in body frame
         Vector foot_v_R[NUM_LEGS]; // foot velocities in the body frame
         Vector foot_dp_R[NUM_LEGS]; // foot displacement vectors in the body frame
-        Vector foot_pN_R[NUM_LEGS]; // new foot position in body frame
-        Vector foot_p_L[NUM_LEGS]; // new foot positions in the leg frame 
+        //Vector foot_pN_R[NUM_LEGS]; // new foot position in body frame
+        //Vector foot_p_L[NUM_LEGS]; // new foot positions in the leg frame 
         float alpha_i[NUM_LEGS]; // alpha offset for each leg, calculated at body instantiation
         float alpha_ci[NUM_LEGS], alpha_si[NUM_LEGS]; // cos, sin x and y components computed at startup for each leg
         void computeAlphaI();

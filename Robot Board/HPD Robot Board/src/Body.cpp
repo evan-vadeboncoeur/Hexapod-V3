@@ -208,7 +208,9 @@ void Body::compute_SLS(){
         l_x = foot_idle_R[i].getX1(); // xy differ for each leg, z is constant
         l_y = foot_idle_R[i].getX2();
         foot_lift_R[i] = Vector(l_x, l_y, l_z);
-        
+        #ifdef MEMORY_DEBUG
+        Serial.println(freeMemory());
+        #endif
         #ifdef SLS_DEBUG
         Serial.print(i);
         Serial.print('\t');

@@ -1,9 +1,8 @@
 #ifndef MTN_PLNR_H
 #define MTN_PLNR_H
-//#define PLAN_DEBUG
+#define PLAN_DEBUG
 //#define PLAN_T_DEBUG
 
-#include "Twist.h"
 #include "Vector.h"
 #include "Body.h"
 #include <math.h>
@@ -25,19 +24,19 @@
 class MotionPlanner{
     private:
         Leg** legs; // 6 legs
-        Leg* tp_L[3]; // 3 legs/tripod
-        Leg* tp_R[3];
         Body b;
         Vector t; // twist command (v_x, v_y, w_z)
         Vector omega = Vector(0.0, 0.0, 0.25); // constanct ccw rotation vector 
         float vx, vy, wz;
         float t_cycle, duty_factor, step_h, cycle_count; // gait cycle (hardcoded?) values
-        int t_c_m=0;
+        int t_c_m=0; // millis version of cycle time
         bool walk_flag = NWALK, even_forward = false, idle = true;
         bool halfTripod(Leg** sw, Leg** st);
         bool push(Leg** l_st, Leg** l_sw);
         bool lift(Leg** l_l);
-        long unsigned int half_c=0, half_c_prev=0, full_c=0, full_c_prev=0;
+        #ifdef PLAN_DEBUG
+        uint64_t half_c=0, half_c_prev=0, full_c=0, full_c_prev=0;
+        #endif
     public:
         enum Gait {TRIPOD, RIPPLE, WAVE, QUADRUPED} gait=TRIPOD;
         MotionPlanner();

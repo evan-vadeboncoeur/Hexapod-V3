@@ -1,6 +1,6 @@
 #ifndef LEG_KINEMATIC_H
 #define LEG_KINEMATIC_H
-#include "MemoryFree.h"
+
 //#define LEG_IK_DEBUG
 //#define LEG_FK_DEBUG
 
@@ -14,9 +14,8 @@
 #include <math.h>
 #include <HardwareSerial.h>
 #include <Arduino.h>
-#include "C_Position.h"
-#include "J_Position.h"
 #include "Vector.h"
+#include "MemoryFree.h"
 
 // Kinematic class to separate leg functions cleanly
 

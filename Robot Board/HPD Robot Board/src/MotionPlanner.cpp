@@ -25,7 +25,7 @@ void MotionPlanner::setGait(int g, bool walk){
     switch(g){
         case TRIPOD: 
             gait = TRIPOD;
-            //if(walk) tripodGait(TEST_STEPS); // test version
+            if(walk) tripodGait(TEST_STEPS); // test version
             break;
         case RIPPLE: 
             gait = RIPPLE;
@@ -126,29 +126,24 @@ bool MotionPlanner::tripodGait(int cc){
     while(num_cycle < cc){
         #ifdef PLAN_DEBUG
         Serial.println("--------------------HALF GAIT ODD--------------------");
-        #endif
-
-        delay(HALF_TRIPOD_DELAY);
         half_c_prev = full_c_prev = millis();
-        //halfTripod(b.getTripod(TP_EVEN), b.getTripod(TP_ODD));
+        #endif
+        delay(HALF_TRIPOD_DELAY);
         halfTripod(b.getTripod(TP_ODD), b.getTripod(TP_EVEN));
-        half_c = (millis() - half_c_prev);
         delay(HALF_TRIPOD_DELAY);
 
         #ifdef PLAN_DEBUG
+        half_c = (millis() - half_c_prev);
         Serial.print("1/2 gait even elapsed time: ");
         Serial.print('\t');
         Serial.println(((float)(half_c)/1000.0));
         Serial.println("--------------------HALF GAIT EVEN--------------------");
-        #endif
-
         half_c_prev = millis();
-       // halfTripod(b.getTripod(TP_ODD), b.getTripod(TP_EVEN));
+        #endif
         halfTripod(b.getTripod(TP_EVEN), b.getTripod(TP_ODD));
+        #ifdef PLAN_DEBUG
         half_c = (millis() - half_c_prev);
         full_c = (millis() - full_c_prev);
-
-        #ifdef PLAN_DEBUG
         Serial.print("1/2 gait odd elapsed time: ");
         Serial.print('\t');
         Serial.print(((float)(half_c)/1000.0));
@@ -175,7 +170,7 @@ bool MotionPlanner::halfTripod(Leg** sw, Leg** st){
 bool MotionPlanner::lift(Leg** l_l){
     Leg* t_l; // temp leg for ids
     int t_id; // temp id
-    Vector F_lift[NUM_LEGS/2]; // lifts in foot frames
+    Vector F_lift;
     Vector J_lift[NUM_LEGS/2]; //lifts in joint space
     
     #ifdef PLAN_DEBUG
@@ -205,8 +200,9 @@ bool MotionPlanner::lift(Leg** l_l){
     for(int i=0; i<(NUM_LEGS/2); i++){
         t_l = *(l_l+i);
         t_id = t_l->getID();
-        F_lift[i] = b.B_TF_L(b.getLift(t_id), t_id);
-        J_lift[i] = b.computeIK(t_l, F_lift[i], ELBOW_DOWN);
+
+        F_lift = b.B_TF_L(b.getLift(t_id), t_id);
+        J_lift[i] = b.computeIK(t_l, F_lift, ELBOW_DOWN);
         
         #ifdef PLAN_DEBUG
         Serial.print(t_id); // leg
@@ -217,11 +213,11 @@ bool MotionPlanner::lift(Leg** l_l){
         Serial.print('\t');
         Serial.print((b.getLift(t_id)).getX3());
         Serial.print('\t');
-        Serial.print(F_lift[i].getX1()); // foot coord
+        Serial.print(F_lift.getX1()); // foot coord
         Serial.print('\t');
-        Serial.print(F_lift[i].getX2());
+        Serial.print(F_lift.getX2());
         Serial.print('\t');
-        Serial.print(F_lift[i].getX3());
+        Serial.print(F_lift.getX3());
         Serial.print('\t');
         Serial.print(J_lift[i].getX1()); // joint coord
         Serial.print('\t');
@@ -237,19 +233,20 @@ bool MotionPlanner::lift(Leg** l_l){
 }
 
 bool MotionPlanner::push(Leg** l_st, Leg** l_sw){
+    
     Leg* t_st_l; // temp leg for ids
     Leg* t_sw_l;
     int t_st_id, t_sw_id; // temp id
-    //#ifdef PLAN_DEBUG
-    Vector F_stance[NUM_LEGS/2]; // lifts in foot frames
-    Vector F_swing[NUM_LEGS/2]; // lifts in foot frames
-    //#endif
-    #ifndef PLAN_DEBUG
-    // Vector F_stance; // lifts in foot frames
-    // Vector F_swing; // lifts in foot frames
-    #endif
+   
+    Vector F_stance; // lifts in foot frames
+    Vector F_swing; // lifts in foot frames
+
+ 
     Vector J_stance[NUM_LEGS/2]; //lifts in joint space
     Vector J_swing[NUM_LEGS/2]; //lifts in joint space
+    #ifdef MEMORY_DEBUG
+    Serial.println(freeMemory());
+    #endif
     #ifdef PLAN_DEBUG
     Serial.println("---------PUSH----------");
     Serial.print("L_ST: ");
@@ -298,10 +295,10 @@ bool MotionPlanner::push(Leg** l_st, Leg** l_sw){
         t_sw_l = *(l_sw+i);
         t_st_id = t_st_l->getID();
         t_sw_id = t_sw_l->getID();
-        F_stance[i] = b.B_TF_L(b.getStance(t_st_id), t_st_id);
-        F_swing[i] = b.B_TF_L(b.getSwing(t_sw_id), t_sw_id);
-        J_stance[i] = b.computeIK(t_st_l, F_stance[i], ELBOW_DOWN);
-        J_swing[i] = b.computeIK(t_sw_l, F_swing[i], ELBOW_DOWN);
+        F_stance = b.B_TF_L(b.getStance(t_st_id), t_st_id);
+        F_swing = b.B_TF_L(b.getSwing(t_sw_id), t_sw_id);
+        J_stance[i] = b.computeIK(t_st_l, F_stance, ELBOW_DOWN);
+        J_swing[i] = b.computeIK(t_sw_l, F_swing, ELBOW_DOWN);
 
         #ifdef PLAN_DEBUG
         Serial.print(t_st_id); // leg
@@ -312,11 +309,11 @@ bool MotionPlanner::push(Leg** l_st, Leg** l_sw){
         Serial.print('\t');
         Serial.print((b.getStance(t_st_id)).getX3());
         Serial.print('\t');
-        Serial.print(F_stance[i].getX1()); // foot coord
+        Serial.print(F_stance.getX1()); // foot coord
         Serial.print('\t');
-        Serial.print(F_stance[i].getX2());
+        Serial.print(F_stance.getX2());
         Serial.print('\t');
-        Serial.print(F_stance[i].getX3());
+        Serial.print(F_stance.getX3());
         Serial.print('\t');
         Serial.print(J_stance[i].getX1()); // joint coord
         Serial.print('\t');
@@ -332,11 +329,11 @@ bool MotionPlanner::push(Leg** l_st, Leg** l_sw){
         Serial.print('\t');
         Serial.print((b.getSwing(t_sw_id)).getX3());
         Serial.print('\t');
-        Serial.print(F_swing[i].getX1()); // foot coord
+        Serial.print(F_swing.getX1()); // foot coord
         Serial.print('\t');
-        Serial.print(F_swing[i].getX2());
+        Serial.print(F_swing.getX2());
         Serial.print('\t');
-        Serial.print(F_swing[i].getX3());
+        Serial.print(F_swing.getX3());
         Serial.print('\t');
         Serial.print(J_swing[i].getX1()); // joint coord
         Serial.print('\t');
@@ -344,7 +341,7 @@ bool MotionPlanner::push(Leg** l_st, Leg** l_sw){
         Serial.print('\t');
         Serial.println(J_swing[i].getX3());
         #endif
-        Serial.println(freeMemory());
+        
     }
     // move at same time    
     b.moveTripod(l_sw, J_swing);
@@ -402,12 +399,7 @@ bool MotionPlanner::ripplePush(int rc){
     Leg* t_l; // temp leg for ids
     int t_id;
     Vector B_st, B_sw, B_t;
-    #ifdef PLAN_DEBUG
-    Vector F_st_sw[NUM_LEGS]; // array for printing coordinates in debug form
-    #endif
-    #ifndef PLAN_DEBUG
     Vector F_st_sw; // no debug, optimize
-    #endif
     Vector J_st_sw[NUM_LEGS]; //stance OR swing in joint space
     // sort into swing (1) and push (5) -> dont need to if we just use if() in for loop for calculations
     Leg** all_legs = b.getLegList();
@@ -457,20 +449,8 @@ bool MotionPlanner::ripplePush(int rc){
         B_t.setX2(B_sw.getX2() - ((B_sw.getX2() - B_st.getX2())*(sf)*sin(theta)));
         sw_z = (sf < 0.12) ? b.getStepHeight() : B_sw.getX3();
         B_t.setX3(sw_z); // Z is constant
-        #ifdef PLAN_DEBUG
-        F_st_sw[i] = b.B_TF_L(B_t, t_id);
-        #endif
-        #ifndef PLAN_DEBUG
         F_st_sw = b.B_TF_L(B_t, t_id);
-        #endif
-        J_st_sw[i] = b.computeIK(t_l, 
-        #ifdef PLAN_DEBUG    
-            F_st_sw[i], 
-        #endif
-        #ifndef PLAN_DEBUG
-            F_st_sw,
-        #endif
-            ELBOW_DOWN);    
+        J_st_sw[i] = b.computeIK(t_l, F_st_sw, ELBOW_DOWN);    
         // printout
         #ifdef PLAN_DEBUG
         Serial.print(rc);
@@ -488,11 +468,11 @@ bool MotionPlanner::ripplePush(int rc){
         Serial.print('\t');
         Serial.print(B_t.getX3());
         Serial.print('\t');
-        Serial.print(F_st_sw[i].getX1()); // foot cood
+        Serial.print(F_st_sw.getX1()); // foot cood
         Serial.print('\t');
-        Serial.print(F_st_sw[i].getX2());
+        Serial.print(F_st_sw.getX2());
         Serial.print('\t');
-        Serial.print(F_st_sw[i].getX3());
+        Serial.print(F_st_sw.getX3());
         Serial.print('\t');
         Serial.print(J_st_sw[i].getX1()); // joint coord
         Serial.print('\t');

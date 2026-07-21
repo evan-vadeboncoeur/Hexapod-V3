@@ -20,14 +20,7 @@ void CommunicationManager::radioISR(){ // static, so does not receive a hidden o
 }
 
 void CommunicationManager::handleInterrupt(){
-    #ifndef IQR2_DEBUG
-    bool tx_ok, tx_fail, rx_ready;
-    radio.whatHappened(tx_ok, tx_fail, rx_ready); // check reason for IQR and reset pin to high
-    if(rx_ready) radio_interrupt = true; // rx was the reason for the flag
-    digitalWrite(NRF_LED, HIGH);
-    #endif
-    //radio_interrupt = true;
-    //Serial.println("Radio handler!");
+    radio_interrupt = true;
 }
 
 void CommunicationManager::commBegin(){
@@ -83,14 +76,15 @@ bool CommunicationManager::receivePacket(){
     #ifndef IQR2_DEBUG
     if(radio_interrupt){ // comment this out for testing purposes
     #endif
-
-        bool packet_received = false;
-        while(radio.available()) { 
-            radio.read(&p, sizeof(p)); // read all packets in the queue to get newest command
-            packet_received = true;
-            
+        digitalWrite(NRF_LED, HIGH);
+        bool tx_ok, tx_fail, rx_ready, packet_received = false;
+        radio.whatHappened(tx_ok, tx_fail, rx_ready); // check reason for IQR and reset pin to high
+        if(rx_ready){
+            while(radio.available()) { 
+                radio.read(&p, sizeof(p)); // read all packets in the queue to get newest command
+                packet_received = true;
+            }
         }
-
         #ifndef IQR2_DEBUG // outside of packet received block in case false-positive
         radio_interrupt = false;
         radio.clearStatusFlags(RF24_IRQ_ALL);

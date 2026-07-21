@@ -15,10 +15,10 @@ class Hexapod{
         CommunicationManager radio;
         BoardManager board;
         Packet command;
-        int gait, gait_old;
+        uint8_t gait, gait_old;
         bool power_off = false, power_on=false, powered_on = false, turnc = false;
-        unsigned long b_check = 0, b_check_prev = 0;
-        unsigned int b_time = 1000;
+        uint64_t b_check = 0, b_check_prev = 0;
+        uint16_t b_time = 1000;
         Vector twist = Vector(0.0, 0.0, 0.0);
         Vector p_g; // global coordinate, if needed...
         enum State{WAITING, WALKING, TURNING, POWER_ON, POWER_OFF}state=WAITING;
@@ -29,13 +29,13 @@ class Hexapod{
         void walk();
         void turn();
         void getCommand();
-        unsigned long int prev_robot=0, prev_comm=0;
-        unsigned long int robot_update=200, comm_update=100;
+        uint64_t prev_robot=0, prev_comm=0;
+        uint16_t robot_update=200, comm_update=100;
         
     public:
-        Hexapod(int g, float df, float tc, float sh); // constructor 1 (all objects instantiated)
-        void opMode(); // set operation mode: teleop (0), computer/robot (1)
+        Hexapod(uint8_t g, float df, float tc, float sh); // constructor 1 (all objects instantiated)
         void startupHexapod();
+        void homeHexapod();
         void shutdownHexapod();
         void stateManager(); // basically the hexapod's while loop
         void commInit();

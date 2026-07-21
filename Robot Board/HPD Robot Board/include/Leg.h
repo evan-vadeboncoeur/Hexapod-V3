@@ -19,8 +19,6 @@
 #define LEG_DELAY (10)
 
 #include "Joint.h"
-#include "C_Position.h"
-#include "J_Position.h"
 #include "Arduino.h"
 #include "LegKinematics.h"
 

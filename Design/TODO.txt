@@ -1,7 +1,9 @@
 TODO Priority (ALL)
 --------------------
-???????????????? RAM ?????????????????
-try to comment out ripple gait and maybe few other things?????????
+) test RAM optimizations (make sure tripod and ripple work)
+) test hexapod->startup to make sure motors go to storage pose, not 0 pose
+) test NRF code that does NOT use SPI on the interrupt stack
+    (hex->commBegin is currently off)
 ) solder in 8.2k, test battery voltage function (meantime: probe regularly)
 ) test hexapod class
     fix non-fluid pause between steps (should only recalculate on new command)
@@ -20,14 +22,10 @@ try to comment out ripple gait and maybe few other things?????????
 
 ROBOT
 3) continue programming ripple gait
-4) ensure proper memory usage so that RAM doesnt top out -> remove unused arrays in motion planner class
-5) slot for NRF in body (fix along with removing weight, adding small radial bores for soldering iron...) (also see if can screw in???)
 
 MISC/LOW PRIORITY
-1) Calculate workspace limitations and maximum swing angles / J1/2 interaction monitoring
-    need to work on leg interaction (J2 J3 collision monitoring)
-2) J2 add rubber boot
-
+1) J2 add rubber boot
+2) workspace limitations
 
 PCB/ECE TODO
 -------------

@@ -13,11 +13,11 @@ class Vector{
         void setX1(float x_1){x1 = x_1;}
         void setX2(float x_2){x2 = x_2;}
         void setX3(float x_3){x3 = x_3;}
-        float getMagnitude(){return m;}
-        float getTheta(){return t;}
+        float getMagnitude(){return sqrt(x1*x1 + x2*x2 + x3*x3);} // give angle between x and y components;}
+        float getTheta(){return atan2(x2,x1);}
         Vector cross(Vector a, Vector b);
     private:
-        float x1, x2, x3, m, t;
+        float x1, x2, x3;
 };
 
 #endif

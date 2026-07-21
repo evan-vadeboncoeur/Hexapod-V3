@@ -1,6 +1,6 @@
 #include "Hexapod.h"
 
-Hexapod::Hexapod(int g, float df, float tc, float sh)
+Hexapod::Hexapod(uint8_t g, float df, float tc, float sh)
     : plan{MotionPlanner(g, df, tc, sh)},
     radio{CommunicationManager()},
     board{BoardManager()}
@@ -8,9 +8,9 @@ Hexapod::Hexapod(int g, float df, float tc, float sh)
 
 }
 
-void Hexapod::startupHexapod(){
+void Hexapod::homeHexapod(){
     #ifdef HEXAPOD_DEBUG
-    Serial.println("**********************Startup Hexapod***********************");
+    Serial.println("**********************Starting Hexapod***********************");
     #endif
     plan.powerOnSequence();
     power_on = false;
@@ -18,8 +18,11 @@ void Hexapod::startupHexapod(){
     state = WAITING;
 }
 
-void Hexapod::commInit(){
+// call before motor power on to ensure motors "see" storage pulses
+// add some sort of indicator for motor power on
+void Hexapod::startupHexapod(){
     radio.commBegin();
+    plan.moveStorage();
 }
 
 void Hexapod::shutdownHexapod(){
@@ -59,15 +62,12 @@ void Hexapod::processPacket(){
     #endif
     // get new packet
     command = radio.getPacket();
-    //board.receiveBlink(); // blink board (need this on interrupt timer, cant be delay)
     // fill out new packet
     gait_old = gait;
     gait = command.g;
     turnc = command.rb && command.lb;
     power_off = command.rb && !command.lb;
     power_on = command.lb && !command.rb; 
-    
-    
     twist = Vector(command.v_x, command.v_y, command.w_z);
     #ifdef HEXAPOD_DEBUG
     Serial.print("Gait: ");
@@ -110,6 +110,8 @@ void Hexapod::stateManager(){
     #ifdef HEXAPOD_DEBUG
     //Serial.println(freeMemory());
     Serial.println("**********************State Manager***********************");
+    //state = WALKING;
+    //gaitSetup();
     #endif
     while(!power_off){
         if((millis() - prev_comm) >= comm_update){
@@ -144,7 +146,7 @@ void Hexapod::stateManager(){
                     #ifdef HEXAPOD_DEBUG
                     Serial.println("--------------------POWERING ON--------------------");
                     #endif    
-                    startupHexapod();
+                    homeHexapod();
                 break;
 
                 case POWER_OFF: // power off macro
@@ -156,10 +158,9 @@ void Hexapod::stateManager(){
             }
         }
         checkBattery(); // this would  be on a timer overflow interrupt delay... (?)
-        //delay(HEXAPOD_LOOP_DELAY); // make smaller - test taking delay out entirely
     }
     #ifdef HEXAPOD_DEBUG
-    Serial.println("-----Shutting Down-----");
+    Serial.println("**********************Shutting Down**********************");
     #endif
     delay(2000);
 }
