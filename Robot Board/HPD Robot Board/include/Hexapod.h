@@ -6,6 +6,7 @@
 #include "CommunicationManager.h"
 #include "BoardManager.h"
 
+
 #define HEXAPOD_LOOP_DELAY (50)
 
 class Hexapod{
@@ -28,8 +29,8 @@ class Hexapod{
         void walk();
         void turn();
         void getCommand();
-        unsigned long prev=0;
-        unsigned long update=200;
+        unsigned long int prev_robot=0, prev_comm=0;
+        unsigned long int robot_update=200, comm_update=100;
         
     public:
         Hexapod(int g, float df, float tc, float sh); // constructor 1 (all objects instantiated)

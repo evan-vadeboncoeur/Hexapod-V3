@@ -49,6 +49,7 @@ void MotionPlanner::walk(){
         break;
     case RIPPLE: 
         rippleGait(1);
+        break;
     case WAVE: 
         waveGait();
         break;
@@ -56,7 +57,7 @@ void MotionPlanner::walk(){
 
         break;
     default:
-        
+        tripodGait();
         break;
     }
 }
@@ -343,6 +344,7 @@ bool MotionPlanner::push(Leg** l_st, Leg** l_sw){
         Serial.print('\t');
         Serial.println(J_swing[i].getX3());
         #endif
+        Serial.println(freeMemory());
     }
     // move at same time    
     b.moveTripod(l_sw, J_swing);

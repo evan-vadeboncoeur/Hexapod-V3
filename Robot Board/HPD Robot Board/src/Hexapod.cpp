@@ -108,12 +108,16 @@ void Hexapod::processPacket(){
 
 void Hexapod::stateManager(){
     #ifdef HEXAPOD_DEBUG
+    //Serial.println(freeMemory());
     Serial.println("**********************State Manager***********************");
     #endif
     while(!power_off){
-        getCommand(); // check every loop for new command interrupt
-        if(millis() - prev >= update){ // 100Hz robot controller update rate
-            prev = millis();
+        if((millis() - prev_comm) >= comm_update){
+            prev_comm = millis();
+            getCommand(); // check every loop for new command interrupt
+        }
+        if((millis() - prev_robot) >= robot_update){ // 100Hz robot controller update rate
+            prev_robot = millis();
             // Hexapod state machine 
             switch(state){
                 case WAITING: // do nothing... maybe add in a blink for "NRF LED"

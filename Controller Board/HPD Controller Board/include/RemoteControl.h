@@ -21,14 +21,14 @@
 #define CENTER_SHIFT_18650_X (266)
 #define CENTER_SHIFT_18650_Y (273)
 #define CENTER_SHIFT (90) // |MID_Theoretical - MID_Actual|
-#define X_BUFF (21)
-#define Y_BUFF (21)
+#define X_BUFF (30)
+#define Y_BUFF (36)
 #define R_MIN (0)
 #define R_MAX (2047) //(root2 * ADC_MID) (true ADC MID = 2894)
 #define V_MIN (0) // mm/s
 #define V_MAX (140)
 #define V_MIN_CLAMP (15.0)
-#define CMD_DELAY (300)
+#define CMD_DELAY (100)
 #define R_DELTA (5.0)
 #define T_DELTA (1.0)
 #define R_ZERO (10.0)

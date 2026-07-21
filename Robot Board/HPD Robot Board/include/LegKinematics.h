@@ -1,5 +1,6 @@
 #ifndef LEG_KINEMATIC_H
 #define LEG_KINEMATIC_H
+#include "MemoryFree.h"
 //#define LEG_IK_DEBUG
 //#define LEG_FK_DEBUG
 
