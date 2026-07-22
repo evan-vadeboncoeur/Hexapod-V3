@@ -4,7 +4,7 @@
 
 #define GLOBAL_DEBUG
 //#define LEG_SETUP_DEBUG
-#define MP_DEBUG
+//#define MP_DEBUG
 //#define COMMS_DEBUG
 // might have to do joints & everything else BEFORE runtime, too, so that it's on the heap, not the stack?
 #ifdef LEG_SETUP_DEBUG
@@ -66,7 +66,8 @@ void setup(){
   #if defined(MP_DEBUG) && !defined(COMMS_DEBUG)
   static MotionPlanner planner(g, duty_f, cycle_time, step_h); // statically stored for life of program
   mp = &planner;
-  mp->moveIdle(); 
+  mp->moveIdle();
+  delay(2000); 
   #endif
   // comm debug
   #if defined(COMMS_DEBUG) && !defined(MP_DEBUG)
@@ -114,15 +115,11 @@ void loop() {
   #endif
   // motion planner gait test
   #if defined(MP_DEBUG) && !defined(LEG_SETUP_DEBUG) && !defined(COMMS_DEBUG)
-  mp->movementSetup(0, twist);
+  mp->movementSetup(0, twist2);
   delay(1000);
-  mp->moveIdle();
-  delay(1000);
-  mp->movementSetup(1, twist);
-
-  // mp->movementSetup(0, twist2);
-  // delay(3000);
-  //Serial.println(digitalRead(2));
+  //mp->moveIdle();
+  //delay(1000);
+  //mp->movementSetup(1, twist);
   //mp->powerOffSequence();
   #endif
   // comm setup tests

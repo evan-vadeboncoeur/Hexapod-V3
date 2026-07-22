@@ -1,6 +1,6 @@
 #ifndef HEXAPOD_H
 #define HEXAPOD_H
-#define HEXAPOD_DEBUG
+//#define HEXAPOD_DEBUG
 
 #include "MotionPlanner.h"
 #include "CommunicationManager.h"

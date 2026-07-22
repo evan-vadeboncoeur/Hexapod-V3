@@ -1,22 +1,23 @@
 TODO Priority (ALL)
 --------------------
-) test RAM optimizations (make sure tripod and ripple work)
-) test new ripple! (make sure to comment out the tripod and ripple test code in setupGait)
-) test hexapod->startup to make sure motors go to storage pose, not 0 pose
-) test NRF code that does NOT use SPI on the interrupt stack
-    (hex->commBegin is currently off)
-) solder in 8.2k, test battery voltage function (meantime: probe regularly)
+) seems like first command ok, second is completely bananas - why?
+    test two commands in MP class, same magnitude, different direction -> plot and compare  
+        if ok, timing or gait order is somehow out of wack
+            otherwise, it's probably the body kinematics being overwritten/not using the proper idle function
 ) test hexapod class
     fix non-fluid pause between steps (should only recalculate on new command)
-        is delay(50) enough to ruin the fluidity of the robot?
-        maybe the HEXAPOD_DEBUG prints are hurting the latency, too?
-            TRY: removing debug prints -> test, remove loop delay completely -> test, both
+        is delay(100) enough to ruin the fluidity of the robot in half tripod?
+            should probably
+) seems like turn command works well only in planner, not state machine , timing not great
+    make a time estimate function that takes angle delta into consideration, omega, uses millis()
+) fix ripple (why does sixths with non-ripple work [0 4 2, 5 1 3] but fifths with non-ripple doesnt)
+    also, seems like stance math is off for reverse (so there is a negative where it is not supposed to be. plot and compare, make new equation)
+    phase = (rc + i)%NUM_LEGS
+    S = phase / 5.0;
+) test hexapod->startup to make sure motors go to storage pose, not 0 pose - continue here
+) solder in 8.2k, test battery voltage function (meantime: probe regularly)
 ) fix startup -> belly flop (should be spaced into tripods...? has macro delay in it)
 ) potentially skip idle -> home before going to storage in macro
-) fix ripple gait (needs some sort of lift?)
-    add code that moves swing leg to z = z_step_height
-        but, this will make us lose out on 1/6 gait cycle touching the ground... try and adjust, i guess
-            also looks like need to change the stance to 1/5 since 1 cycle off (swing) 5 cycles on (not 5), so test with 1/6 first then change
 )interrupt that watches the state of NRF output pin on EPS32, input pin on 2560. pulls LED high, timer flag high for LED pin, then polling timer turns it off. 
     potentially use another interrupt for timer overflow -> led pin = off
 ) add slat to bottom chassis for battery (dovetail in and out - still have hex cuts)
@@ -44,7 +45,7 @@ L3
 
 Code TODO
 ----------
-1) verify ripple gait
+1) improve ripple gait
 2) program wave gait
 
 

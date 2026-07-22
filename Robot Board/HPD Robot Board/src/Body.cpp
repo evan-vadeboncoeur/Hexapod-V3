@@ -25,11 +25,11 @@ Body::Body(float df, float t_c, float sh) // initialize each leg before contruct
     },
     leg_list{
         &(legs[LEG_0]),
-        &(legs[LEG_4]),
-        &(legs[LEG_2]),
-        &(legs[LEG_5]),
         &(legs[LEG_1]),
-        &(legs[LEG_3])
+        &(legs[LEG_2]),
+        &(legs[LEG_3]),
+        &(legs[LEG_4]),
+        &(legs[LEG_5])
     }
 {
     step_height = sh;

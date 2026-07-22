@@ -25,11 +25,14 @@ void MotionPlanner::setGait(int g, bool walk){
     switch(g){
         case TRIPOD: 
             gait = TRIPOD;
-            if(walk) tripodGait(TEST_STEPS); // test version
+            //if(walk) tripodGait(5); // test version
             break;
         case RIPPLE: 
             gait = RIPPLE;
-            if(walk) rippleGait(5);
+            //#ifdef PLAN_DEBUG
+            //if(walk) rippleGait(3);
+            //#endif
+            break;
         case WAVE: 
             gait = WAVE;
             break;
@@ -371,7 +374,6 @@ bool MotionPlanner::rippleGait(int cc){
         float s = (float)(millis() % t_c_m) / t_c_m;
         // gait scheduler code
         if((s >= (float (ripple_ct*((float)1/6)))) && (s < (float ((ripple_ct+1)*((float)1/6))))){
-            //Serial.println(ripple_ct);
             ripplePush(ripple_ct);
             ripple_ct++;
             ripple_ct %= NUM_LEGS; // wraparound 6 to 0
@@ -495,7 +497,7 @@ bool MotionPlanner::powerOnSequence(){
     Serial.println("**********************Powering On***********************");
     #endif
     moveHome();
-    delay(50);
+    delay(MACRO_DELAY);
     moveIdle();
     return true;
 }
