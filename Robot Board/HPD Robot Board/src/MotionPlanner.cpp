@@ -3,10 +3,12 @@
 MotionPlanner::MotionPlanner(){
 }
 
-MotionPlanner::MotionPlanner(int g, float df, float tc, float sh)
+MotionPlanner::MotionPlanner(uint8_t g, float df, float tc, float sh)
     : b{Body(df, tc, sh)} // initialize body first (set alpha, idle, gait cycle values), set tripods too in body constructor
 {
     delay(5);
+    tripods[0] = b.getTripod(TP_EVEN);
+    tripods[1] = b.getTripod(TP_ODD);
     setGait(g, NWALK); 
     t_c_m = tc * 1000; // make an int for millis comparison
 }
@@ -14,7 +16,66 @@ MotionPlanner::MotionPlanner(int g, float df, float tc, float sh)
 // GAIT SETUP
 void MotionPlanner::movementSetup(int g, Vector tw){
     setBodyVelocity(tw); // compute trajectories
-    setGait(g, WALK); // calls desired gait, start walking
+    // set state times
+    setGait(g, NWALK); // calls desired gait, start walking
+    stateTime();
+}
+
+// returns movement time between two angles of a single servo
+uint32_t MotionPlanner::moveTime(float t1, float t2){
+    uint32_t calc = (uint32_t)((abs(t2-t1) / OMEGA) * 1000 + MVMT_BFR);
+    #ifdef STATE_TIME_DEBUG
+    Serial.print(t2);
+    Serial.print('\t');
+    Serial.print(t1);
+    Serial.print('\t');
+    Serial.println(calc);
+    #endif
+    return calc;
+}
+
+// parses through joint vectors and determines limiting motions for state, sets the time value for that state
+// TODO: additional functionality for other gaits (body class may need to be limited as well?)
+void MotionPlanner::stateTime(){
+    stance_lift=0, lift_swing=0, swing_stance=0;
+    for(int i=0; i<NUM_LEGS; i++){
+        uint32_t s_l, l_s, s_s;
+        // Stance -> Lift
+        s_l = moveTime(b.getStanceJ(i).getX1(), b.getLiftJ(i).getX1());
+        if (s_l > stance_lift) stance_lift = s_l;
+        s_l = moveTime(b.getStanceJ(i).getX2(), b.getLiftJ(i).getX2());
+        if (s_l > stance_lift) stance_lift = s_l;
+        s_l = moveTime(b.getStanceJ(i).getX3(), b.getLiftJ(i).getX3());
+        if (s_l > stance_lift) stance_lift = s_l;
+        // Lift -> Swing
+        l_s = moveTime(b.getSwingJ(i).getX1(), b.getLiftJ(i).getX1());
+        if (l_s > lift_swing) lift_swing = l_s;
+        l_s = moveTime(b.getSwingJ(i).getX2(), b.getLiftJ(i).getX2());
+        if (l_s > lift_swing) lift_swing = l_s;
+        l_s = moveTime(b.getSwingJ(i).getX3(), b.getLiftJ(i).getX3());
+        if (l_s > lift_swing) lift_swing = l_s;
+        // Swing -> Stance
+        s_s = moveTime(b.getSwingJ(i).getX1(), b.getStanceJ(i).getX1());
+        if (s_s > swing_stance) swing_stance = s_s;
+        s_s = moveTime(b.getSwingJ(i).getX2(), b.getStanceJ(i).getX3());
+        if (s_s > swing_stance) swing_stance = s_s;
+        s_s = moveTime(b.getSwingJ(i).getX2(), b.getStanceJ(i).getX3());
+        if (s_s > swing_stance) swing_stance = s_s;
+    }
+    #ifdef PLAN_DEBUG
+    Serial.println("---------Tripod Gait State Time----------");
+    Serial.print("St-L");
+    Serial.print('\t');
+    Serial.print("L-Sw");
+    Serial.print('\t');
+    Serial.println("Sw-St");
+    Serial.print(stance_lift);
+    Serial.print('\t');
+    Serial.print(lift_swing);
+    Serial.print('\t');
+    Serial.println(swing_stance);
+    #endif
+    gait_update_time = millis() + stance_lift;
 }
 
 void MotionPlanner::setBodyVelocity(Vector tw){
@@ -25,12 +86,12 @@ void MotionPlanner::setGait(int g, bool walk){
     switch(g){
         case TRIPOD: 
             gait = TRIPOD;
-            //if(walk) tripodGait(5); // test version
+            if(walk) tripodGait(4); // test version
             break;
         case RIPPLE: 
             gait = RIPPLE;
             //#ifdef PLAN_DEBUG
-            //if(walk) rippleGait(3);
+            if(walk) rippleGait(4);
             //#endif
             break;
         case WAVE: 
@@ -49,6 +110,7 @@ void MotionPlanner::walk(){
     switch(gait){
     case TRIPOD: 
         tripodGait();
+        //updateTripod();
         break;
     case RIPPLE: 
         rippleGait(1);
@@ -71,6 +133,25 @@ void MotionPlanner::turn(){
 }
 
 // GAITS ----------------------------------------------------------------------------------
+void MotionPlanner::updateTripod(){ // can work with ripple and wave as well?. may need code to verify if at end of half-cycle (flag)
+    if(millis() < gait_update_time) return;
+  
+    switch(tp_stance){
+        case LIFT:
+            lift(tripods[!tp_index]);
+            tp_stance = PUSH;
+            gait_update_time = millis() + stance_lift;
+        break;
+        case PUSH:
+            push(tripods[tp_index], tripods[!tp_index]);
+            tp_stance = LIFT;
+            gait_update_time = millis() + swing_stance;
+            tp_index = !tp_index;
+        break;
+    }
+}
+
+
 // teleop, indefinite version
 bool MotionPlanner::tripodGait(){
     #ifdef PLAN_DEBUG
@@ -93,33 +174,6 @@ bool MotionPlanner::tripodGait(){
     //} 
     return true; // tripod gait finished
 }
-// overload that maintains which tripod is where (could use a cycle counter with first foot position for faster calculation...)
-// bool MotionPlanner::tripodGait(){
-//     #ifdef PLAN_DEBUG
-//     Serial.println("**********************TRIPOD GAIT***********************");
-//     #endif
-    
-//     Leg** stance_tripod = (even_forward || idle) ? b.getTripod(TP_EVEN) : b.getTripod(TP_ODD); // even in swing or idle. else odd is forward
-//     Leg** swing_tripod = (even_forward || idle) ? b.getTripod(TP_ODD) : b.getTripod(TP_EVEN);
-//     idle = false;
-//     delay(HALF_TRIPOD_DELAY);
-
-//     #ifdef PLAN_DEBUG
-//     Serial.println("--------------------STANCE 1--------------------");
-//     #endif
-//     halfTripod(swing_tripod, stance_tripod);
-//     delay(HALF_TRIPOD_DELAY);
-
-//     #ifdef PLAN_DEBUG
-//     Serial.println("--------------------STANCE 2--------------------");
-//     #endif
-//     halfTripod(stance_tripod, swing_tripod);
-    
-    
-//     //} 
-//     return true; // tripod gait finished
-// }
-    
 
 bool MotionPlanner::tripodGait(int cc){
     #ifdef PLAN_DEBUG
@@ -204,7 +258,7 @@ bool MotionPlanner::lift(Leg** l_l){
         t_l = *(l_l+i);
         t_id = t_l->getID();
 
-        F_lift = b.B_TF_L(b.getLift(t_id), t_id);
+        F_lift = b.B_TF_L(b.getLift(t_id), t_id); // could remove this and one beneath it from call stack by computing this at init time in body class, then could have all joint vectors stored in body/mp for timing calculations
         J_lift[i] = b.computeIK(t_l, F_lift, ELBOW_DOWN);
         
         #ifdef PLAN_DEBUG
@@ -435,13 +489,21 @@ bool MotionPlanner::ripplePush(int rc){
     #endif
     for(int i=0; i<NUM_LEGS; i++){
         float sw_z;
-        int drc = rc - i;
+        //int drc = rc - i;
+        float phase = 5.0;
         t_l = *(all_legs+i);
         t_id = t_l->getID();
+        // ripple v2
+        int d = (i - rc + NUM_LEGS) % NUM_LEGS; // THIS IS THE EXPRESSION I WAS LOOKING FOR, didnt need a +/- 1, uses whole num legs to get "abs" value
+        if(d == 0){
+            sf = 0.0;
+        } else{
+            sf = ((phase + 1.0) - (float(d))) / phase; // find phase / 5, while 0 = 0, inside of 1-6 cycle
+        }
         // find magnitude away from rc leg (but make note of direction)
         //sf = (abs(rc - i)*((float)1/6)); // change to FIFTHS
         //sf = ((i - rc) <=  0) ? sf : 1.0 - sf;
-        sf = (drc == 0) ? 0.0 : ((drc < 0) ? (1.0 - ((abs(drc)-1.0)/5.0)) : (abs(drc))/5.0); // has to be an easier way than this?
+        //sf = (drc == 0) ? 0.0 : ((drc < 0) ? (1.0 - ((abs(drc)-1.0)/5.0)) : (abs(drc))/5.0); // has to be an easier way than this?
         //sf = 1.0 - (rc - i)*((float)1/5);
         // assuming linear translation, it *should* be ok to chunk everything into linear lines in 1/6 increments of the gait- ...
         // get bounds of leg in body frame
@@ -449,9 +511,10 @@ bool MotionPlanner::ripplePush(int rc){
         B_sw = b.getSwing(t_id);
         // modify linear coordinate from SW->stance (may need actual linear interpolation helper function)
         // need to "dot product" in direction of motion
+        // x = x_swing - sf*(x_swing - x_stance)*cos(theta);
         B_t.setX1(B_sw.getX1() - ((B_sw.getX1() - B_st.getX1())*(sf)*cos(theta)));
         B_t.setX2(B_sw.getX2() - ((B_sw.getX2() - B_st.getX2())*(sf)*sin(theta)));
-        sw_z = (sf < 0.12) ? b.getStepHeight() : B_sw.getX3();
+        sw_z = (sf < 0.12) ? b.getLiftHeight() : B_sw.getX3();
         B_t.setX3(sw_z); // Z is constant
         F_st_sw = b.B_TF_L(B_t, t_id);
         J_st_sw[i] = b.computeIK(t_l, F_st_sw, ELBOW_DOWN);    

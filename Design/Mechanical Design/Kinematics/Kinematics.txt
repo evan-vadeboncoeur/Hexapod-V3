@@ -1,0 +1,6 @@
+Servos:
+-------
+J0, J1 use HiWonder 2018 180 degree servos since they do not need to rotate to storage positions
+These operate at 7.4V (minimum), and from 500us - 2500us
+Angular velocity is 0.2sec/60 deg -> 5.2383 rad/sec 
+2027 operate under the same conditions but have an operating range of 0-270 deg

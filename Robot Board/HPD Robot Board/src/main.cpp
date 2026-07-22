@@ -4,7 +4,7 @@
 
 #define GLOBAL_DEBUG
 //#define LEG_SETUP_DEBUG
-//#define MP_DEBUG
+#define MP_DEBUG
 //#define COMMS_DEBUG
 // might have to do joints & everything else BEFORE runtime, too, so that it's on the heap, not the stack?
 #ifdef LEG_SETUP_DEBUG
@@ -15,7 +15,7 @@ int j2 = LEG_1_J2;
 #endif
 
 // Hexpaod Variables
-int g = 0;
+uint8_t g = 0;
 float duty_f = 0.5;
 float cycle_time = 1.5;
 float step_h = 55.0;
@@ -45,7 +45,7 @@ MotionPlanner* mp = nullptr;
 CommunicationManager* cm = nullptr;
 #endif
 Vector twist = Vector(110.0, 0.0, 0.0);
-Vector twist2 = Vector(0.0, 0.0, 0.4);
+Vector twist2 = Vector(-110.0, 0.0, 0.0);
 //Vector twist = Vector(0.0, 0.0, 0.3);
 #endif
 
@@ -115,12 +115,12 @@ void loop() {
   #endif
   // motion planner gait test
   #if defined(MP_DEBUG) && !defined(LEG_SETUP_DEBUG) && !defined(COMMS_DEBUG)
-  mp->movementSetup(0, twist2);
+  mp->movementSetup(g, twist); 
   delay(1000);
-  //mp->moveIdle();
-  //delay(1000);
-  //mp->movementSetup(1, twist);
-  //mp->powerOffSequence();
+  mp->moveIdle();
+  delay(1000);
+  mp->movementSetup(g, twist2);
+  
   #endif
   // comm setup tests
   #if defined(COMMS_DEBUG) && !defined(LEG_SETUP_DEBUG) && !defined(MP_DEBUG) 

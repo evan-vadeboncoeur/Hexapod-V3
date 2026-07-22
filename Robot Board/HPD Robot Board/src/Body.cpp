@@ -168,7 +168,21 @@ void Body::compute_SLS(){
     //p_lift_z = z_ground + h*sin(pi*s), z_ground = p_idle_z (see idle value), h = clearance height = 20mm, s = 0.5 (halfway pt of cycle)
     // compute lift of leg, apply in for loop
     l_z = z_g + step_height*sin(M_PI*linear_interpolation); // only need to compute once
-    setStepHeight(l_z);
+    #ifdef SLS_DEBUG
+    Serial.println("Lift Height: ");
+    Serial.print("Lz");
+    Serial.print('\t');
+    Serial.print("Zg");
+    Serial.print('\t');
+    Serial.println("Sh");
+    Serial.print(l_z);
+    Serial.print('\t');
+    Serial.print(z_g);
+    Serial.print('\t');
+    Serial.println(step_height); // this value increases each time because of the below line, same with l_z
+    #endif
+
+    setLiftHeight(l_z);
     st_z = z_g; // only set once, added for clarity
     sw_z = z_g;
 
@@ -194,20 +208,25 @@ void Body::compute_SLS(){
     Serial.print('\t');
     Serial.println("Lf_z");
     #endif
+    Leg* t_l;
     // compute stance and swing of each leg
     for(int i=0; i<(NUM_LEGS); i++){
+        t_l = leg_list[i]; // leg pointer for IK
         // stance
         st_x = foot_idle_R[i].getX1() + foot_dp_R[i].getX1()/2.0; // + is away from body direction
         st_y = foot_idle_R[i].getX2() + foot_dp_R[i].getX2()/2.0;
         foot_stance_R[i] = Vector(st_x, st_y, st_z);
+        foot_stance_J[i] = computeIK(t_l, B_TF_L(foot_stance_R[i], i), ELBOW_DOWN); // direct to joint vectors
         // swing
         sw_x = foot_idle_R[i].getX1() - foot_dp_R[i].getX1()/2.0;
         sw_y = foot_idle_R[i].getX2() - foot_dp_R[i].getX2()/2.0;
         foot_swing_R[i] = Vector(sw_x, sw_y, sw_z);
+        foot_swing_J[i] = computeIK(t_l, B_TF_L(foot_swing_R[i], i), ELBOW_DOWN); // direct to joint vectors
         // lift
         l_x = foot_idle_R[i].getX1(); // xy differ for each leg, z is constant
         l_y = foot_idle_R[i].getX2();
         foot_lift_R[i] = Vector(l_x, l_y, l_z);
+        foot_lift_J[i] = computeIK(t_l, B_TF_L(foot_lift_R[i], i), ELBOW_DOWN); // direct to joint vectors
         #ifdef MEMORY_DEBUG
         Serial.println(freeMemory());
         #endif

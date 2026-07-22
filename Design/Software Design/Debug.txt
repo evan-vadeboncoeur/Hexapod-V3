@@ -80,6 +80,19 @@ Debugging
             return addresses
     Allocating everything at compile time in an embedded system is better so that there are no memory-leak surprises
     Using freeMemory() at various places into the deepest call-chain revealed there is still over 500 bytes of RAM free
-12) NRF / interrupt SPI failure
+12) [R] NRF / interrupt SPI failure
     interrupt is more than just set/calculate, it calls a handler, sets an IO, and uses SPI (radio.whatHappened) to determine the nature of the interrupt
-        this could cause multiple SPI calls on the same thread which may mess things up
+        solution: this could cause multiple SPI calls on the same thread which may mess things up
+13) [] body kinematics fails after second command velocity
+    probably cause of way more issues than realized
+    setStepHeight was overwriting the one-time set value of step_height at body construction. while this isnt the end of the world and has an intended use, the coordinate
+    that needed to be changed with lift_z, so that the value could be used by ripple gait, and not change step_height with each call
+    this was causing kinematic issues as the legs would try to go to places it could not physically compute
+14) [R] ripple gait simplicity
+    while the ripple gait happens in 6 steps (swing) -> (stance) with each leg at a phase offset of 1/6, it still needs the stance legs to move 1/5 the distance,
+        because one of the moves in the cycle is used for swing, therefore leaving the other 5/6 phases to account for 5/5 of the stance
+    was using a lot of ternary operators to accomplish "circular distance" to compute the necessary phase, then use the phase to find the stance %
+        can use circular distance by computing the distance, then shifting the values forward using the mod divisor as the absolute value insurance
+        was close to this, but not really sure why i didnt do it?
+        d = (ripple_cnt - leg + NUM_LEGS) % NUM_LEGS; so that is leg > rc, the distance is still found
+

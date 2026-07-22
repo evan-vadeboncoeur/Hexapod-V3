@@ -122,7 +122,7 @@ void Hexapod::stateManager(){
             prev_robot = millis();
             // Hexapod state machine 
             switch(state){
-                case WAITING: // do nothing... maybe add in a blink for "NRF LED"
+                case WAITING: // do nothing
                     #ifdef HEXAPOD_DEBUG
                     Serial.println("--------------------WAITING--------------------");
                     #endif

@@ -70,8 +70,11 @@ class Body{
         bool moveTripod(Leg** tp, Vector jv[NUM_LEGS/2]);
         bool moveLegs(Vector jv[NUM_LEGS]);
         float getTheta(){return theta;}
-        void setStepHeight(float sh){step_height = sh;}
-        float getStepHeight(){return step_height;}
+        void setLiftHeight(float sh){lift_z = sh;}
+        float getLiftHeight(){return lift_z;}
+        Vector getLiftJ(int i){return foot_lift_J[i];}
+        Vector getSwingJ(int i){return foot_swing_J[i];}
+        Vector getStanceJ(int i){return foot_stance_J[i];}
     private:
         // body members
         Vector twist;
@@ -80,7 +83,7 @@ class Body{
         float duty_factor, t_cycle, t_stance; 
         float chassis_radius = 92.5; // radius of circumscribed leg circle
         float z_g; // ground "height" in body frame (where feet contact ground in body frame)
-        float step_height, sh_r; // step height parameter, step height in robot frame
+        float step_height, lift_z; // step height parameter, step height in robot frame
         // leg members
         Leg legs[NUM_LEGS];
         Leg* tp_even[NUM_LEGS/2];
@@ -88,13 +91,13 @@ class Body{
         Leg* leg_list[NUM_LEGS];
         Vector foot_idle_R[NUM_LEGS]; // idle foot positions in body frame
         Vector foot_swing_R[NUM_LEGS]; // swing foot positions in body frame
+        Vector foot_swing_J[NUM_LEGS]; // lift joint vectors
         Vector foot_stance_R[NUM_LEGS]; // stance foot positions in body frame
+        Vector foot_stance_J[NUM_LEGS]; // lift joint vectors
         Vector foot_lift_R[NUM_LEGS]; // lift (idle + z offset using linear interpolation)
-        //Vector foot_p_R[NUM_LEGS]; // foot positions in body frame
+        Vector foot_lift_J[NUM_LEGS]; // lift joint vectors
         Vector foot_v_R[NUM_LEGS]; // foot velocities in the body frame
         Vector foot_dp_R[NUM_LEGS]; // foot displacement vectors in the body frame
-        //Vector foot_pN_R[NUM_LEGS]; // new foot position in body frame
-        //Vector foot_p_L[NUM_LEGS]; // new foot positions in the leg frame 
         float alpha_i[NUM_LEGS]; // alpha offset for each leg, calculated at body instantiation
         float alpha_ci[NUM_LEGS], alpha_si[NUM_LEGS]; // cos, sin x and y components computed at startup for each leg
         void computeAlphaI();
