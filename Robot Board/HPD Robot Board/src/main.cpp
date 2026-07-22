@@ -46,7 +46,7 @@ CommunicationManager* cm = nullptr;
 #endif
 Vector twist = Vector(110.0, 0.0, 0.0);
 Vector twist2 = Vector(-110.0, 0.0, 0.0);
-//Vector twist = Vector(0.0, 0.0, 0.3);
+//Vector twist3 = Vector(0.0, 0.0, 0.3);
 #endif
 
 void setup(){
@@ -110,8 +110,6 @@ void loop() {
   delay(1000);
   s2.write(HPS_2027_CTR); // avg is middle, not 1000us
   delay(1000);
-  //s2.write(545); // test deadband
-  delay(2000);
   #endif
   // motion planner gait test
   #if defined(MP_DEBUG) && !defined(LEG_SETUP_DEBUG) && !defined(COMMS_DEBUG)
