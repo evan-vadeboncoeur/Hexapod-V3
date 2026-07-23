@@ -1,12 +1,10 @@
 TODO Priority (ALL)
 --------------------
-) make push, lift etc use joint vectors computed at startup, not runtime
-) write state machines for both tp and ripple (use timing/millis for each state transition after movement)
-    test tp state machine code for gait timing
+) test startup trajectory computation version
+) test wave gait state machine (make sure timing code is working, too)
 ) test hexapod->startup to make sure motors go to storage pose, not 0 pose - continue here
-) solder in 8.2k, test battery voltage function (meantime: probe regularly)
+) test battery voltage printout
 ) fix startup -> belly flop (should be spaced into tripods...? has macro delay in it)
-) potentially skip idle -> home before going to storage in macro
 )interrupt that watches the state of NRF output pin on EPS32, input pin on 2560. pulls LED high, timer flag high for LED pin, then polling timer turns it off. 
     potentially use another interrupt for timer overflow -> led pin = off
 ) add slat to bottom chassis for battery (dovetail in and out - still have hex cuts)

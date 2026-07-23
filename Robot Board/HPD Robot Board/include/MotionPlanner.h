@@ -1,6 +1,6 @@
 #ifndef MTN_PLNR_H
 #define MTN_PLNR_H
-//#define PLAN_DEBUG
+#define PLAN_DEBUG
 //#define PLAN_T_DEBUG
 #define STATE_TIME_DEBUG
 
@@ -23,7 +23,7 @@
 
 #define OMEGA (5.2383)
 #define MVMT_BFR (0)
-#define OMEGA_C (0.7)
+#define OMEGA_C (0.95)
 
 // motion planner class that recieves a command (gait, direction, # steps...). Controls order of leg movements
 class MotionPlanner{
@@ -36,12 +36,14 @@ class MotionPlanner{
         float vx, vy, wz;
         float t_cycle, duty_factor, step_h, cycle_count; // gait cycle (hardcoded?) values
         int t_c_m=0; // millis version of cycle time
+        int wave_ct=0;
         bool walk_flag = NWALK, even_forward = false, idle = true;
         bool halfTripod(Leg** sw, Leg** st);
         bool push(Leg** l_st, Leg** l_sw);
         bool lift(Leg** l_l);
         uint32_t moveTime(float t1, float t2);
         void stateTime();
+        uint32_t stateTimeHelper(Vector v1, Vector v2, uint32_t m);
         #ifdef PLAN_DEBUG
         uint64_t half_c=0, half_c_prev=0, full_c=0, full_c_prev=0;
         #endif
@@ -52,7 +54,7 @@ class MotionPlanner{
         enum TripodStance {LIFT, PUSH} tp_stance=LIFT;
         uint8_t tp_index=0;
     public:
-        enum Gait {TRIPOD, RIPPLE, WAVE, QUADRUPED} gait=TRIPOD;
+        enum Gait {TRIPOD, WAVE, RIPPLE, QUADRUPED} gait=TRIPOD;
         MotionPlanner();
         MotionPlanner(uint8_t g, float df, float tc, float sh);
         void movementSetup(int g, Vector tw);
@@ -64,11 +66,12 @@ class MotionPlanner{
         void setStepHeight(int sh){step_h = sh;}
         // Gaits
         void updateTripod();
+        void updateWave();
         bool tripodGait();
         bool tripodGait(int cc);
-        bool waveGait();
+        bool waveGait(int cc);
         bool rippleGait(int cc);
-        bool ripplePush(int s);
+        bool wavePush(int wc);
         bool quadrapedGait();
         // Motion macros
         bool powerOnSequence();

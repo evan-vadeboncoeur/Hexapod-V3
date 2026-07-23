@@ -3,8 +3,9 @@
 
 // #define SETUP_BK_DEBUG
 // #define VR_BK_DEBUG
-//#define SLS_DEBUG
+#define SLS_DEBUG
 // #define DP_BK_DEBUG
+#define TRIPOD_MOVE_DEBUG
 
 #include "Leg.h"
 
@@ -107,6 +108,7 @@ class Body{
         void compute_SLS();
         void L_TF_B(Vector v);
         void bodyInitialSetup(Vector v);
+        Vector computeFK(Leg* l, Vector v);
 };
 
 #endif

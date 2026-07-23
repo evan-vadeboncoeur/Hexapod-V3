@@ -80,7 +80,7 @@ bool CommunicationManager::receivePacket(){
         digitalWrite(NRF_LED, HIGH);
         bool tx_ok, tx_fail, rx_ready, packet_received = false;
         radio.whatHappened(tx_ok, tx_fail, rx_ready); // check reason for IQR and reset pin to high
-        if(rx_ready){
+        if(rx_ready && !packet_received){ // pr in here to make warning go away
             while(radio.available()) { 
                 radio.read(&p, sizeof(p)); // read all packets in the queue to get newest command
                 packet_received = true;

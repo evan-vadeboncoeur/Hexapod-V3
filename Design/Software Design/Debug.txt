@@ -99,3 +99,6 @@ Debugging
     B_t.setX1(B_sw.getX1() - ((B_sw.getX1() - B_st.getX1())*(sf))*cos(theta)); <- cos(theta) was already applied thru
     the body velocity command, does not need to be added here to obtain a component in the X direction (the components are already purely X)
     adding cos(theta) made it so that on theta = pi, cos(pi) = -1 -> modifier was applied to swing variable twice, made elements out of range for kinematics
+16) [R] bool != bool is not the same as bool = !bool
+    first only tests if a boolean is not equal to a boolean (in this case, the same one)
+    second one actually sets it

@@ -4,7 +4,7 @@
 
 #define GLOBAL_DEBUG
 //#define LEG_SETUP_DEBUG
-//#define MP_DEBUG
+#define MP_DEBUG
 //#define COMMS_DEBUG
 // might have to do joints & everything else BEFORE runtime, too, so that it's on the heap, not the stack?
 #ifdef LEG_SETUP_DEBUG
@@ -15,7 +15,7 @@ int j2 = LEG_1_J2;
 #endif
 
 // Hexpaod Variables
-uint8_t g = 1;
+uint8_t g = 0;
 float duty_f = 0.5;
 float cycle_time = 1.5;
 float step_h = 55.0;

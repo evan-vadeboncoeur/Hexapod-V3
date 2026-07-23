@@ -119,5 +119,9 @@ Vector Leg::computeIK(Vector v, bool elbow){
     return lk.ik(v, elbow);
 }
 
+Vector Leg::computeFK(Vector v){
+    return lk.fk(v);
+}
+
 
 

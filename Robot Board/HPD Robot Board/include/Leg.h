@@ -73,6 +73,7 @@ class Leg{
         void moveFootToPV(Vector new_pVL, bool config);
         void moveFootToJV(Vector new_jVL); // move to joint vector
         Vector computeIK(Vector v, bool elbow);
+        Vector computeFK(Vector v);
 
         
  

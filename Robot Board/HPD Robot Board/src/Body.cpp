@@ -313,7 +313,45 @@ Vector Body::computeIK(Leg* l, Vector v, bool elbow){
     return (l->computeIK(v, elbow));
 }
 
+Vector Body::computeFK(Leg* l, Vector v){
+    return (l->computeFK(v));
+}
+
 bool Body::moveTripod(Leg** tp, Vector jv[3]){
+    #ifdef TRIPOD_MOVE_DEBUG
+    Vector f;
+    Serial.println("----------Tripod Move Debug----------");
+    Serial.print("Leg");
+    Serial.print('\t');
+    Serial.print("J0");
+    Serial.print('\t');
+    Serial.print("J1");
+    Serial.print('\t');
+    Serial.print("J2");
+    Serial.print('\t');
+    Serial.print("XF");
+    Serial.print('\t');
+    Serial.print("YF");
+    Serial.print('\t');
+    Serial.println("ZF");
+
+    for(int i=0; i<NUM_LEGS/2; i++){
+        f = (*(tp+i))->computeFK(Vector(jv[i].getX1(), jv[i].getX2(), jv[i].getX3()));
+        Serial.print((*(tp+i))->getID());
+        Serial.print('\t');
+        Serial.print(jv[i].getX1());
+        Serial.print('\t');
+        Serial.print(jv[i].getX2());
+        Serial.print('\t');
+        Serial.print(jv[i].getX3());
+        Serial.print('\t');
+        Serial.print(f.getX1());
+        Serial.print('\t');
+        Serial.print(f.getX2());
+        Serial.print('\t');
+        Serial.println(f.getX3());
+    }
+    #endif
     (*(tp+0))->moveFootToJV(jv[0]);
     (*(tp+1))->moveFootToJV(jv[1]);
     (*(tp+2))->moveFootToJV(jv[2]);
