@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "../../.."
+		},
+		{
+			"name": "HPD Controller Board",
+			"path": "../../../Controller Board/HPD Controller Board"
+		},
+		{
+			"name": "HPD Robot Board",
+			"path": ".."
+		}
+	],
+	"settings": {}
+}
