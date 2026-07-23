@@ -95,4 +95,7 @@ Debugging
         can use circular distance by computing the distance, then shifting the values forward using the mod divisor as the absolute value insurance
         was close to this, but not really sure why i didnt do it?
         d = (ripple_cnt - leg + NUM_LEGS) % NUM_LEGS; so that is leg > rc, the distance is still found
-
+15) [R] ripple gait did not work in backward direction
+    B_t.setX1(B_sw.getX1() - ((B_sw.getX1() - B_st.getX1())*(sf))*cos(theta)); <- cos(theta) was already applied thru
+    the body velocity command, does not need to be added here to obtain a component in the X direction (the components are already purely X)
+    adding cos(theta) made it so that on theta = pi, cos(pi) = -1 -> modifier was applied to swing variable twice, made elements out of range for kinematics

@@ -23,8 +23,13 @@ void MotionPlanner::movementSetup(int g, Vector tw){
 
 // returns movement time between two angles of a single servo
 uint32_t MotionPlanner::moveTime(float t1, float t2){
-    uint32_t calc = (uint32_t)((abs(t2-t1) / OMEGA) * 1000 + MVMT_BFR);
+    uint32_t calc = (uint32_t)(((abs(t2-t1) / OMEGA) * 1000 + MVMT_BFR)*OMEGA_C);
     #ifdef STATE_TIME_DEBUG
+    Serial.print("t2");
+    Serial.print('\t');
+    Serial.print("t1");
+    Serial.print('\t');
+    Serial.println("time");
     Serial.print(t2);
     Serial.print('\t');
     Serial.print(t1);
@@ -86,12 +91,12 @@ void MotionPlanner::setGait(int g, bool walk){
     switch(g){
         case TRIPOD: 
             gait = TRIPOD;
-            if(walk) tripodGait(4); // test version
+            if(walk) tripodGait(2); // test version
             break;
         case RIPPLE: 
             gait = RIPPLE;
             //#ifdef PLAN_DEBUG
-            if(walk) rippleGait(4);
+            if(walk) rippleGait(2);
             //#endif
             break;
         case WAVE: 
@@ -109,8 +114,8 @@ void MotionPlanner::setGait(int g, bool walk){
 void MotionPlanner::walk(){
     switch(gait){
     case TRIPOD: 
-        tripodGait();
-        //updateTripod();
+        //tripodGait();
+        updateTripod();
         break;
     case RIPPLE: 
         rippleGait(1);
@@ -129,7 +134,22 @@ void MotionPlanner::walk(){
 
 void MotionPlanner::turn(){
     setBodyVelocity(omega);
-    tripodGait();
+    switch(gait){
+    case TRIPOD: 
+        tripodGait();
+        break;
+    case RIPPLE: 
+        rippleGait(1);
+        break;
+    case WAVE: 
+        waveGait();
+        break;
+    case QUADRUPED: 
+        break;
+    default:
+        tripodGait();
+        break;
+    }
 }
 
 // GAITS ----------------------------------------------------------------------------------
@@ -450,8 +470,7 @@ bool MotionPlanner::ripplePush(int rc){
     // move function that simultaneously moves all joints to calculated positions
     // Challenges: gait startup, gait pause, memory usage
     // setup variables
-    float sf, theta;
-    theta = b.getTheta();
+    float sf;
     Leg* t_l; // temp leg for ids
     int t_id;
     Vector B_st, B_sw, B_t;
@@ -512,8 +531,8 @@ bool MotionPlanner::ripplePush(int rc){
         // modify linear coordinate from SW->stance (may need actual linear interpolation helper function)
         // need to "dot product" in direction of motion
         // x = x_swing - sf*(x_swing - x_stance)*cos(theta);
-        B_t.setX1(B_sw.getX1() - ((B_sw.getX1() - B_st.getX1())*(sf)*cos(theta)));
-        B_t.setX2(B_sw.getX2() - ((B_sw.getX2() - B_st.getX2())*(sf)*sin(theta)));
+        B_t.setX1(B_sw.getX1() - ((B_sw.getX1() - B_st.getX1())*(sf)));
+        B_t.setX2(B_sw.getX2() - ((B_sw.getX2() - B_st.getX2())*(sf)));
         sw_z = (sf < 0.12) ? b.getLiftHeight() : B_sw.getX3();
         B_t.setX3(sw_z); // Z is constant
         F_st_sw = b.B_TF_L(B_t, t_id);

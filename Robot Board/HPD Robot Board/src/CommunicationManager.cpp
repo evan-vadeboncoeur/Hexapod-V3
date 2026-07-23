@@ -21,6 +21,7 @@ void CommunicationManager::radioISR(){ // static, so does not receive a hidden o
 
 void CommunicationManager::handleInterrupt(){
     radio_interrupt = true;
+    //Serial.println("in int");
 }
 
 void CommunicationManager::commBegin(){
@@ -86,6 +87,7 @@ bool CommunicationManager::receivePacket(){
             }
         }
         #ifndef IQR2_DEBUG // outside of packet received block in case false-positive
+        //Serial.println("handled");
         radio_interrupt = false;
         radio.clearStatusFlags(RF24_IRQ_ALL);
         digitalWrite(NRF_LED, LOW);
@@ -116,10 +118,9 @@ bool CommunicationManager::receivePacket(){
             Serial.print(p.v_y);
             Serial.print('\t');
             Serial.println(p.w_z);
-            
-            return true;
         }  
-        #endif  
+        #endif
+        return true;  
     #ifndef IQR2_DEBUG
     }
     #endif

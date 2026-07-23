@@ -1,6 +1,6 @@
 #ifndef MTN_PLNR_H
 #define MTN_PLNR_H
-#define PLAN_DEBUG
+//#define PLAN_DEBUG
 //#define PLAN_T_DEBUG
 #define STATE_TIME_DEBUG
 
@@ -22,7 +22,8 @@
 #define MACRO_DELAY (500)
 
 #define OMEGA (5.2383)
-#define MVMT_BFR (100)
+#define MVMT_BFR (0)
+#define OMEGA_C (0.7)
 
 // motion planner class that recieves a command (gait, direction, # steps...). Controls order of leg movements
 class MotionPlanner{

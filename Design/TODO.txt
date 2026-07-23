@@ -1,13 +1,6 @@
 TODO Priority (ALL)
 --------------------
-1) verify body velocity commands
-    test tp fwd, tp bwd
-2) verify ripple gait
-    test tp fwd, tp bwd
-3) test RC multi-velocity commands as well
-    walk
-    turn
-    etc.
+) make push, lift etc use joint vectors computed at startup, not runtime
 ) write state machines for both tp and ripple (use timing/millis for each state transition after movement)
     test tp state machine code for gait timing
 ) test hexapod->startup to make sure motors go to storage pose, not 0 pose - continue here

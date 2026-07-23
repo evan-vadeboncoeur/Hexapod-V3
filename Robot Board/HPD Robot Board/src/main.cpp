@@ -4,7 +4,7 @@
 
 #define GLOBAL_DEBUG
 //#define LEG_SETUP_DEBUG
-#define MP_DEBUG
+//#define MP_DEBUG
 //#define COMMS_DEBUG
 // might have to do joints & everything else BEFORE runtime, too, so that it's on the heap, not the stack?
 #ifdef LEG_SETUP_DEBUG
@@ -15,7 +15,7 @@ int j2 = LEG_1_J2;
 #endif
 
 // Hexpaod Variables
-uint8_t g = 0;
+uint8_t g = 1;
 float duty_f = 0.5;
 float cycle_time = 1.5;
 float step_h = 55.0;
@@ -44,9 +44,9 @@ MotionPlanner* mp = nullptr;
 #if defined(COMMS_DEBUG) && !defined(MP_DEBUG)
 CommunicationManager* cm = nullptr;
 #endif
-Vector twist = Vector(110.0, 0.0, 0.0);
+Vector twist1 = Vector(110.0, 0.0, 0.0);
 Vector twist2 = Vector(-110.0, 0.0, 0.0);
-//Vector twist3 = Vector(0.0, 0.0, 0.3);
+Vector twist3 = Vector(0.0, 0.0, 0.3);
 #endif
 
 void setup(){
@@ -66,7 +66,8 @@ void setup(){
   #if defined(MP_DEBUG) && !defined(COMMS_DEBUG)
   static MotionPlanner planner(g, duty_f, cycle_time, step_h); // statically stored for life of program
   mp = &planner;
-  mp->moveIdle();
+  mp->moveHome();
+  //mp->moveIdle();
   delay(2000); 
   #endif
   // comm debug
@@ -113,11 +114,15 @@ void loop() {
   #endif
   // motion planner gait test
   #if defined(MP_DEBUG) && !defined(LEG_SETUP_DEBUG) && !defined(COMMS_DEBUG)
-  mp->movementSetup(g, twist); 
-  delay(1000);
+  mp->movementSetup(g, twist1); 
+  delay(500);
   mp->moveIdle();
-  delay(1000);
+  delay(500);
   mp->movementSetup(g, twist2);
+  delay(500);
+  mp->moveIdle();
+  delay(500);
+  mp->movementSetup(g, twist3);
   
   #endif
   // comm setup tests

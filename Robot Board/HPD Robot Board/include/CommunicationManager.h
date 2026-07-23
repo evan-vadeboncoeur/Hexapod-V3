@@ -1,6 +1,6 @@
 #ifndef COMM_H_H
 #define COMM_H_H
-#define COMM_DEBUG
+//#define COMM_DEBUG
 //#define IQR2_DEBUG
 
 #define CE_H (48)

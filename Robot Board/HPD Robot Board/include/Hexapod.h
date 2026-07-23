@@ -30,7 +30,7 @@ class Hexapod{
         void turn();
         void getCommand();
         uint64_t prev_robot=0, prev_comm=0;
-        uint16_t robot_update=200, comm_update=100;
+        uint16_t robot_update=15, comm_update=10;
         
     public:
         Hexapod(uint8_t g, float df, float tc, float sh); // constructor 1 (all objects instantiated)
@@ -38,7 +38,6 @@ class Hexapod{
         void homeHexapod();
         void shutdownHexapod();
         void stateManager(); // basically the hexapod's while loop
-        void commInit();
 };
 
 #endif
