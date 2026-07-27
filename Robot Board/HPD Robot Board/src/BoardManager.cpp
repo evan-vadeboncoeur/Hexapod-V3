@@ -7,6 +7,8 @@ BoardManager::BoardManager(){
     // output setup
     pinMode(LOW_BATT_P, OUTPUT);
     pinMode(NRFR_P, OUTPUT);
+    // timer setup for comm pin
+    //TCCR0A 
 }
 
 // battery management

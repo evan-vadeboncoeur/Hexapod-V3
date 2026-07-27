@@ -50,7 +50,6 @@ void RemoteControl::stateManager(){
 
 bool RemoteControl::newCommand(){
     // gait change, left macro, right macro, angle change, significant magnitude change, 0 velocity (& not prev 0 velocity)
-    
     #ifdef NEW_DEBUG
     uint8_t a = (abs(r - r_p) > R_DELTA);
     uint8_t b = (r < R_ZERO);
@@ -78,7 +77,8 @@ bool RemoteControl::newCommand(){
     Serial.print('\t');
     Serial.println(b);
     #endif
-    if((g_p != g) || (rb != rb_p) || (lb != lb_p) || (abs(theta_tw - theta_tw_p) > T_DELTA) || (abs(r - r_p) > R_DELTA) || (r <= R_ZERO && (r_p > R_ZERO))) return true; // theta: any amount change is grounds for new command since in this version we are discretely using multiples of PI/3
+    
+    if((g_p != g) || ((rb != rb_p) && !turn_p) || ((lb != lb_p) && !turn_p) || (abs(theta_tw - theta_tw_p) > T_DELTA) || (abs(r - r_p) > R_DELTA) || (r <= R_ZERO && (r_p > R_ZERO))) return true; // theta: any amount change is grounds for new command since in this version we are discretely using multiples of PI/3
     else return false;
 }
 
@@ -141,6 +141,7 @@ void RemoteControl::handlePrevInputs(){
     lb_p = lb;
     g_p = g;
     r_p = r;
+    turn_p = lb && rb;
 }
 
 void RemoteControl::buildTwist(){
@@ -155,13 +156,15 @@ void RemoteControl::buildTwist(){
     r = (r > (float)V_MAX) ? (float)V_MAX : r; // clamp to V_MAX
     // compute angle of velocity vector, centered along the perpendicular bisector of 1 of 6 edges between J0's
     theta_tw = (float)(atan2(y,x)); // will return the same as typical RHR XY coordinate system, works for this viewpoint of frame
+    #ifndef DIR_360
     theta_tw = M_PI_3*roundf(theta_tw/M_PI_3); // Quantization to pi/3 buckets centered at theta = 0
+    #endif
     // convert back to velocity components
     vx = r*cos(theta_tw); 
     vy = r*sin(theta_tw); 
     // clamp just in case map didnt filter
     vx = (abs(vx) < X_BUFF) ? 0.0 : vx;
-    vy = (abs(vy) < Y_BUFF) ? 0.0 : vy; // ? why is vy negative sometimes? fp rounding?
+    vy = (abs(vy) < Y_BUFF) ? 0.0 : vy;
     // TODO
     wz = 0.0;
     #ifdef TWIST_DEBUG
