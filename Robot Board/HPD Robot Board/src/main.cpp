@@ -4,7 +4,7 @@
 
 #define GLOBAL_DEBUG
 //#define LEG_SETUP_DEBUG
-#define MP_DEBUG
+//#define MP_DEBUG
 //#define COMMS_DEBUG
 // might have to do joints & everything else BEFORE runtime, too, so that it's on the heap, not the stack?
 #ifdef LEG_SETUP_DEBUG

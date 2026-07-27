@@ -17,7 +17,7 @@ MotionPlanner::MotionPlanner(uint8_t g, float df, float tc, float sh)
 void MotionPlanner::movementSetup(int g, Vector tw){
     setBodyVelocity(tw); // compute trajectories
     // set state times
-    setGait(g, WALK); // calls desired gait, start walking
+    setGait(g, NWALK); // calls desired gait, start walking
     stateTime();
 }
 
@@ -135,8 +135,8 @@ void MotionPlanner::walk(){
         updateTripod();
         break;
     case WAVE: 
-        waveGait(1);
-        //updateWave();
+        //waveGait(1);
+        updateWave();
         break;
     case RIPPLE: 
         rippleGait(1);
@@ -154,7 +154,7 @@ void MotionPlanner::turn(){
     setBodyVelocity(omega);
     switch(gait){
     case TRIPOD: 
-        tripodGait();
+        updateTripod();
         break;
     case WAVE: 
         waveGait(1);
@@ -166,7 +166,7 @@ void MotionPlanner::turn(){
     case QUADRUPED: 
         break;
     default:
-        tripodGait();
+        updateTripod();
         break;
     }
 }
@@ -681,8 +681,8 @@ bool MotionPlanner::moveIdle(){
 bool MotionPlanner::moveStorage(){
     #ifdef PLAN_DEBUG
     Serial.println("----------------------Moving To Storage---------------------");
-    #endif
     Serial.println("----------Even Tripod----------");
+    #endif
     for(int l=0; l<(NUM_LEGS/2); l++){
         Leg* cl = b.getLegTripod(l, TP_EVEN);
         #ifdef PLAN_DEBUG
@@ -693,7 +693,9 @@ bool MotionPlanner::moveStorage(){
         b.moveLeg(cl, cl->storage_j_L, JOINT_MOVE, ELBOW_DOWN);
     }
     delay(MACRO_DELAY);
+    #ifdef PLAN_DEBUG
     Serial.println("----------Odd Tripod----------");
+    #endif
     for(int l=0; l<(NUM_LEGS/2); l++){
         Leg* cl = b.getLegTripod(l, TP_ODD);
         #ifdef PLAN_DEBUG

@@ -1,23 +1,17 @@
 TODO Priority (ALL)
 --------------------
-) test startup trajectory computation version
-) test wave gait state machine (make sure timing code is working, too)
-) test hexapod->startup to make sure motors go to storage pose, not 0 pose - continue here
-) test battery voltage printout
-) fix startup -> belly flop (should be spaced into tripods...? has macro delay in it)
-)interrupt that watches the state of NRF output pin on EPS32, input pin on 2560. pulls LED high, timer flag high for LED pin, then polling timer turns it off. 
-    potentially use another interrupt for timer overflow -> led pin = off
+) add wave gait
+) fix random turning -> idle (add counter for transition on RC side)
 ) add slat to bottom chassis for battery (dovetail in and out - still have hex cuts)
 
 MISC/LOW PRIORITY
 ------------------
 1) J2 add rubber boot
 2) workspace limitations
+3) new command -> LED high & start timer -> timer overflow = LED off (interrupt)
 
 PCB/ECE TODO
 -------------
-1) test battery management
-    robot
 
 CAD TODO
 ---------------------

@@ -1,8 +1,8 @@
 #ifndef MTN_PLNR_H
 #define MTN_PLNR_H
-#define PLAN_DEBUG
+//#define PLAN_DEBUG
 //#define PLAN_T_DEBUG
-#define STATE_TIME_DEBUG
+//#define STATE_TIME_DEBUG
 
 #include "Vector.h"
 #include "Body.h"
@@ -23,7 +23,7 @@
 
 #define OMEGA (5.2383)
 #define MVMT_BFR (0)
-#define OMEGA_C (0.95)
+#define OMEGA_C (1.35)
 
 // motion planner class that recieves a command (gait, direction, # steps...). Controls order of leg movements
 class MotionPlanner{
