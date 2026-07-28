@@ -1,7 +1,6 @@
 TODO Priority (ALL)
 --------------------
 ) add wave gait
-) fix gait change -> reflected in turn command
 ) add slat to bottom chassis for battery (dovetail in and out - still have hex cuts)
 
 MISC/LOW PRIORITY
