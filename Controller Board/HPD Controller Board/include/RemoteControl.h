@@ -1,8 +1,8 @@
 #ifndef REMOTE_H
 #define REMOTE_H
-#define REMOTE_DEBUG
+//#define REMOTE_DEBUG
 #define TWIST_DEBUG
-#define TRANSMIT_DEBUG
+//#define TRANSMIT_DEBUG
 #define NEW_DEBUG
 #define DIR_360
 
@@ -52,7 +52,8 @@ class RemoteControl{
         bool newCommand();
         float v_ref = 3.3; // reference voltage on the ESP32
         int lx, ly, rx, ry;
-        uint8_t lb, rb, lb_p, rb_p, turn_p;
+        uint8_t lb, rb, lb_p=false, rb_p=false;
+        bool turn_p=false;
         uint8_t g, g_p;
         bool s_one, s_two, s_three, s_four;
         float theta_tw, theta_tw_p, vx, vx_p, vy, vy_p, v, v_p, wz, wz_p, r, r_p;

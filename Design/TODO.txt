@@ -1,10 +1,7 @@
 TODO Priority (ALL)
 --------------------
 ) add wave gait
-) fix random turning -> idle transition (add counter for transition on RC side)
-    test edge case turn_p comparasion
-) add code to choose between any direction vs "canon" directions
-    test 360 version
+) fix gait change -> reflected in turn command
 ) add slat to bottom chassis for battery (dovetail in and out - still have hex cuts)
 
 MISC/LOW PRIORITY

@@ -47,6 +47,7 @@ void Hexapod::walk(){
 }
 
 void Hexapod::turn(){
+    plan.setGait(gait, NWALK);
     plan.turn();
 }
 
@@ -102,8 +103,10 @@ void Hexapod::processPacket(){
     }
     else if(power_off) state = POWER_OFF; // only p off macro
     else if(power_on) state = POWER_ON; // only p on macro
-    else if(turnc && (powered_on)) state = TURNING; // both = turning mode (CCW) (MAY BE DIFFICULT GETTING BOTH AT SAME TIME)
-    
+    else if(turnc && (powered_on)) {
+        state = TURNING; // both = turning mode (CCW) (MAY BE DIFFICULT GETTING BOTH AT SAME TIME)
+        if(gait != gait_old) gaitSetup();
+    }
 }
 
 void Hexapod::stateManager(){

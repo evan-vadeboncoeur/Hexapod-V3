@@ -51,8 +51,6 @@ void RemoteControl::stateManager(){
 bool RemoteControl::newCommand(){
     // gait change, left macro, right macro, angle change, significant magnitude change, 0 velocity (& not prev 0 velocity)
     #ifdef NEW_DEBUG
-    uint8_t a = (abs(r - r_p) > R_DELTA);
-    uint8_t b = (r < R_ZERO);
     Serial.println("--------------------New Command Debug--------------------");
     Serial.print("Gait");
     Serial.print('\t');
@@ -73,21 +71,19 @@ bool RemoteControl::newCommand(){
     Serial.print('\t');
     Serial.print((abs(theta_tw - theta_tw_p) > T_DELTA));
     Serial.print('\t');
-    Serial.print(a);
-    Serial.print('\t');
-    Serial.println(b);
+    Serial.println(turn_p);
     #endif
     
-    if((g_p != g) || ((rb != rb_p) && !turn_p) || ((lb != lb_p) && !turn_p) || (abs(theta_tw - theta_tw_p) > T_DELTA) || (abs(r - r_p) > R_DELTA) || (r <= R_ZERO && (r_p > R_ZERO))) return true; // theta: any amount change is grounds for new command since in this version we are discretely using multiples of PI/3
+    if((g_p != g) || ((rb != rb_p) && !turn_p) || ((lb != lb_p) && !turn_p) || (rb && lb && turn_p) || (abs(theta_tw - theta_tw_p) > T_DELTA) || (abs(r - r_p) > R_DELTA) || (r <= R_ZERO && (r_p > R_ZERO)) || (r <= R_ZERO && !turn_p)) return true; // theta: any amount change is grounds for new command since in this version we are discretely using multiples of PI/3
     else return false;
 }
 
 void RemoteControl::readSensors(){
     bmr.readInputs(); // read all inputs
-    lb = !(bmr.getLb()); // flip to opposite (active low -> active high)
+    lb = (bmr.getLb()); // flip to opposite (active low -> active high)
     lx = bmr.getLx();
     ly = bmr.getLy();
-    rb = !(bmr.getRb());
+    rb = (bmr.getRb());
     rx = bmr.getRx();
     ry = bmr.getRy();
     g = bmr.getGait();
@@ -141,7 +137,7 @@ void RemoteControl::handlePrevInputs(){
     lb_p = lb;
     g_p = g;
     r_p = r;
-    turn_p = lb && rb;
+    turn_p = lb_p && rb_p;
 }
 
 void RemoteControl::buildTwist(){

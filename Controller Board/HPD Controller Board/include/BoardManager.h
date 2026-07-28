@@ -2,7 +2,7 @@
 #define BRD_R_H
 //#define BRD_R_DEBUG
 //#define GAIT_DEBUG
-#define BATTERY_DEBUG
+//#define BATTERY_DEBUG
 
 #include <Arduino.h>
 #include <HardwareSerial.h>
